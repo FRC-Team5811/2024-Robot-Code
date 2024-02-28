@@ -70,7 +70,8 @@ public class SwerveModule {
     }
 
     public void onPeriodic() {
-        double smoothAngleEstimate = 0.99 * turningEncoder.getPosition() + 0.01 * getAbsoluteEncoderRad();
+        double motorEncoderAngle = turningEncoder.getPosition() % (2 * Math.PI);
+        double smoothAngleEstimate = 0.9 * motorEncoderAngle + 0.1 * getAbsoluteEncoderRad();
         turningEncoder.setPosition(smoothAngleEstimate);
     }
 
@@ -111,8 +112,6 @@ public class SwerveModule {
         angle -= (absoluteEncoderOffsetRad * 180 / Math.PI);
         return angle * (absoluteEncoderReversed ? -1.0 : 1.0);
     }
-
-    
 
     public void resetEncoders() {
         driveEncoder.setPosition(0);
