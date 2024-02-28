@@ -8,8 +8,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.PID;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SwerveJoystickCmd extends Command {
@@ -20,9 +22,11 @@ public class SwerveJoystickCmd extends Command {
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
     private final SlewRateLimiter turningLimiter;
+    private boolean wasTurningLastFrame;
+
 
     private double turningSetpoint;
-    private PIDController thetaController;
+    private PID thetaLockController;
 
     public static boolean slowJoe = false;
 
@@ -37,13 +41,14 @@ public class SwerveJoystickCmd extends Command {
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
         this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+        wasTurningLastFrame = false;
         addRequirements(swerveSubsystem);
     }
 
     @Override
     public void initialize() {
-        thetaController = new PIDController(16, 0, 0.5);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        thetaLockController = new PID(Constants.DriveConstants.kPThetaLockTurning, Constants.DriveConstants.kIThetaLockTurning, Constants.DriveConstants.kDThetaLockTurning);
+        thetaLockController.enableContinuousInput(-Math.PI, Math.PI);
         turningSetpoint = swerveSubsystem.getHeading();
     }
 
@@ -54,9 +59,15 @@ public class SwerveJoystickCmd extends Command {
         double ySpeed = -ySpdFunction.get();
         double turningSpeed = -turningSpdFunction.get();
 
-        if (Math.abs(turningSpeed) > 0.1) {
-            turningSetpoint = swerveSubsystem.getHeading() + turningSpeed * (Math.PI / 1.8);
-        }
+        // if (Math.abs(turningSpeed) > 0.1) {
+        //     turningSetpoint = swerveSubsystem.getHeading() + turningSpeed * (Math.PI);
+        //     wasTurningLastFrame = true;
+        // }
+        // else if (wasTurningLastFrame) {
+        //     turningSetpoint =  swerveSubsystem.getHeading();
+        //     wasTurningLastFrame = false;
+        // }
+
 
         // 2. Apply deadband
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
@@ -85,12 +96,14 @@ public class SwerveJoystickCmd extends Command {
         ySpeed = yLimiter.calculate(ySpeed) * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         turningSpeed = turningLimiter.calculate(turningSpeed)
                 * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
-
-        // turningSpeed = thetaController.calculate(swerveSubsystem.getHeading(), turningSetpoint);
+        if (Math.abs(turningSpeed) < 0.05)
+            turningSpeed = 0.0;
+        // turningSpeed = thetaLockController.calculate(swerveSubsystem.getHeading(), turningSetpoint);
         // double turningSpeedMag = Math.abs(turningSpeed);
         // if (turningSpeedMag > DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond) {
         //     turningSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * turningSpeed / turningSpeedMag;
         // }
+
 
         if (slowJoe) {
             xSpeed = xSpeed * 0.33;

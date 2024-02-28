@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
             () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
             () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
             () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-            () -> robotContainer.driverJoytick.getRawButton(Constants.OIConstants.RightTriggerButton)));
+            () -> !robotContainer.driverJoytick.getRawButton(Constants.OIConstants.RightTriggerButton)));
 
         /* this makes sure that the autonomous stops running when
         teleop starts running. If you want the autonomous to

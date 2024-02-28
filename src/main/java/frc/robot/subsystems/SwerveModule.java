@@ -70,9 +70,10 @@ public class SwerveModule {
     }
 
     public void onPeriodic() {
-        double motorEncoderAngle = turningEncoder.getPosition() % (2 * Math.PI);
-        double smoothAngleEstimate = 0.9 * motorEncoderAngle + 0.1 * getAbsoluteEncoderRad();
-        turningEncoder.setPosition(smoothAngleEstimate);
+        double motorEncoderAngle = turningEncoder.getPosition();// % (2 * Math.PI);
+        if (Math.abs(motorEncoderAngle) > 4 * Math.PI) {
+            turningEncoder.setPosition(getAbsoluteEncoderRad());
+        }
     }
 
     public double getTurningPosition() {
