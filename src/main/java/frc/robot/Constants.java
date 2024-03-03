@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public final class Constants {
 
+    public static boolean dashboardDebugMode = false;
+
     public static final double kIntakeMax = 0.5;
     public static final double kIntakeMin = -0.8;
 

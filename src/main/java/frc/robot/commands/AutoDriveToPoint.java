@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.PID;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.PID;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -124,7 +124,8 @@ public class AutoDriveToPoint extends Command {
     
     var targetModuleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(targetChassisSpeeds);
     swerveSubsystem.setModuleStates(targetModuleStates);
-    SmartDashboard.putString("speeds auto", targetChassisSpeeds.toString());
+    if (Constants.dashboardDebugMode)
+        SmartDashboard.putString("Auto speeds", targetChassisSpeeds.toString());
   }
 
   @Override

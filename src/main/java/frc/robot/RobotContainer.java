@@ -60,7 +60,6 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         new JoystickButton(driverJoytick, Constants.OIConstants.RightBumperButton).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading(), swerveSubsystem));
-        new JoystickButton(driverJoytick, Constants.OIConstants.LeftTriggerButton).onTrue(new InstantCommand(() -> swerveSubsystem.toggleLock(), swerveSubsystem));
         new JoystickButton(driverJoytick, Constants.OIConstants.LeftBumperButton).whileTrue(new RunCommand(() -> SwerveJoystickCmd.slowJoe = true));
         new JoystickButton(driverJoytick, Constants.OIConstants.LeftBumperButton).whileFalse(new RunCommand(() -> SwerveJoystickCmd.slowJoe = false));
     }

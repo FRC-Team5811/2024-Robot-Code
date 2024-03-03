@@ -44,7 +44,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putString("Robot Location",robotContainer.swerveSubsystem.getPose().getTranslation().toString());
     }
 
     @Override
@@ -92,7 +91,6 @@ public class Robot extends TimedRobot {
     // this function is called periodically during autonomous.
     @Override
     public void autonomousPeriodic() {
-        SmartDashboard.putString("position", robotContainer.swerveSubsystem.getPose().toString());
     }
 
     @Override

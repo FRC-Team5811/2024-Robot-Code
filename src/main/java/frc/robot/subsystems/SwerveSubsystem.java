@@ -48,7 +48,8 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kFrontLeftTurningEncoderReversed,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+            DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed,
+            "frontLeft");
         frontRight = new SwerveModule(
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightTurningMotorPort,
@@ -56,7 +57,8 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kFrontRightTurningEncoderReversed,
             DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
             DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+            DriveConstants.kFrontRightDriveAbsoluteEncoderReversed,
+            "frontRight");
         backLeft = new SwerveModule(
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftTurningMotorPort,
@@ -64,7 +66,8 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackLeftTurningEncoderReversed,
             DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
+            DriveConstants.kBackLeftDriveAbsoluteEncoderReversed,
+            "backLeft");
         backRight = new SwerveModule(
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightTurningMotorPort,
@@ -72,18 +75,11 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackRightTurningEncoderReversed,
             DriveConstants.kBackRightDriveAbsoluteEncoderPort,
             DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
-            DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
+            DriveConstants.kBackRightDriveAbsoluteEncoderReversed,
+            "backRight");
         
         gyro = new AHRS(SPI.Port.kMXP);
         zeroHeading();
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-                //zeroHeading();
-            } catch (Exception e) {
-            }
-        }).start();
     }
 
     public void zeroHeading() {
@@ -92,7 +88,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     // should be counter-clockwise positive!!
     public double getHeading() {
-        // return odometer.getPoseMeters().getRotation().getRadians();
         return Math.IEEEremainder(-gyro.getYaw(), 360) * Math.PI /   180;
     }
 
@@ -109,10 +104,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public void resetOdometry(Pose2d pose) {
-        // frontLeft.resetEncoders();
-        // frontRight.resetEncoders();
-        // backLeft.resetEncoders();
-        // backRight.resetEncoders();
         swerveModulePositions[0] = frontLeft.getPosition();
         swerveModulePositions[1] = frontRight.getPosition();
         swerveModulePositions[2] = backLeft.getPosition();
@@ -129,8 +120,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        printEncoders();
-
         frontLeft.onPeriodic();
         frontRight.onPeriodic();
         backLeft.onPeriodic();
@@ -142,26 +131,10 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveModulePositions[3] = backRight.getPosition();
 
         odometer.update(getRotation2d(), swerveModulePositions);
-        SmartDashboard.putString("position", getPose().toString());
-        SmartDashboard.putNumber("Robot Heading", getHeading());
 
-        SmartDashboard.putNumber("turn enc 0: ", backRight.getTurnEncoder());
-        SmartDashboard.putNumber("turn enc 1: ", frontRight.getTurnEncoder());
-        SmartDashboard.putNumber("turn enc 2: ", frontLeft.getTurnEncoder());
-        SmartDashboard.putNumber("turn enc 3: ", backLeft.getTurnEncoder());
-
-        
-        if (locked)
-            this.setModulesLock();
-        
-    }
-
-    public void printEncoders() {
-        
-        SmartDashboard.putNumber("Front left abs radians", frontLeft.getAbsoluteEncoderRad());
-        SmartDashboard.putNumber("Front right abs radians", frontRight.getAbsoluteEncoderRad());
-        SmartDashboard.putNumber("Back left abs radians", backLeft.getAbsoluteEncoderRad());
-        SmartDashboard.putNumber("Back right abs radians", backRight.getAbsoluteEncoderRad());
+        if (Constants.dashboardDebugMode) {
+            SmartDashboard.putString("Robot pose", getPose().toString());
+        }
     }
 
     public void stopModules() {
@@ -179,40 +152,10 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
-    public void teleopControl(SwerveModuleState[] desiredStates) {
-        if (locked == false){
-            setModuleStates(desiredStates);
-
-        }
-        else{
-            setModulesLock();
-
-        }
-    }
-
-    public void toggleLock() {
-        locked = !locked;
-        if(locked == true){
-            idle(IdleMode.kBrake);
-        }
-        if(locked == false){
-            idle(IdleMode.kCoast);
-        }
-    }
-
-    public void idle(IdleMode idleMode){
-        frontRight.idle(idleMode);
-        frontLeft.idle(idleMode);
-        backRight.idle(idleMode);
-        backLeft.idle(idleMode);
-    }
-
-    public void setModulesLock() {
-        SwerveModuleState[] lockStates = new SwerveModuleState[4];
-        lockStates[0] = new SwerveModuleState(0.01, Rotation2d.fromDegrees(45));
-        lockStates[1] = new SwerveModuleState(0.01, Rotation2d.fromDegrees(-45));
-        lockStates[2] = new SwerveModuleState(0.01, Rotation2d.fromDegrees(-45));
-        lockStates[3] = new SwerveModuleState(0.01, Rotation2d.fromDegrees(45));
-        setModuleStates(lockStates);
+    public void setIdleMode(IdleMode idleMode) {
+        frontRight.setIdleMode(idleMode);
+        frontLeft.setIdleMode(idleMode);
+        backRight.setIdleMode(idleMode);
+        backLeft.setIdleMode(idleMode);
     }
 }
