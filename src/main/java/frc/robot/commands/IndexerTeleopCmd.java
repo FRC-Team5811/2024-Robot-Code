@@ -12,14 +12,16 @@ public class IndexerTeleopCmd extends Command {
     private final Indexer indexer;
 
     private final Supplier<Boolean> intakeFunction;
+    private final Supplier<Boolean> expelFunction;
     private final Supplier<Boolean> ampScoreFunction;
     private final Supplier<Boolean> speakerScoreFunction;
 
     public IndexerTeleopCmd(Indexer indexer,
-        Supplier<Boolean> intakeFunction, Supplier<Boolean> ampScoreFunction,
-        Supplier<Boolean> speakerScoreFunction) {
+        Supplier<Boolean> intakeFunction, Supplier<Boolean> expelFunction, 
+        Supplier<Boolean> ampScoreFunction, Supplier<Boolean> speakerScoreFunction) {
         this.indexer = indexer;
         this.intakeFunction = intakeFunction;
+        this.expelFunction = expelFunction;
         this.ampScoreFunction = ampScoreFunction;
         this.speakerScoreFunction = speakerScoreFunction;
     }
@@ -34,6 +36,11 @@ public class IndexerTeleopCmd extends Command {
             // manip is manually intaking
 
             // indexer.runMotorsAtIntakingSpeed();
+        }
+        else if (expelFunction.get()) {
+            // manip is manually expelling
+
+            // indexer.runMotorsAtExpellingSpeed();
         }
         else if (ampScoreFunction.get()) {
             // manip is manually amp scoring
