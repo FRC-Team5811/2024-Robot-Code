@@ -13,25 +13,6 @@ public final class Constants {
 
     public static boolean dashboardDebugMode = false;
 
-    public static final double kIntakeMax = 0.5;
-    public static final double kIntakeMin = -0.8;
-
-    public static final int kLinearMotorPort = 12;
-    public static final int kArticulationMotorPort1 = 2;
-    public static final int kArticulationMotorPort2 = 3;
-    public static final int kIntakeMotorPort = 1;
-
-    public static final double kMaxAngleMotorSpeed = 0.15;
-    public static final double kMaxLinearMotorSpeed = 0.8;
-
-    public static final double kArmAngleMin = -70;
-    public static final double kArmAngleMax = 190;
-    public static final double kArmAngleBuffer = 5;
-
-    public static final double kArmLinearMax = 24.625;
-    public static final double kArmLinearMin = 0;
-    public static final double kArmLinearBuffer = 1;
-
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 1 / 5.8462;
@@ -113,6 +94,12 @@ public final class Constants {
         public static final double kDThetaLockTurning = 0;
     }
 
+    public static final class ManipConstants {
+        
+        public static final double shooterAnalogMaxRate = 1.0;
+
+    }
+    
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
