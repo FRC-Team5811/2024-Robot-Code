@@ -96,6 +96,10 @@ public final class Constants {
 
     public static final class ManipConstants {
         
+        public static final double shooterMaxRPM = 5500;
+        public static final double shooterSpeakerRPMLower = 4000;
+        public static final double shooterSpeakerRPMUpper = 4000;
+
         public static final double shooterAnalogMaxRate = 1.0;
 
     }

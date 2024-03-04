@@ -33,15 +33,15 @@ public class RobotContainer {
     public final Joystick manipJoytick = new Joystick(OIConstants.kManipControllerPort);
 
     public final CANSparkMax motor0 = new CANSparkMax(12, MotorType.kBrushless);
-    public final RelativeEncoder motor0Encoder;
+    public final RelativeEncoder shooterEncoderLower;
     public final CANSparkMax motor1 = new CANSparkMax(13, MotorType.kBrushless);
-    public final RelativeEncoder motor1Encoder;
+    public final RelativeEncoder shooterEncoderUpper;
     public final CANSparkMax motor2 = new CANSparkMax(14, MotorType.kBrushless);
     public final CANSparkMax motor3 = new CANSparkMax(15, MotorType.kBrushless);
     public final WPI_VictorSPX motor4 = new WPI_VictorSPX(16);
 
-    public PIDController crapController0;
-    public PIDController crapController1;
+    public PIDController shooterPIDLower;
+    public PIDController shooterPIDUpper;
 
     // POVButton UpPov = new POVButton(manipJoytick, 0);
     // POVButton DownPov = new POVButton(manipJoytick, 180);
@@ -52,10 +52,10 @@ public class RobotContainer {
         configureButtonBindings();
         SmartDashboard.putNumber("Auto", 1);
         
-        motor0Encoder = motor0.getEncoder();
-        motor1Encoder = motor1.getEncoder();
-        crapController0 = new PIDController(0.5, 0.1, 0.3);
-        crapController1 = new PIDController(0.5, 0.1, 0.3);
+        shooterEncoderLower = motor0.getEncoder();
+        shooterEncoderUpper = motor1.getEncoder();
+        shooterPIDLower = new PIDController(0.5, 0.1, 0.3);
+        shooterPIDUpper = new PIDController(0.5, 0.1, 0.3);
     }
 
     private void configureButtonBindings() {

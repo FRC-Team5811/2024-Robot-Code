@@ -129,36 +129,14 @@ public class Robot extends TimedRobot {
         double axis2 = robotContainer.manipJoytick.getRawAxis(2);
         double axis3 = robotContainer.manipJoytick.getRawAxis(3);
 
-        
-        double flipShooter = 1.0;
-        double shooterSetpoint = 4000;
-        double shooterSetpoint2 = 4000;
-        double rpmAt1 = 5500.0;
-        if (axis1 < -0.5) {
-            double speed0 = robotContainer.motor0Encoder.getVelocity();
-            double speed1 = robotContainer.motor1Encoder.getVelocity();
-            double powerTune0 = (1.0/rpmAt1) * robotContainer.crapController0.calculate(speed0, -shooterSetpoint2 * flipShooter);
-            double powerTune1 = (1.0/rpmAt1) * robotContainer.crapController1.calculate(speed1, shooterSetpoint * flipShooter);
-            double basePower0 = (1.0/rpmAt1) * (-shooterSetpoint2 * flipShooter);
-            double basePower1 = (1.0/rpmAt1) * (shooterSetpoint * flipShooter);
-            
-            robotContainer.motor0.set(basePower0 + powerTune0);
-            robotContainer.motor1.set(basePower1 + powerTune1);
-        }
-        else if (axis1 < 0.0) {
-            robotContainer.motor0.set(0.0);
-            robotContainer.motor1.set(0.0);
-        }
-        else {
-            robotContainer.motor0.set(axis1 * flipShooter);
-            robotContainer.motor1.set(-axis1 * flipShooter);
+        if (axis0 < -0.5)
+            runMotorsSpeakerPID();
+        else
+        {
+            robotContainer.motor0.set(0);
+            robotContainer.motor1.set(0);
         }
 
-        SmartDashboard.putNumber("shooter rpm 0", robotContainer.motor0Encoder.getVelocity());
-        SmartDashboard.putNumber("shooter rpm difference", robotContainer.motor0Encoder.getVelocity() + robotContainer.motor1Encoder.getVelocity());
-
-        // robotContainer.motor0.set(axis1 * flipShooter);
-        // robotContainer.motor1.set(-axis1 * flipShooter);
         robotContainer.motor2.set(axis0);
         robotContainer.motor3.set(axis3);
         robotContainer.motor4.set(axis2);
@@ -167,6 +145,22 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("axis1", axis1);
         SmartDashboard.putNumber("axis2", axis2);
         SmartDashboard.putNumber("axis3", axis3);
+    }
+
+    private void runMotorsSpeakerPID() {
+        double shooterSetpointRPMLower = Constants.ManipConstants.shooterSpeakerRPMLower;
+        double shooterSetpointRPMUpper = Constants.ManipConstants.shooterSpeakerRPMUpper;
+        double maxRPM = Constants.ManipConstants.shooterMaxRPM;
+
+        double rpmLower = robotContainer.shooterEncoderLower.getVelocity();
+        double rpmUpper = robotContainer.shooterEncoderUpper.getVelocity();
+        double expectedOutputLower = (1.0/maxRPM) * (shooterSetpointRPMLower);
+        double expectedOutputUpper = (1.0/maxRPM) * (shooterSetpointRPMUpper);
+        double pidOutputLower = (1.0/maxRPM) * robotContainer.shooterPIDLower.calculate(rpmLower, shooterSetpointRPMLower);
+        double pidOutputUpper = (1.0/maxRPM) * robotContainer.shooterPIDUpper.calculate(rpmUpper, shooterSetpointRPMUpper);
+        
+        robotContainer.motor0.set(expectedOutputLower + pidOutputLower);
+        robotContainer.motor1.set(expectedOutputUpper + pidOutputUpper);
     }
 
     @Override
