@@ -5,6 +5,7 @@ import java.io.Console;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -18,6 +19,12 @@ import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
-public class Intake {
-    
+public class Intake extends SubsystemBase {
+        
+    public static final WPI_VictorSPX motor4 = new WPI_VictorSPX(16);
+
+    public Intake() {
+
+    }
+
 }

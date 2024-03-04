@@ -32,17 +32,6 @@ public class RobotContainer {
     public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
     public final Joystick manipJoytick = new Joystick(OIConstants.kManipControllerPort);
 
-    public final CANSparkMax motor0 = new CANSparkMax(12, MotorType.kBrushless);
-    public final RelativeEncoder motor0Encoder;
-    public final CANSparkMax motor1 = new CANSparkMax(13, MotorType.kBrushless);
-    public final RelativeEncoder motor1Encoder;
-    public final CANSparkMax motor2 = new CANSparkMax(14, MotorType.kBrushless);
-    public final CANSparkMax motor3 = new CANSparkMax(15, MotorType.kBrushless);
-    public final WPI_VictorSPX motor4 = new WPI_VictorSPX(16);
-
-    public PIDController crapController0;
-    public PIDController crapController1;
-
     // POVButton UpPov = new POVButton(manipJoytick, 0);
     // POVButton DownPov = new POVButton(manipJoytick, 180);
     // POVButton RightPov = new POVButton(manipJoytick, 90);
