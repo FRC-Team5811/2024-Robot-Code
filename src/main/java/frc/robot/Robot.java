@@ -7,12 +7,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.IndexerTeleopCmd;
+import frc.robot.commands.IntakeTeleopCmd;
+import frc.robot.commands.ShooterTeleopCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 
 public class Robot extends TimedRobot {
@@ -38,7 +45,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-        // robotContainer.swerveSubsystem.gyro.calibrate();
+        configureButtonBindings();
     }
 
     @Override
@@ -100,10 +107,32 @@ public class Robot extends TimedRobot {
         // swerve drive controls on drive controller
         robotContainer.swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
             robotContainer.swerveSubsystem,
-            () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
-            () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-            () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-            () -> !robotContainer.driverJoytick.getRawButton(Constants.OIConstants.RightTriggerButton)));
+            () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverYAxis),
+            () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis),
+            () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis),
+            () -> !robotContainer.driverController.getRawButton(Constants.OIConstants.RightTriggerButton)
+            ));
+
+        // robotContainer.intake.setDefaultCommand(new IntakeTeleopCmd(
+        //     robotContainer.intake,
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
+        //     () -> robotContainer.manipPOVDownValue
+        //     ));
+
+        // robotContainer.indexer.setDefaultCommand(new IndexerTeleopCmd(
+        //     robotContainer.indexer,
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
+        //     () -> robotContainer.manipPOVDownValue,
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
+        //     ));
+
+        // robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
+        //     robotContainer.shooter,
+        //     () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.shooterManualButton),
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton)
+        //     ));
 
         /* this makes sure that the autonomous stops running when
         teleop starts running. If you want the autonomous to
@@ -124,17 +153,45 @@ public class Robot extends TimedRobot {
     // this function is called periodically during operator control
     @Override
     public void teleopPeriodic() {
-        double axis0 = robotContainer.manipJoytick.getRawAxis(0);
-        double axis1 = robotContainer.manipJoytick.getRawAxis(1);
-        double axis2 = robotContainer.manipJoytick.getRawAxis(2);
-        double axis3 = robotContainer.manipJoytick.getRawAxis(3);
+
+        uglyOldCodeThatShouldBeDeleted();
+
+
+    }
+
+    @Override
+    public void testInit() {
+        // cancels all running commands at the start of test mode
+        CommandScheduler.getInstance().cancelAll();
+    }
+
+    // this function is called periodically during test mode
+    @Override
+    public void testPeriodic() {
+    }
+
+    private void configureButtonBindings() {
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightBumperButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroHeading(), robotContainer.swerveSubsystem));
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileTrue(new RunCommand(() -> SwerveJoystickCmd.slowJoe = true));
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileFalse(new RunCommand(() -> SwerveJoystickCmd.slowJoe = false));
+
+        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(new IntakeSequenceCmd());
+        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.ampShotSequenceButton).onTrue(new AmpShotSequenceCmd());
+        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.speakerShotSequenceButton).onTrue(new SpeakerShotSequenceCmd());
+    }
+
+    private void uglyOldCodeThatShouldBeDeleted() {
+        double axis0 = robotContainer.manipController.getRawAxis(0);
+        double axis1 = robotContainer.manipController.getRawAxis(1);
+        double axis2 = robotContainer.manipController.getRawAxis(2);
+        double axis3 = robotContainer.manipController.getRawAxis(3);
 
         if (axis0 < -0.5)
             runMotorsSpeakerPID();
         else
         {
-            robotContainer.motor0.set(0);
-            robotContainer.motor1.set(0);
+            robotContainer.shooterMotorLower.set(0);
+            robotContainer.shooterMotorUpper.set(0);
         }
 
         robotContainer.motor2.set(axis0);
@@ -159,18 +216,7 @@ public class Robot extends TimedRobot {
         double pidOutputLower = (1.0/maxRPM) * robotContainer.shooterPIDLower.calculate(rpmLower, shooterSetpointRPMLower);
         double pidOutputUpper = (1.0/maxRPM) * robotContainer.shooterPIDUpper.calculate(rpmUpper, shooterSetpointRPMUpper);
         
-        robotContainer.motor0.set(expectedOutputLower + pidOutputLower);
-        robotContainer.motor1.set(expectedOutputUpper + pidOutputUpper);
-    }
-
-    @Override
-    public void testInit() {
-        // cancels all running commands at the start of test mode
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-    // this function is called periodically during test mode
-    @Override
-    public void testPeriodic() {
+        robotContainer.shooterMotorLower.set(expectedOutputLower + pidOutputLower);
+        robotContainer.shooterMotorUpper.set(expectedOutputUpper + pidOutputUpper);
     }
 }
