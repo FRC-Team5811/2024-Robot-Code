@@ -13,25 +13,6 @@ public final class Constants {
 
     public static boolean dashboardDebugMode = false;
 
-    public static final double kIntakeMax = 0.5;
-    public static final double kIntakeMin = -0.8;
-
-    public static final int kLinearMotorPort = 12;
-    public static final int kArticulationMotorPort1 = 2;
-    public static final int kArticulationMotorPort2 = 3;
-    public static final int kIntakeMotorPort = 1;
-
-    public static final double kMaxAngleMotorSpeed = 0.15;
-    public static final double kMaxLinearMotorSpeed = 0.8;
-
-    public static final double kArmAngleMin = -70;
-    public static final double kArmAngleMax = 190;
-    public static final double kArmAngleBuffer = 5;
-
-    public static final double kArmLinearMax = 24.625;
-    public static final double kArmLinearMin = 0;
-    public static final double kArmLinearBuffer = 1;
-
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 1 / 5.8462;
@@ -113,6 +94,20 @@ public final class Constants {
         public static final double kDThetaLockTurning = 0;
     }
 
+    public static final class ManipConstants {
+        
+        public static final double shooterMaxRPM = 5500;
+        public static final double shooterSpeakerRPMLower = 4000;
+        public static final double shooterSpeakerRPMUpper = 4000;
+        public static final double shooterControlP = 0.5;
+        public static final double shooterControlI = 0.1;
+        public static final double shooterControlD = 0.3;
+
+
+        public static final double shooterAnalogMaxRate = 1.0;
+
+    }
+    
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
@@ -146,9 +141,6 @@ public final class Constants {
         public static final int kDriverRotAxis = 2;
         public static final int kDriverFieldOrientedButtonIdx = 2;
 
-        public static final int kManipRotateAxis = 1;
-        public static final int kManipLinearAxis = 3;
-
         public static final double kDeadband = 0.05;
 
         //Buttons
@@ -164,6 +156,23 @@ public final class Constants {
         public static final int RightBumperButton = 6;
         public static final int LeftTriggerButton = 7;
         public static final int RightTriggerButton = 8;
+
+        public static final int POVUpButtonAngle = 0;
+        public static final int POVDownButtonAngle = 180;
+        public static final int POVRightButtonAngle = 90;
+        public static final int POVLeftButtonAngle = 270;
+
+        public static final int intakeManualButton = RightBumperButton;
+        public static final int ampScoreManualButton = LeftTriggerButton;
+        public static final int speakerScoreManualButton = RightTriggerButton;
+
+        public static final double shooterManualDeadband = 0.2;
+        public static final int shooterManualAxis = 1;
+        public static final int shooterManualButton = YButton;
+
+        public static final int intakeSequenceButton = AButton;
+        public static final int ampShotSequenceButton = BButton;
+        public static final int speakerShotSequenceButton = XButton;
     }
 
     public static class FieldConstants {

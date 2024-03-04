@@ -19,6 +19,9 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoDriveToPoint;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.AutoTest1;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -27,8 +30,32 @@ public class RobotContainer {
 
     // Subsystems
     public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+    public final Intake intake = new Intake();
+    public final Indexer indexer = new Indexer();
+    public final Shooter shooter = new Shooter();
 
     // Joysticks
+    public final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
+    public final Joystick manipController = new Joystick(OIConstants.kManipControllerPort);
+    public final POVButton manipPOVButtonUp = new POVButton(manipController, 0);
+    public final POVButton manipPOVButtonDown = new POVButton(manipController, 180);
+    public final POVButton manipPOVButtonRight = new POVButton(manipController, 90);
+    public final POVButton manipPOVButtonLeft = new POVButton(manipController, 270);
+    public boolean manipPOVUpValue = false;
+    public boolean manipPOVDownValue = false;
+    public boolean manipPOVRightValue = false;
+    public boolean manipPOVLeftValue = false;
+
+    public final CANSparkMax shooterMotorLower = new CANSparkMax(12, MotorType.kBrushless);
+    public final RelativeEncoder shooterEncoderLower;
+    public final CANSparkMax shooterMotorUpper = new CANSparkMax(13, MotorType.kBrushless);
+    public final RelativeEncoder shooterEncoderUpper;
+    public final CANSparkMax motor2 = new CANSparkMax(14, MotorType.kBrushless);
+    public final CANSparkMax motor3 = new CANSparkMax(15, MotorType.kBrushless);
+    public final WPI_VictorSPX motor4 = new WPI_VictorSPX(16);
+
+    public PIDController shooterPIDLower;
+    public PIDController shooterPIDUpper;
     public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
     public final Joystick manipJoytick = new Joystick(OIConstants.kManipControllerPort);
 
@@ -38,19 +65,30 @@ public class RobotContainer {
     // POVButton LeftPov = new POVButton(manipJoytick, 270);
 
     public RobotContainer() {
-        configureButtonBindings();
+        
         SmartDashboard.putNumber("Auto", 1);
         
-        motor0Encoder = motor0.getEncoder();
-        motor1Encoder = motor1.getEncoder();
-        crapController0 = new PIDController(0.5, 0.1, 0.3);
-        crapController1 = new PIDController(0.5, 0.1, 0.3);
-    }
+        shooterEncoderLower = shooterMotorLower.getEncoder();
+        shooterEncoderUpper = shooterMotorUpper.getEncoder();
+        shooterPIDLower = new PIDController(
+            Constants.ManipConstants.shooterControlP,
+            Constants.ManipConstants.shooterControlI,
+            Constants.ManipConstants.shooterControlD);
+        shooterPIDUpper = new PIDController(
+            Constants.ManipConstants.shooterControlP,
+            Constants.ManipConstants.shooterControlI,
+            Constants.ManipConstants.shooterControlD);
 
-    private void configureButtonBindings() {
-        new JoystickButton(driverJoytick, Constants.OIConstants.RightBumperButton).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading(), swerveSubsystem));
-        new JoystickButton(driverJoytick, Constants.OIConstants.LeftBumperButton).whileTrue(new RunCommand(() -> SwerveJoystickCmd.slowJoe = true));
-        new JoystickButton(driverJoytick, Constants.OIConstants.LeftBumperButton).whileFalse(new RunCommand(() -> SwerveJoystickCmd.slowJoe = false));
+        // POV buttons work differently... let's store the raw value on changed
+        // would be cleaner to have a dedicated "controller" wrapper class, but we may not even use this code
+        manipPOVButtonUp.onTrue(new InstantCommand(() -> manipPOVUpValue = true));
+        manipPOVButtonUp.onFalse(new InstantCommand(() -> manipPOVUpValue = false));
+        manipPOVButtonDown.onTrue(new InstantCommand(() -> manipPOVDownValue = true));
+        manipPOVButtonDown.onFalse(new InstantCommand(() -> manipPOVDownValue = false));
+        manipPOVButtonRight.onTrue(new InstantCommand(() -> manipPOVRightValue = true));
+        manipPOVButtonRight.onFalse(new InstantCommand(() -> manipPOVRightValue = false));
+        manipPOVButtonLeft.onTrue(new InstantCommand(() -> manipPOVLeftValue = true));
+        manipPOVButtonLeft.onFalse(new InstantCommand(() -> manipPOVLeftValue = false));
     }
 
     public Command getAutonomousCommand(SwerveSubsystem swerveSubsystem, Pose2d pose1, Pose2d pose2, Pose2d pose3, Pose2d pose4, Pose2d pose5) {

@@ -7,12 +7,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.IndexerTeleopCmd;
+import frc.robot.commands.IntakeTeleopCmd;
+import frc.robot.commands.ShooterTeleopCmd;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -42,7 +49,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
-        // robotContainer.swerveSubsystem.gyro.calibrate();
+        configureButtonBindings();
     }
 
     @Override
@@ -104,10 +111,32 @@ public class Robot extends TimedRobot {
         // swerve drive controls on drive controller
         robotContainer.swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
             robotContainer.swerveSubsystem,
-            () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverYAxis),
-            () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverXAxis),
-            () -> robotContainer.driverJoytick.getRawAxis(OIConstants.kDriverRotAxis),
-            () -> !robotContainer.driverJoytick.getRawButton(Constants.OIConstants.RightTriggerButton)));
+            () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverYAxis),
+            () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis),
+            () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis),
+            () -> !robotContainer.driverController.getRawButton(Constants.OIConstants.RightTriggerButton)
+            ));
+
+        // robotContainer.intake.setDefaultCommand(new IntakeTeleopCmd(
+        //     robotContainer.intake,
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
+        //     () -> robotContainer.manipPOVDownValue
+        //     ));
+
+        // robotContainer.indexer.setDefaultCommand(new IndexerTeleopCmd(
+        //     robotContainer.indexer,
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
+        //     () -> robotContainer.manipPOVDownValue,
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
+        //     ));
+
+        // robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
+        //     robotContainer.shooter,
+        //     () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.shooterManualButton),
+        //     () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton)
+        //     ));
 
         /* this makes sure that the autonomous stops running when
         teleop starts running. If you want the autonomous to
@@ -128,49 +157,10 @@ public class Robot extends TimedRobot {
     // this function is called periodically during operator control
     @Override
     public void teleopPeriodic() {
-        double axis0 = robotContainer.manipJoytick.getRawAxis(0);
-        double axis1 = robotContainer.manipJoytick.getRawAxis(1);
-        double axis2 = robotContainer.manipJoytick.getRawAxis(2);
-        double axis3 = robotContainer.manipJoytick.getRawAxis(3);
 
-        
-        double flipShooter = 1.0;
-        double shooterSetpoint = 4000;
-        double shooterSetpoint2 = 4000;
-        double rpmAt1 = 5500.0;
-        if (axis1 < -0.5) {
-            double speed0 = Shooter.motor0Encoder.getVelocity();
-            double speed1 = Shooter.motor1Encoder.getVelocity();
-            double powerTune0 = (1.0/rpmAt1) * Shooter.crapController0.calculate(speed0, -shooterSetpoint2 * flipShooter);
-            double powerTune1 = (1.0/rpmAt1) * Shooter.crapController1.calculate(speed1, shooterSetpoint * flipShooter);
-            double basePower0 = (1.0/rpmAt1) * (-shooterSetpoint2 * flipShooter);
-            double basePower1 = (1.0/rpmAt1) * (shooterSetpoint * flipShooter);
-            
-            Shooter.motor0.set(basePower0 + powerTune0);
-            Shooter.motor1.set(basePower1 + powerTune1);
-        }
-        else if (axis1 < 0.0) {
-            Shooter.motor0.set(0.0);
-            Shooter.motor1.set(0.0);
-        }
-        else {
-            Shooter.motor0.set(axis1 * flipShooter);
-            Shooter.motor1.set(-axis1 * flipShooter);
-        }
+        uglyOldCodeThatShouldBeDeleted();
 
-        SmartDashboard.putNumber("shooter rpm 0", robotContainer.motor0Encoder.getVelocity());
-        SmartDashboard.putNumber("shooter rpm difference", robotContainer.motor0Encoder.getVelocity() + robotContainer.motor1Encoder.getVelocity());
 
-        // robotContainer.motor0.set(axis1 * flipShooter);
-        // robotContainer.motor1.set(-axis1 * flipShooter);
-        robotContainer.motor2.set(axis0);
-        Indexer.motor3.set(axis3);
-        Intake.motor4.set(axis2);
-
-        SmartDashboard.putNumber("axis0", axis0);
-        SmartDashboard.putNumber("axis1", axis1);
-        SmartDashboard.putNumber("axis2", axis2);
-        SmartDashboard.putNumber("axis3", axis3);
     }
 
     @Override
@@ -182,5 +172,55 @@ public class Robot extends TimedRobot {
     // this function is called periodically during test mode
     @Override
     public void testPeriodic() {
+    }
+
+    private void configureButtonBindings() {
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightBumperButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroHeading(), robotContainer.swerveSubsystem));
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileTrue(new RunCommand(() -> SwerveJoystickCmd.slowJoe = true));
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileFalse(new RunCommand(() -> SwerveJoystickCmd.slowJoe = false));
+
+        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(new IntakeSequenceCmd());
+        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.ampShotSequenceButton).onTrue(new AmpShotSequenceCmd());
+        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.speakerShotSequenceButton).onTrue(new SpeakerShotSequenceCmd());
+    }
+
+    private void uglyOldCodeThatShouldBeDeleted() {
+        double axis0 = robotContainer.manipController.getRawAxis(0);
+        double axis1 = robotContainer.manipController.getRawAxis(1);
+        double axis2 = robotContainer.manipController.getRawAxis(2);
+        double axis3 = robotContainer.manipController.getRawAxis(3);
+
+        if (axis0 < -0.5)
+            runMotorsSpeakerPID();
+        else
+        {
+            robotContainer.shooterMotorLower.set(0);
+            robotContainer.shooterMotorUpper.set(0);
+        }
+
+        robotContainer.motor2.set(axis0);
+        robotContainer.motor3.set(axis3);
+        robotContainer.motor4.set(axis2);
+
+        SmartDashboard.putNumber("axis0", axis0);
+        SmartDashboard.putNumber("axis1", axis1);
+        SmartDashboard.putNumber("axis2", axis2);
+        SmartDashboard.putNumber("axis3", axis3);
+    }
+
+    private void runMotorsSpeakerPID() {
+        double shooterSetpointRPMLower = Constants.ManipConstants.shooterSpeakerRPMLower;
+        double shooterSetpointRPMUpper = Constants.ManipConstants.shooterSpeakerRPMUpper;
+        double maxRPM = Constants.ManipConstants.shooterMaxRPM;
+
+        double rpmLower = robotContainer.shooterEncoderLower.getVelocity();
+        double rpmUpper = robotContainer.shooterEncoderUpper.getVelocity();
+        double expectedOutputLower = (1.0/maxRPM) * (shooterSetpointRPMLower);
+        double expectedOutputUpper = (1.0/maxRPM) * (shooterSetpointRPMUpper);
+        double pidOutputLower = (1.0/maxRPM) * robotContainer.shooterPIDLower.calculate(rpmLower, shooterSetpointRPMLower);
+        double pidOutputUpper = (1.0/maxRPM) * robotContainer.shooterPIDUpper.calculate(rpmUpper, shooterSetpointRPMUpper);
+        
+        robotContainer.shooterMotorLower.set(expectedOutputLower + pidOutputLower);
+        robotContainer.shooterMotorUpper.set(expectedOutputUpper + pidOutputUpper);
     }
 }
