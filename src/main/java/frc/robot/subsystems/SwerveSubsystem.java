@@ -79,6 +79,8 @@ public class SwerveSubsystem extends SubsystemBase {
             "backRight");
         
         gyro = new AHRS(SPI.Port.kMXP);
+
+        resetModuleEncoders();
         zeroHeading();
     }
 

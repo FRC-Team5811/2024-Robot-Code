@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.PID;
+import frc.robot.Robot;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.Consumer;
@@ -69,6 +70,8 @@ public class AutoDriveToPoint extends Command {
   thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
   prevChassisSpeeds = swerveSubsystem.getChassisSpeeds();
+
+  targetPose = Robot.processPoseWithAllianceColor(targetPose);
 
 
   // Pose2d currentPose = swerveSubsystem.getPose();
