@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public final class Constants {
 
-    public static boolean dashboardDebugMode = false;
+    public static boolean dashboardDebugMode = true;
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
@@ -135,12 +135,6 @@ public final class Constants {
     public static final class OIConstants {
         public static final int kDriverControllerPort = 0;
         public static final int kManipControllerPort = 1;
-
-        public static final int kDriverYAxis = 1;
-        public static final int kDriverXAxis = 0;
-        public static final int kDriverRotAxis = 2;
-        public static final int kDriverFieldOrientedButtonIdx = 2;
-
         public static final double kDeadband = 0.05;
 
         //Buttons
@@ -162,15 +156,26 @@ public final class Constants {
         public static final int POVRightButtonAngle = 90;
         public static final int POVLeftButtonAngle = 270;
 
+        // drive bindings
+        public static final int kDriverYAxis = 1;
+        public static final int kDriverXAxis = 0;
+        public static final int kDriverRotAxis = 2;
+        public static final int driverFieldOrientedButton = AButton;
+        public static final int driverSlowModeButton = LeftTriggerButton;
+
+        // intake bindings
         public static final int intakeManualButton = RightBumperButton;
+        public static final int intakeSequenceButton = AButton;
+        
+
+        // indexer bindings
         public static final int ampScoreManualButton = LeftTriggerButton;
         public static final int speakerScoreManualButton = RightTriggerButton;
 
-        public static final double shooterManualDeadband = 0.2;
+        // shooter bindings
+        public static final double shooterCustomDeadband = 0.2;
         public static final int shooterManualAxis = 1;
         public static final int shooterManualButton = YButton;
-
-        public static final int intakeSequenceButton = AButton;
         public static final int ampShotSequenceButton = BButton;
         public static final int speakerShotSequenceButton = XButton;
     }

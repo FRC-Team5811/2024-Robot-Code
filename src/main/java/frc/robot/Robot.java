@@ -23,7 +23,7 @@ import frc.robot.commands.AutoSpeakerSequence;
 import frc.robot.commands.IndexerTeleopCmd;
 import frc.robot.commands.IntakeTeleopCmd;
 import frc.robot.commands.ShooterTeleopCmd;
-import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.SwerveTeleopCmd;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Indexer;
@@ -109,23 +109,34 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        
         CommandScheduler.getInstance().cancelAll();
+        /* this makes sure that the autonomous stops running when
+        teleop starts running. If you want the autonomous to
+        continue until interrupted by another command, remove
+        this line or comment it out */
+        if (autonomousCommand != null) {
+            autonomousCommand.cancel(); // is this redundant since we cancelled all commands above?
+        }
 
-        // swerve drive controls on drive controller
-        robotContainer.swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
+        // manual swerve drive controls on drive controller
+        robotContainer.swerveSubsystem.setDefaultCommand(new SwerveTeleopCmd(
             robotContainer.swerveSubsystem,
             () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverYAxis),
             () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis),
             () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis),
-            () -> !robotContainer.driverController.getRawButton(Constants.OIConstants.RightTriggerButton)
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverFieldOrientedButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverSlowModeButton)
             ));
 
+        // manual intake controls on manip controller
         robotContainer.intake.setDefaultCommand(new IntakeTeleopCmd(
             robotContainer.intake,
             () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
             () -> robotContainer.manipPOVDownValue
             ));
 
+        // manual indexer controls on manip controller
         robotContainer.indexer.setDefaultCommand(new IndexerTeleopCmd(
             robotContainer.indexer,
             () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
@@ -134,6 +145,7 @@ public class Robot extends TimedRobot {
             () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
             ));
 
+        // manual shooter controls on manip controller
         robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
             robotContainer.shooter,
             () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
@@ -141,20 +153,7 @@ public class Robot extends TimedRobot {
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton)
             ));
 
-        /* this makes sure that the autonomous stops running when
-        teleop starts running. If you want the autonomous to
-        continue until interrupted by another command, remove
-        this line or comment it out */
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
-
         robotContainer.swerveSubsystem.resetModuleEncoders();
-
-        // temporary, used for reading absolute encoder values
-        // robotContainer.swerveSubsystem.printEncoders();
-        // System.out.println("ENCOOODEEERRR: " + robotContainer.swerveSubsystem.getHeading());
-
     }
 
     // this function is called periodically during operator control
@@ -177,8 +176,6 @@ public class Robot extends TimedRobot {
 
     private void configureButtonBindings() {
         new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightBumperButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroHeading(), robotContainer.swerveSubsystem));
-        new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileTrue(new RunCommand(() -> SwerveJoystickCmd.slowJoe = true));
-        new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileFalse(new RunCommand(() -> SwerveJoystickCmd.slowJoe = false));
 
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(
             new AutoIntakeSequence(robotContainer.intake, robotContainer.indexer, false));

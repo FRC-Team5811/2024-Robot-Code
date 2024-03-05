@@ -35,14 +35,14 @@ public class ShooterTeleopCmd extends Command {
     public void execute() {
         
         if (shooterButtonFunction.get()) {
-            // manip is pressing shooter button
+            // manip is pressing speaker shot ramp up button
 
             shooter.autoSpeakerShotRampUp();
             shooter.runSpeakerDiverter();
         }
         else {
             double input = shooterAnalogFunction.get();
-            input = Math.abs(input) > OIConstants.shooterManualDeadband ? input : 0.0;
+            input = Math.abs(input) > OIConstants.shooterCustomDeadband ? input : 0.0;
             input = shooterAnalogLimiter.calculate(input);
 
             shooter.manualSpeakerMotors(input);
