@@ -25,9 +25,9 @@ import java.util.function.Supplier;
 
 public class AutoSpeakerSequence extends Command {
 
-private final Shooter shooter;
-private final Indexer indexer;
-private int cycles = 0;
+    private final Shooter shooter;
+    private final Indexer indexer;
+    private int cycles = 0;
 
     public AutoSpeakerSequence(Shooter shooter, Indexer indexer) {
         this.indexer = indexer;
@@ -36,11 +36,11 @@ private int cycles = 0;
         addRequirements(indexer);
     }
 
-@Override
+    @Override
     public void initialize() {
     }
 
-@Override
+    @Override
     public void execute() {
         cycles += 1;
         shooter.autoSpeakerShotRampUp();
@@ -50,7 +50,7 @@ private int cycles = 0;
         }
     }
 
-@Override
+    @Override
     public boolean isFinished() {
         if (cycles > 5*50) {
             return true;
@@ -58,14 +58,13 @@ private int cycles = 0;
         return false;
     }
 
-@Override
+    @Override
     public void end(boolean interrupted) {
         shooter.stopSpeakerMotors();
         shooter.stopDiverter();
         indexer.stop();
+
+        // reset state
+        cycles = 0;
     }
-    
-
-
-
 }

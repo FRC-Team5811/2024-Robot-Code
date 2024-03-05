@@ -39,6 +39,9 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         shooterEncoderLower = speakerLowerMotor.getEncoder();
         shooterEncoderUpper = speakerUpperMotor.getEncoder();
+
+        diverterMotor.setInverted(true);
+        speakerLowerMotor.setInverted(true);
     }
 
     public void autoSpeakerShotRampUp() {

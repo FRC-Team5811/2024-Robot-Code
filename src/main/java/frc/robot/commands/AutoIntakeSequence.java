@@ -24,10 +24,10 @@ import java.util.function.Supplier;
 
 public class AutoIntakeSequence extends Command {
 
-private final boolean timeOut;
-private final Intake intake;
-private final Indexer indexer;
-private int cycles = 0;
+    private final boolean timeOut;
+    private final Intake intake;
+    private final Indexer indexer;
+    private int cycles = 0;
 
     public AutoIntakeSequence(Intake intake, Indexer indexer, boolean timeOut) {
         this.timeOut = timeOut;
@@ -37,18 +37,18 @@ private int cycles = 0;
         addRequirements(indexer);
     }
 
-@Override
+    @Override
     public void initialize() {
     }
 
-@Override
+    @Override
     public void execute() {
         cycles += 1;
         intake.pull();
         indexer.pull();
     }
 
-@Override
+    @Override
     public boolean isFinished() {
         if (cycles > 5*50 && timeOut) {
             return true;
@@ -56,13 +56,12 @@ private int cycles = 0;
         return indexer.getLimitBool();  
     }
 
-@Override
+    @Override
     public void end(boolean interrupted) {
         intake.stop();
         indexer.stop();
+
+        // reset state
+        cycles = 0;
     }
-    
-
-
-
 }

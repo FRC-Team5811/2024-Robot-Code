@@ -31,7 +31,7 @@ public class Indexer extends SubsystemBase {
     public final double indexerPullSpeed = 1;
 
     public Indexer () {
-
+        indexerMotor.setInverted(true);
     }
 
     public void push() {
@@ -55,7 +55,7 @@ public class Indexer extends SubsystemBase {
     }
 
     public boolean getLimitBool() {
-        return limitSwitch.get();
+        return false; // limitSwitch.get();
     }
 
 }
