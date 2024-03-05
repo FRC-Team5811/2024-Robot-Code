@@ -24,6 +24,7 @@ public class IndexerTeleopCmd extends Command {
         this.expelFunction = expelFunction;
         this.ampScoreFunction = ampScoreFunction;
         this.speakerScoreFunction = speakerScoreFunction;
+        addRequirements(indexer);
     }
 
     @Override
@@ -35,31 +36,31 @@ public class IndexerTeleopCmd extends Command {
         if (intakeFunction.get()) {
             // manip is manually intaking
 
-            // indexer.runMotorsAtIntakingSpeed();
+            indexer.pull();
         }
         else if (expelFunction.get()) {
             // manip is manually expelling
 
-            // indexer.runMotorsAtExpellingSpeed();
+            indexer.push();
         }
         else if (ampScoreFunction.get()) {
             // manip is manually amp scoring
 
-            // indexer.runMotorsAtAmpScoringSpeed();
+            indexer.ampScore();
         }
         else if (speakerScoreFunction.get()) {
             // manip is manually speaker scoring
 
-            // indexer.runMotorsAtSpeakerScoringSpeed();
+            indexer.speakerScore();
         }
         else {
-            // indexer.runMotorsZeroSpeed();
+            indexer.stop();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        // indexer.runMotorsZeroSpeed();
+        indexer.stop();
     }
 
     @Override

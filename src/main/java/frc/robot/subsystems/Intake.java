@@ -15,16 +15,32 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class Intake extends SubsystemBase {
-        
-    public static final WPI_VictorSPX motor4 = new WPI_VictorSPX(16);
+    
+    public final WPI_VictorSPX intakeMotor = new WPI_VictorSPX(16);
+    public final double intakeSpeed = 1;
 
     public Intake() {
-
+        
     }
+
+    public void pull() {
+        intakeMotor.set(intakeSpeed);
+    }
+
+    public void push() {
+        intakeMotor.set(-intakeSpeed);
+    }
+
+    public void stop() {
+        intakeMotor.stopMotor();
+    }
+
 
 }

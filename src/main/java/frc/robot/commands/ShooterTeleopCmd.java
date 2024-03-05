@@ -24,6 +24,7 @@ public class ShooterTeleopCmd extends Command {
         this.shooterButtonFunction = shooterHoldFunction;
         this.ampScoreButtonFunction = ampScoreButtonFunction;
         shooterAnalogLimiter = new SlewRateLimiter(Constants.ManipConstants.shooterAnalogMaxRate);
+        addRequirements(shooter);
     }
 
     @Override
@@ -36,34 +37,34 @@ public class ShooterTeleopCmd extends Command {
         if (shooterButtonFunction.get()) {
             // manip is pressing shooter button
 
-            // shooter.runMotorsSpeakerPID();
-            // shooter.runDiverterSpeakerShot();
+            shooter.autoSpeakerShotRampUp();
+            shooter.runSpeakerDiverter();
         }
         else {
             double input = shooterAnalogFunction.get();
             input = Math.abs(input) > OIConstants.shooterManualDeadband ? input : 0.0;
             input = shooterAnalogLimiter.calculate(input);
 
-            // shooter.runMotorsDirectSpeed(input);
+            shooter.manualSpeakerMotors(input);
 
             // determine how to run the diverter/amp shooter
-            if (input != 0.0) { // shooter is being manually controlled via analog axis
-                
-                // shooter.runDiverterSpeakerShot();
+            if (ampScoreButtonFunction.get()) { // shooter not being controlled, we can safely make an amp shot
+                shooter.runAmpDiverter();
             }
-            else if (ampScoreButtonFunction.get()) { // shooter not being controlled, we can safely make an amp shot
-                // shooter.runDiverterAmpShot();
+            else if (input != 0.0) { // shooter is being manually controlled via analog axis
+                
+                shooter.runSpeakerDiverter();
             }
             else {
-                // shooter.stopDiverter();
+                shooter.stopDiverter();
             }
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        // shooter.runMotorsZeroSpeed();
-        // shooter.stopDiverter();
+        shooter.stopDiverter();
+        shooter.stopSpeakerMotors();
     }
 
     @Override

@@ -7,6 +7,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.math.controller.PIDController;
@@ -21,9 +23,39 @@ import frc.robot.Constants.ModuleConstants;
 
 public class Indexer extends SubsystemBase {
 
-    public static final CANSparkMax motor3 = new CANSparkMax(15, MotorType.kBrushless);
-    //add limit switch here
+    public final CANSparkMax indexerMotor = new CANSparkMax(15, MotorType.kBrushless);
+    private DigitalInput limitSwitch = new DigitalInput(0);
+    public final double indexerAmpShotMotorSpeed = 0.3;
+    public final double indexerSpeakerShotMotorSpeed = 0.3;
+    public final double indexerPushSpeed = -1;
+    public final double indexerPullSpeed = 1;
 
     public Indexer () {
+
     }
+
+    public void push() {
+        indexerMotor.set(indexerPushSpeed);
+    }
+
+    public void pull() {
+        indexerMotor.set(indexerPullSpeed);
+    }
+
+    public void ampScore() {
+        indexerMotor.set(indexerAmpShotMotorSpeed);
+    }
+
+    public void speakerScore() {
+        indexerMotor.set(indexerSpeakerShotMotorSpeed);
+    }
+
+    public void stop() {
+        indexerMotor.stopMotor();
+    }
+
+    public boolean getLimitBool() {
+        return limitSwitch.get();
+    }
+
 }

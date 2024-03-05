@@ -17,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoAmpSequence;
+import frc.robot.commands.AutoIntakeSequence;
+import frc.robot.commands.AutoSpeakerSequence;
 import frc.robot.commands.IndexerTeleopCmd;
 import frc.robot.commands.IntakeTeleopCmd;
 import frc.robot.commands.ShooterTeleopCmd;
@@ -117,26 +120,26 @@ public class Robot extends TimedRobot {
             () -> !robotContainer.driverController.getRawButton(Constants.OIConstants.RightTriggerButton)
             ));
 
-        // robotContainer.intake.setDefaultCommand(new IntakeTeleopCmd(
-        //     robotContainer.intake,
-        //     () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
-        //     () -> robotContainer.manipPOVDownValue
-        //     ));
+        robotContainer.intake.setDefaultCommand(new IntakeTeleopCmd(
+            robotContainer.intake,
+            () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
+            () -> robotContainer.manipPOVDownValue
+            ));
 
-        // robotContainer.indexer.setDefaultCommand(new IndexerTeleopCmd(
-        //     robotContainer.indexer,
-        //     () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
-        //     () -> robotContainer.manipPOVDownValue,
-        //     () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
-        //     () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
-        //     ));
+        robotContainer.indexer.setDefaultCommand(new IndexerTeleopCmd(
+            robotContainer.indexer,
+            () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
+            () -> robotContainer.manipPOVDownValue,
+            () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
+            () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
+            ));
 
-        // robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
-        //     robotContainer.shooter,
-        //     () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
-        //     () -> robotContainer.manipController.getRawButton(OIConstants.shooterManualButton),
-        //     () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton)
-        //     ));
+        robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
+            robotContainer.shooter,
+            () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
+            () -> robotContainer.manipController.getRawButton(OIConstants.shooterManualButton),
+            () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton)
+            ));
 
         /* this makes sure that the autonomous stops running when
         teleop starts running. If you want the autonomous to
@@ -158,8 +161,6 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
 
-        uglyOldCodeThatShouldBeDeleted();
-
 
     }
 
@@ -179,48 +180,11 @@ public class Robot extends TimedRobot {
         new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileTrue(new RunCommand(() -> SwerveJoystickCmd.slowJoe = true));
         new JoystickButton(robotContainer.driverController, Constants.OIConstants.LeftBumperButton).whileFalse(new RunCommand(() -> SwerveJoystickCmd.slowJoe = false));
 
-        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(new IntakeSequenceCmd());
-        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.ampShotSequenceButton).onTrue(new AmpShotSequenceCmd());
-        // new JoystickButton(robotContainer.manipController, Constants.OIConstants.speakerShotSequenceButton).onTrue(new SpeakerShotSequenceCmd());
-    }
-
-    private void uglyOldCodeThatShouldBeDeleted() {
-        double axis0 = robotContainer.manipController.getRawAxis(0);
-        double axis1 = robotContainer.manipController.getRawAxis(1);
-        double axis2 = robotContainer.manipController.getRawAxis(2);
-        double axis3 = robotContainer.manipController.getRawAxis(3);
-
-        if (axis0 < -0.5)
-            runMotorsSpeakerPID();
-        else
-        {
-            robotContainer.shooterMotorLower.set(0);
-            robotContainer.shooterMotorUpper.set(0);
-        }
-
-        robotContainer.motor2.set(axis0);
-        robotContainer.motor3.set(axis3);
-        robotContainer.motor4.set(axis2);
-
-        SmartDashboard.putNumber("axis0", axis0);
-        SmartDashboard.putNumber("axis1", axis1);
-        SmartDashboard.putNumber("axis2", axis2);
-        SmartDashboard.putNumber("axis3", axis3);
-    }
-
-    private void runMotorsSpeakerPID() {
-        double shooterSetpointRPMLower = Constants.ManipConstants.shooterSpeakerRPMLower;
-        double shooterSetpointRPMUpper = Constants.ManipConstants.shooterSpeakerRPMUpper;
-        double maxRPM = Constants.ManipConstants.shooterMaxRPM;
-
-        double rpmLower = robotContainer.shooterEncoderLower.getVelocity();
-        double rpmUpper = robotContainer.shooterEncoderUpper.getVelocity();
-        double expectedOutputLower = (1.0/maxRPM) * (shooterSetpointRPMLower);
-        double expectedOutputUpper = (1.0/maxRPM) * (shooterSetpointRPMUpper);
-        double pidOutputLower = (1.0/maxRPM) * robotContainer.shooterPIDLower.calculate(rpmLower, shooterSetpointRPMLower);
-        double pidOutputUpper = (1.0/maxRPM) * robotContainer.shooterPIDUpper.calculate(rpmUpper, shooterSetpointRPMUpper);
-        
-        robotContainer.shooterMotorLower.set(expectedOutputLower + pidOutputLower);
-        robotContainer.shooterMotorUpper.set(expectedOutputUpper + pidOutputUpper);
+        new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(
+            new AutoIntakeSequence(robotContainer.intake, robotContainer.indexer, false));
+        new JoystickButton(robotContainer.manipController, Constants.OIConstants.ampShotSequenceButton).onTrue(
+            new AutoAmpSequence(robotContainer.shooter, robotContainer.indexer));
+        new JoystickButton(robotContainer.manipController, Constants.OIConstants.speakerShotSequenceButton).onTrue(
+            new AutoSpeakerSequence(robotContainer.shooter, robotContainer.indexer));
     }
 }

@@ -8,13 +8,14 @@ public class IntakeTeleopCmd extends Command {
     private final Intake intake;
 
     private final Supplier<Boolean> intakeFunction;
-    private final Supplier<Boolean> expelFunction;
+    private final Supplier<Boolean> pushFunction;
 
     public IntakeTeleopCmd(Intake intake,
         Supplier<Boolean> intakeFunction, Supplier<Boolean> expelFunction) {
         this.intake = intake;
         this.intakeFunction = intakeFunction;
-        this.expelFunction = expelFunction;
+        this.pushFunction = expelFunction;
+        addRequirements(intake);
     }
 
     @Override
@@ -26,21 +27,21 @@ public class IntakeTeleopCmd extends Command {
         if (intakeFunction.get()) {
             // manip is manually intaking
 
-            // intake.runMotorsAtIntakingSpeed();
+            intake.pull();
         }
-        if (expelFunction.get()) {
+        else if (pushFunction.get()) {
             // manip is manually expelling
 
-            // intake.runMotorsAtExpellingSpeed();
+            intake.push();
         }
         else {
-            // intake.runMotorsZeroSpeed();
+            intake.stop();
         }
     }
 
     @Override
     public void end(boolean interrupted) {
-        // intake.runMotorsZeroSpeed();
+        intake.stop();
     }
 
     @Override

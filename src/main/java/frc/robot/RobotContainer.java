@@ -46,16 +46,6 @@ public class RobotContainer {
     public boolean manipPOVRightValue = false;
     public boolean manipPOVLeftValue = false;
 
-    public final CANSparkMax shooterMotorLower = new CANSparkMax(12, MotorType.kBrushless);
-    public final RelativeEncoder shooterEncoderLower;
-    public final CANSparkMax shooterMotorUpper = new CANSparkMax(13, MotorType.kBrushless);
-    public final RelativeEncoder shooterEncoderUpper;
-    public final CANSparkMax motor2 = new CANSparkMax(14, MotorType.kBrushless);
-    public final CANSparkMax motor3 = new CANSparkMax(15, MotorType.kBrushless);
-    public final WPI_VictorSPX motor4 = new WPI_VictorSPX(16);
-
-    public PIDController shooterPIDLower;
-    public PIDController shooterPIDUpper;
     public final Joystick driverJoytick = new Joystick(OIConstants.kDriverControllerPort);
     public final Joystick manipJoytick = new Joystick(OIConstants.kManipControllerPort);
 
@@ -67,17 +57,6 @@ public class RobotContainer {
     public RobotContainer() {
         
         SmartDashboard.putNumber("Auto", 1);
-        
-        shooterEncoderLower = shooterMotorLower.getEncoder();
-        shooterEncoderUpper = shooterMotorUpper.getEncoder();
-        shooterPIDLower = new PIDController(
-            Constants.ManipConstants.shooterControlP,
-            Constants.ManipConstants.shooterControlI,
-            Constants.ManipConstants.shooterControlD);
-        shooterPIDUpper = new PIDController(
-            Constants.ManipConstants.shooterControlP,
-            Constants.ManipConstants.shooterControlI,
-            Constants.ManipConstants.shooterControlD);
 
         // POV buttons work differently... let's store the raw value on changed
         // would be cleaner to have a dedicated "controller" wrapper class, but we may not even use this code
