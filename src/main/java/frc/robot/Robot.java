@@ -73,11 +73,11 @@ public class Robot extends TimedRobot {
         timer = new Timer();
         timer.start();
 
-        // SequentialCommandGroup resetEncodersOnStartup = new SequentialCommandGroup(
-        //     new WaitCommand(3),
-        //     new InstantCommand(() -> robotContainer.swerveSubsystem.resetModuleEncoders())
-        // );
-        // resetEncodersOnStartup.schedule();
+        SequentialCommandGroup resetEncodersOnStartup = new SequentialCommandGroup(
+            new WaitCommand(5),
+            new InstantCommand(() -> robotContainer.swerveSubsystem.resetModuleEncoders(), robotContainer.swerveSubsystem)
+        );
+        resetEncodersOnStartup.schedule();
     }
 
     @Override
