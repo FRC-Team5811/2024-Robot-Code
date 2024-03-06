@@ -79,22 +79,27 @@ public class SwerveSubsystem extends SubsystemBase {
             "backRight");
         
         gyro = new AHRS(SPI.Port.kMXP);
-
-        resetModuleEncoders();
-        zeroHeading();
     }
 
-    public void zeroHeading() {
+    public void zeroGyroAngle() {
         gyro.reset();
     }
 
     // should be counter-clockwise positive!!
-    public double getHeading() {
-        return Math.IEEEremainder(-gyro.getYaw(), 360) * Math.PI /   180;
+    private double getGyroAngleRad() {
+        return Math.IEEEremainder(-gyro.getYaw(), 360) * Math.PI / 180;
     }
 
-    public Rotation2d getRotation2d() {
-        return Rotation2d.fromRadians(getHeading());
+    private Rotation2d getGyroRotation2d() {
+        return Rotation2d.fromRadians(getGyroAngleRad());
+    }
+
+    public double getPoseAngleRad() {
+        return odometer.getPoseMeters().getRotation().getRadians();
+    }
+
+    public Rotation2d getPoseRotation2d() {
+        return odometer.getPoseMeters().getRotation();
     }
     
     public Pose2d getPose() {
@@ -102,7 +107,10 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getChassisSpeeds() {
-        return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(frontLeft.getState(), frontRight.getState(), backLeft.getState(), backRight.getState());
+        return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(
+            frontLeft.getState(), frontRight.getState(),
+            backLeft.getState(), backRight.getState()
+            );
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -110,7 +118,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveModulePositions[1] = frontRight.getPosition();
         swerveModulePositions[2] = backLeft.getPosition();
         swerveModulePositions[3] = backRight.getPosition();
-        odometer.resetPosition(getRotation2d(), swerveModulePositions, pose);
+        odometer.resetPosition(getGyroRotation2d(), swerveModulePositions, pose);
     }
 
     public void resetModuleEncoders() {
@@ -132,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveModulePositions[2] = backLeft.getPosition();
         swerveModulePositions[3] = backRight.getPosition();
 
-        odometer.update(getRotation2d(), swerveModulePositions);
+        odometer.update(getGyroRotation2d(), swerveModulePositions);
 
         if (Constants.dashboardDebugMode) {
             SmartDashboard.putString("Robot pose", getPose().toString());

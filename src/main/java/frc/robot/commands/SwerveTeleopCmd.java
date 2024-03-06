@@ -53,7 +53,7 @@ public class SwerveTeleopCmd extends Command {
     public void initialize() {
         thetaLockController = new PID(Constants.DriveConstants.kPThetaLockTurning, Constants.DriveConstants.kIThetaLockTurning, Constants.DriveConstants.kDThetaLockTurning);
         thetaLockController.enableContinuousInput(-Math.PI, Math.PI);
-        turningSetpoint = swerveSubsystem.getHeading();
+        turningSetpoint = swerveSubsystem.getPoseAngleRad();
     }
 
     @Override
@@ -80,11 +80,11 @@ public class SwerveTeleopCmd extends Command {
         if (Math.abs(turningInput) > 0.0) { // this code is after deadband
             // driver is actively telling the robot to turn
 
-            turningSetpoint = swerveSubsystem.getHeading() + turningInput * (0.5 * Math.PI);
+            turningSetpoint = swerveSubsystem.getPoseAngleRad() + turningInput * (0.5 * Math.PI);
             turningSetpoint = turningSetpoint % (2 * Math.PI);
             wasTurningLastFrame = true;
             // create the turning speed based on the rotation lock controller
-            turningSpeed = thetaLockController.calculate(swerveSubsystem.getHeading(), turningSetpoint);
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
             if (Math.abs(turningSpeed) > DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond) { // clamp turning speed
                 turningSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * turningSpeed / Math.abs(turningSpeed);
             }
@@ -95,10 +95,10 @@ public class SwerveTeleopCmd extends Command {
             // if we were turning last frame, update the setpoint to our current heading
             // if not, don't modify the setpoint
             if (wasTurningLastFrame) {
-                turningSetpoint = swerveSubsystem.getHeading();
+                turningSetpoint = swerveSubsystem.getPoseAngleRad();
                 wasTurningLastFrame = false;
             }
-            turningSpeed = thetaLockController.calculate(swerveSubsystem.getHeading(), turningSetpoint);
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
             if (Math.abs(turningSpeed) > DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond) { // clamp turning speed
                 turningSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * turningSpeed / Math.abs(turningSpeed);
             }
@@ -107,7 +107,7 @@ public class SwerveTeleopCmd extends Command {
             // robot is stopped, we don't need to apply the rotation lock controller and speed should be 0.0
 
             if (wasTurningLastFrame) {
-                turningSetpoint = swerveSubsystem.getHeading();
+                turningSetpoint = swerveSubsystem.getPoseAngleRad();
                 wasTurningLastFrame = false;
             }
             turningSpeed = 0.0;
@@ -127,7 +127,7 @@ public class SwerveTeleopCmd extends Command {
         ChassisSpeeds chassisSpeeds;
         if (fieldOrientedActive) {
             // relative to field
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getRotation2d());
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getPoseRotation2d());
         } else {
             // relative to robot
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);

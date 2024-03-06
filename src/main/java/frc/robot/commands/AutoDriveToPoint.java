@@ -97,7 +97,7 @@ public class AutoDriveToPoint extends Command {
     double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
 
     
-    var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, thetaPower, swerveSubsystem.getRotation2d());
+    var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, thetaPower, swerveSubsystem.getPose().getRotation());
     SmartDashboard.putString("Auto speeds relative", targetChassisSpeeds.toString());
 
     Pose2d vD = new Pose2d(targetChassisSpeeds.vxMetersPerSecond - prevChassisSpeeds.vxMetersPerSecond, 

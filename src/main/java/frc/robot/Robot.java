@@ -73,11 +73,12 @@ public class Robot extends TimedRobot {
         timer = new Timer();
         timer.start();
 
-        SequentialCommandGroup resetEncodersOnStartup = new SequentialCommandGroup(
+        SequentialCommandGroup startupCalibrationCmd = new SequentialCommandGroup(
             new WaitCommand(5),
+            new InstantCommand(() -> robotContainer.swerveSubsystem.zeroGyroAngle(), robotContainer.swerveSubsystem),
             new InstantCommand(() -> robotContainer.swerveSubsystem.resetModuleEncoders(), robotContainer.swerveSubsystem)
         );
-        resetEncodersOnStartup.schedule();
+        startupCalibrationCmd.schedule();
     }
 
     @Override
@@ -86,8 +87,6 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("limit switch", robotContainer.indexer.getLimitBool());
         updateAllianceColor();
     }
-
-    
 
     @Override
     public void disabledInit() {
@@ -179,7 +178,7 @@ public class Robot extends TimedRobot {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightTriggerButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroHeading(), robotContainer.swerveSubsystem));
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightTriggerButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroGyroAngle(), robotContainer.swerveSubsystem));
 
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(
             new AutoIntakeSequence(robotContainer.intake, robotContainer.indexer, true));
