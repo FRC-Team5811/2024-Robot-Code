@@ -72,6 +72,7 @@ public class AutoDriveToPoint extends Command {
   prevChassisSpeeds = swerveSubsystem.getChassisSpeeds();
 
   targetPose = Robot.processPoseWithAllianceColor(targetPose);
+  SmartDashboard.putString("target pose", targetPose.toString());
 
 
   // Pose2d currentPose = swerveSubsystem.getPose();
@@ -90,8 +91,14 @@ public class AutoDriveToPoint extends Command {
     Pose2d currentPose = swerveSubsystem.getPose();
     double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
     double yPower = yController.calculate(currentPose.getY(), targetPose.getY());
+    SmartDashboard.putNumber("xPower", xPower);
+    SmartDashboard.putNumber("yPower", yPower);
+
     double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+
+    
     var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, thetaPower, swerveSubsystem.getRotation2d());
+    SmartDashboard.putString("Auto speeds relative", targetChassisSpeeds.toString());
 
     Pose2d vD = new Pose2d(targetChassisSpeeds.vxMetersPerSecond - prevChassisSpeeds.vxMetersPerSecond, 
                            targetChassisSpeeds.vyMetersPerSecond - prevChassisSpeeds.vyMetersPerSecond,

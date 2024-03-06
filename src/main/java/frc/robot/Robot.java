@@ -30,16 +30,21 @@ import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoAmpSequence;
+import frc.robot.commands.AutoDriveToPoint;
 import frc.robot.commands.AutoIntakeSequence;
 import frc.robot.commands.AutoSpeakerSequence;
 import frc.robot.commands.AutoTest1;
 import frc.robot.commands.IndexerTeleopCmd;
 import frc.robot.commands.IntakeTeleopCmd;
+import frc.robot.commands.ResetSwervePoseCmd;
 import frc.robot.commands.ShooterTeleopCmd;
 import frc.robot.commands.SwerveTeleopCmd;
 import frc.robot.subsystems.Intake;
@@ -65,14 +70,20 @@ public class Robot extends TimedRobot {
 
         allianceColorWidget = Shuffleboard.getTab("SmartDashboard").addBoolean("Alliance Color", () -> true);
 
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.start();
+
+        // SequentialCommandGroup resetEncodersOnStartup = new SequentialCommandGroup(
+        //     new WaitCommand(3),
+        //     new InstantCommand(() -> robotContainer.swerveSubsystem.resetModuleEncoders())
+        // );
+        // resetEncodersOnStartup.schedule();
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-
+        SmartDashboard.putBoolean("limit switch", robotContainer.indexer.getLimitBool());
         updateAllianceColor();
     }
 
@@ -107,6 +118,8 @@ public class Robot extends TimedRobot {
         teleop starts running. If you want the autonomous to
         continue until interrupted by another command, remove
         this line or comment it out */
+
+        robotContainer.swerveSubsystem.resetModuleEncoders();
 
         setupDefaultCommands();
     }
@@ -166,7 +179,7 @@ public class Robot extends TimedRobot {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightBumperButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroHeading(), robotContainer.swerveSubsystem));
+        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightTriggerButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroHeading(), robotContainer.swerveSubsystem));
 
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(
             new AutoIntakeSequence(robotContainer.intake, robotContainer.indexer, true));

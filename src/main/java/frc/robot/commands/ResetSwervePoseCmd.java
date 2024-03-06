@@ -13,6 +13,7 @@ public class ResetSwervePoseCmd extends InstantCommand {
     public ResetSwervePoseCmd(SwerveSubsystem swerveSubsystem, Pose2d pose) {
         this.swerveSubsystem = swerveSubsystem;
         this.pose = pose;
+        addRequirements(swerveSubsystem);
     }
 
     @Override

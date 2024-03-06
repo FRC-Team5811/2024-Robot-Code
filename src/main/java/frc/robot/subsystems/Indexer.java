@@ -55,7 +55,7 @@ public class Indexer extends SubsystemBase {
     }
 
     public boolean getLimitBool() {
-        return false; // limitSwitch.get();
+        return limitSwitch.get();
     }
 
 }

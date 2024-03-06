@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
@@ -59,15 +60,18 @@ public class RobotContainer {
 
         SequentialCommandGroup testAuto0 = new SequentialCommandGroup(
             new ResetSwervePoseCmd(swerveSubsystem, new Pose2d(2, 2, new Rotation2d())),
-            new AutoDriveToPoint(swerveSubsystem, new Pose2d(3, 2.5, new Rotation2d()))
+            new WaitCommand(2),
+            new AutoDriveToPoint(swerveSubsystem, new Pose2d(3, 2.5, new Rotation2d()), true)
         );
         SequentialCommandGroup testAuto1 = new SequentialCommandGroup(
             new ResetSwervePoseCmd(swerveSubsystem, new Pose2d(2, 2, new Rotation2d())),
-            new AutoDriveToPoint(swerveSubsystem, new Pose2d(2.5, 3, new Rotation2d()))
+            new WaitCommand(2),
+            new AutoDriveToPoint(swerveSubsystem, new Pose2d(2.5, 3, new Rotation2d()), true)
         );
 
         choosableAuto.setDefaultOption("Test Auto 0", testAuto0);
         choosableAuto.addOption("Test Auto 1", testAuto1);
+        SmartDashboard.putData("Auto Selection", choosableAuto);
 
         // POV buttons work differently... let's store the raw value on changed
         // would be cleaner to have a dedicated "controller" wrapper class, but we may not even use this code
