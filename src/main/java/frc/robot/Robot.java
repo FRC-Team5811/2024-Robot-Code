@@ -149,6 +149,7 @@ public class Robot extends TimedRobot {
             () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverXAxis),
             () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis),
             () -> robotContainer.driverController.getRawButton(OIConstants.driverFieldOrientedButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverResetHeadingButton),
             () -> robotContainer.driverController.getRawButton(OIConstants.driverSlowModeButton)
             ));
 
@@ -178,8 +179,6 @@ public class Robot extends TimedRobot {
     }
 
     private void configureButtonBindings() {
-        new JoystickButton(robotContainer.driverController, Constants.OIConstants.RightTriggerButton).onTrue(new InstantCommand(() -> robotContainer.swerveSubsystem.zeroGyroAngle(), robotContainer.swerveSubsystem));
-
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(
             new AutoIntakeSequence(robotContainer.intake, robotContainer.indexer, true));
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.ampShotSequenceButton).onTrue(

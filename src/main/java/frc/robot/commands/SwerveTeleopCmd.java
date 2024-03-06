@@ -4,6 +4,8 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +22,7 @@ public class SwerveTeleopCmd extends Command {
     private final SwerveSubsystem swerveSubsystem;
     private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
     private final Supplier<Boolean> fieldOrientedToggleFunction;
+    private final Supplier<Boolean> resetForwardHeadingFunction;
     private final Supplier<Boolean> slowModeFunction;
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
@@ -31,17 +34,20 @@ public class SwerveTeleopCmd extends Command {
     private PID thetaLockController;
 
     private boolean prevFieldOrientedInput = false;
+    private boolean prevResetHeadingInput = false;
     private boolean fieldOrientedActive = true;
 
 
     public SwerveTeleopCmd(SwerveSubsystem swerveSubsystem,
             Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
-            Supplier<Boolean> fieldOrientedToggleFunction, Supplier<Boolean> slowModeFunction) {
+            Supplier<Boolean> fieldOrientedToggleFunction, Supplier<Boolean> resetForwardHeadingFunction,
+            Supplier<Boolean> slowModeFunction) {
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunction = xSpdFunction;
         this.ySpdFunction = ySpdFunction;
         this.turningSpdFunction = turningSpdFunction;
         this.fieldOrientedToggleFunction = fieldOrientedToggleFunction;
+        this.resetForwardHeadingFunction = resetForwardHeadingFunction;
         this.slowModeFunction = slowModeFunction;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationMetersPerSecondSquared);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationMetersPerSecondSquared);
@@ -58,39 +64,45 @@ public class SwerveTeleopCmd extends Command {
 
     @Override
     public void execute() {
+        // handle inputs
         double xInput = -xSpdFunction.get();
         double yInput = -ySpdFunction.get();
         double turningInput = -turningSpdFunction.get();
+        xInput = Math.abs(xInput) > OIConstants.kDeadband ? xInput : 0.0;
+        yInput = Math.abs(yInput) > OIConstants.kDeadband ? yInput : 0.0;
+        turningInput = Math.abs(turningInput) > OIConstants.kDeadband ? turningInput : 0.0;
+        xInput = xInput > 0 ? Math.pow(Math.abs(xInput), inputCurveExponent) : -Math.pow(Math.abs(xInput), inputCurveExponent);
+        yInput = yInput > 0 ? Math.pow(Math.abs(yInput), inputCurveExponent) : -Math.pow(Math.abs(yInput), inputCurveExponent);
 
         if (fieldOrientedToggleFunction.get() && !prevFieldOrientedInput)
             fieldOrientedActive = !fieldOrientedActive;
         prevFieldOrientedInput = fieldOrientedToggleFunction.get();
+
+        if (resetForwardHeadingFunction.get() && !prevResetHeadingInput) {
+            Pose2d currentPose = swerveSubsystem.getPose();
+            swerveSubsystem.resetOdometry(new Pose2d(currentPose.getX(), currentPose.getY(), new Rotation2d()));
+        }
+        prevResetHeadingInput = resetForwardHeadingFunction.get();
+
         boolean slowMode = slowModeFunction.get();
 
-        xInput = Math.abs(xInput) > OIConstants.kDeadband ? xInput : 0.0;
-        yInput = Math.abs(yInput) > OIConstants.kDeadband ? yInput : 0.0;
-        turningInput = Math.abs(turningInput) > OIConstants.kDeadband ? turningInput : 0.0;
-
-        xInput = xInput > 0 ? Math.pow(Math.abs(xInput), inputCurveExponent) : -Math.pow(Math.abs(xInput), inputCurveExponent);
-        yInput = yInput > 0 ? Math.pow(Math.abs(yInput), inputCurveExponent) : -Math.pow(Math.abs(yInput), inputCurveExponent);
+        // calculate translational speeds
         double xSpeed = xInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         double ySpeed = yInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+
+        // limit translational acceleration
+        xSpeed = xLimiter.calculate(xSpeed);
+        ySpeed = yLimiter.calculate(ySpeed);
         
+        // calculate rotational speed
         double turningSpeed;
         if (Math.abs(turningInput) > 0.0) { // this code is after deadband
             // driver is actively telling the robot to turn
-
-            turningSetpoint = swerveSubsystem.getPoseAngleRad() + turningInput * (0.5 * Math.PI);
-            turningSetpoint = turningSetpoint % (2 * Math.PI);
             wasTurningLastFrame = true;
-            // create the turning speed based on the rotation lock controller
-            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
-            if (Math.abs(turningSpeed) > DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond) { // clamp turning speed
-                turningSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * turningSpeed / Math.abs(turningSpeed);
-            }
+            turningSpeed = turningInput * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
         }
-        else if (Math.abs(xInput) > 0.0 || Math.abs(yInput) > 0.0) {
-            // driver is not telling the robot to turn, but is translating and will need rotation lock
+        else {
+            // driver is not telling the robot to turn
 
             // if we were turning last frame, update the setpoint to our current heading
             // if not, don't modify the setpoint
@@ -98,46 +110,50 @@ public class SwerveTeleopCmd extends Command {
                 turningSetpoint = swerveSubsystem.getPoseAngleRad();
                 wasTurningLastFrame = false;
             }
-            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
-            if (Math.abs(turningSpeed) > DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond) { // clamp turning speed
-                turningSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * turningSpeed / Math.abs(turningSpeed);
+
+            // if drivetrain is moving above threshold, apply theta lock, else, turning speed is 0
+            ChassisSpeeds chassisSpeeds = swerveSubsystem.getChassisSpeeds();
+            if (
+            Math.abs(chassisSpeeds.vxMetersPerSecond) > 0.1 ||
+            Math.abs(chassisSpeeds.vyMetersPerSecond) > 0.1 ||
+            Math.abs(chassisSpeeds.omegaRadiansPerSecond) > 0.1
+            ) {
+                turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+            }
+            else {
+                turningSpeed = 0.0;
             }
         }
-        else {
-            // robot is stopped, we don't need to apply the rotation lock controller and speed should be 0.0
-
-            if (wasTurningLastFrame) {
-                turningSetpoint = swerveSubsystem.getPoseAngleRad();
-                wasTurningLastFrame = false;
-            }
-            turningSpeed = 0.0;
-        }
-
-        // limit translational and rotational acceleration
-        xSpeed = xLimiter.calculate(xSpeed);
-        ySpeed = yLimiter.calculate(ySpeed);
+        
+        // limit rotational acceleration, then limit max rotation speed
         turningSpeed = turningLimiter.calculate(turningSpeed);
-
-        if (slowMode) {
-            xSpeed = xSpeed * 0.33;
-            ySpeed = ySpeed * 0.33;
-            turningSpeed = turningSpeed * 0.33;
+        if (Math.abs(turningSpeed) > DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond) { // clamp turning speed
+            turningSpeed = DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * turningSpeed / Math.abs(turningSpeed);
         }
 
+        // apply slow mode
+        if (slowMode) {
+            xSpeed = xSpeed * 0.5;
+            ySpeed = ySpeed * 0.5;
+            turningSpeed = turningSpeed * 0.5;
+        }
+
+        // apply field oriented control if active
         ChassisSpeeds chassisSpeeds;
         if (fieldOrientedActive) {
-            // relative to field
+            // speeds were relative to field, so convert them back to robot relative
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getPoseRotation2d());
         } else {
-            // relative to robot
+            // speeds are relative to robot
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
 
+        // pass speeds to swerve subsystem
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
         swerveSubsystem.setModuleStates(moduleStates);
 
         if (Constants.dashboardDebugMode)
-            SmartDashboard.putString("Teleop speeds", chassisSpeeds.toString());
+            SmartDashboard.putString("Teleop Speeds", chassisSpeeds.toString());
     }
 
     @Override
