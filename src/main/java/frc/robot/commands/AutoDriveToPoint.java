@@ -72,7 +72,7 @@ public class AutoDriveToPoint extends Command {
   prevChassisSpeeds = swerveSubsystem.getChassisSpeeds();
 
   targetPose = Robot.processPoseWithAllianceColor(targetPose);
-  SmartDashboard.putString("target pose", targetPose.toString());
+  SmartDashboard.putString("Debug/target pose", targetPose.toString());
 
 
   // Pose2d currentPose = swerveSubsystem.getPose();
@@ -91,14 +91,14 @@ public class AutoDriveToPoint extends Command {
     Pose2d currentPose = swerveSubsystem.getPose();
     double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
     double yPower = yController.calculate(currentPose.getY(), targetPose.getY());
-    SmartDashboard.putNumber("xPower", xPower);
-    SmartDashboard.putNumber("yPower", yPower);
+    SmartDashboard.putNumber("Debug/xPower", xPower);
+    SmartDashboard.putNumber("Debug/yPower", yPower);
 
     double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
 
     
     var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, thetaPower, swerveSubsystem.getPose().getRotation());
-    SmartDashboard.putString("Auto speeds relative", targetChassisSpeeds.toString());
+    SmartDashboard.putString("Debug/Auto speeds relative", targetChassisSpeeds.toString());
 
     Pose2d vD = new Pose2d(targetChassisSpeeds.vxMetersPerSecond - prevChassisSpeeds.vxMetersPerSecond, 
                            targetChassisSpeeds.vyMetersPerSecond - prevChassisSpeeds.vyMetersPerSecond,
@@ -134,8 +134,7 @@ public class AutoDriveToPoint extends Command {
     
     var targetModuleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(targetChassisSpeeds);
     swerveSubsystem.setModuleStates(targetModuleStates);
-    if (Constants.dashboardDebugMode)
-        SmartDashboard.putString("Auto speeds", targetChassisSpeeds.toString());
+    SmartDashboard.putString("Debug/Auto speeds", targetChassisSpeeds.toString());
   }
 
   @Override

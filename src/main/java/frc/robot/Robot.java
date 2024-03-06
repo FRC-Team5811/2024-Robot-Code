@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.internal.DriverStationModeThread;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,7 +59,6 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
     private Timer timer;
 
-    private SuppliedValueWidget<Boolean> allianceColorWidget;
     private boolean allianceColorKnown = false;
     public static Alliance allianceColor = Alliance.Blue;
     private double lastAllianceColorCheck = -1;
@@ -67,8 +67,6 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         robotContainer = new RobotContainer();
         configureButtonBindings();
-
-        allianceColorWidget = Shuffleboard.getTab("SmartDashboard").addBoolean("Alliance Color", () -> true);
 
         timer = new Timer();
         timer.start();
@@ -84,7 +82,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
-        SmartDashboard.putBoolean("limit switch", robotContainer.indexer.getLimitBool());
+        SmartDashboard.putBoolean("Driver/limit switch", robotContainer.indexer.getLimitBool());
         updateAllianceColor();
     }
 
@@ -192,23 +190,27 @@ public class Robot extends TimedRobot {
             Optional<Alliance> optionalAlliance = DriverStation.getAlliance();
             lastAllianceColorCheck = timer.get();
 
+            boolean blue = false;
+            boolean red = false;
             if (optionalAlliance.isPresent()) {
                 allianceColor = optionalAlliance.get();
                 allianceColorKnown = true;
 
                 if (allianceColor == Alliance.Blue)
-                    allianceColorWidget.withProperties(Map.of("colorWhenTrue", "blue"));
+                    blue = true;
                 else if (allianceColor == Alliance.Red)
-                    allianceColorWidget.withProperties(Map.of("colorWhenTrue", "red"));
-                else
-                    allianceColorWidget.withProperties(Map.of("colorWhenTrue", "purple")); // this should never happen
+                    red = true;  
             }
             else {
                 allianceColor = Alliance.Blue;
                 allianceColorKnown = false;
 
-                allianceColorWidget.withProperties(Map.of("colorWhenTrue", "gray")); // does "gray" work??
+                blue = false;
+                red = false;
             }
+
+            SmartDashboard.putBoolean("Driver/Blue Alliance", blue);
+            SmartDashboard.putBoolean("Driver/Red Alliance", red);
         }
     }
 

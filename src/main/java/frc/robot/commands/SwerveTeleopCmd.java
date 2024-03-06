@@ -152,8 +152,7 @@ public class SwerveTeleopCmd extends Command {
         SwerveModuleState[] moduleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
         swerveSubsystem.setModuleStates(moduleStates);
 
-        if (Constants.dashboardDebugMode)
-            SmartDashboard.putString("Teleop Speeds", chassisSpeeds.toString());
+        SmartDashboard.putString("Debug/Teleop Speeds", chassisSpeeds.toString());
     }
 
     @Override

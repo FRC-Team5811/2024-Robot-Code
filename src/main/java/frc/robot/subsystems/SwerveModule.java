@@ -77,10 +77,8 @@ public class SwerveModule {
             turningEncoder.setPosition(getAbsoluteEncoderRad());
         }
 
-        if (Constants.dashboardDebugMode){
-            SmartDashboard.putNumber(moduleName + " mag enc rads", getAbsoluteEncoderRad());
-            SmartDashboard.putNumber(moduleName + " neo enc diff", motorEncoderAngle - getAbsoluteEncoderRad());
-        }
+        SmartDashboard.putNumber("Debug/" + moduleName + " mag enc rads", getAbsoluteEncoderRad());
+        SmartDashboard.putNumber("Debug/" + moduleName + " neo enc diff", motorEncoderAngle - getAbsoluteEncoderRad());
     }
 
     public double getTurningPosition() {
@@ -161,8 +159,7 @@ public class SwerveModule {
         driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
         
-        if (Constants.dashboardDebugMode)
-            SmartDashboard.putString("Module [" + moduleName + "] desired state", state.toString());
+        SmartDashboard.putString("Debug/Module [" + moduleName + "] desired state", state.toString());
     }
 
     public void stop() {

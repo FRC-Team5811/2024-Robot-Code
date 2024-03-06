@@ -79,6 +79,8 @@ public class SwerveSubsystem extends SubsystemBase {
             "backRight");
         
         gyro = new AHRS(SPI.Port.kMXP);
+
+        SmartDashboard.putData("Swerve subsystem", this);
     }
 
     public void zeroGyroAngle() {
@@ -142,9 +144,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
         odometer.update(getGyroRotation2d(), swerveModulePositions);
 
-        if (Constants.dashboardDebugMode) {
-            SmartDashboard.putString("Robot pose", getPose().toString());
-        }
+        SmartDashboard.putString("Debug/Robot pose", getPose().toString());
+        SmartDashboard.putString("Debug/Robot speeds", getChassisSpeeds().toString());
     }
 
     public void stopModules() {

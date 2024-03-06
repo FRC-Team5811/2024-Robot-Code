@@ -71,7 +71,7 @@ public class RobotContainer {
 
         choosableAuto.setDefaultOption("Test Auto 0", testAuto0);
         choosableAuto.addOption("Test Auto 1", testAuto1);
-        SmartDashboard.putData("Auto Selection", choosableAuto);
+        SmartDashboard.putData("Driver/Auto Selection", choosableAuto);
 
         // POV buttons work differently... let's store the raw value on changed
         // would be cleaner to have a dedicated "controller" wrapper class, but we may not even use this code
