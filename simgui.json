@@ -9,7 +9,11 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Driver/Auto Selection": "String Chooser"
+      "/SmartDashboard/Debug/Field": "Field2d",
+      "/SmartDashboard/Debug/Set Robot Pose": "Command",
+      "/SmartDashboard/Driver/Auto Selection": "String Chooser",
+      "/SmartDashboard/Driver/Field": "Field2d",
+      "/SmartDashboard/Swerve subsystem": "Subsystem"
     }
   },
   "NetworkTables": {

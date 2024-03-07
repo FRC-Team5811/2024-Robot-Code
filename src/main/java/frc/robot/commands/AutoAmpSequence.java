@@ -49,7 +49,7 @@ public class AutoAmpSequence extends Command {
 
     @Override
     public boolean isFinished() {
-        if (cycles > 5*50) {
+        if (cycles > 1.2*50) {
             return true;
         }
         return false;

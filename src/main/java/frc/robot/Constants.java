@@ -99,9 +99,9 @@ public final class Constants {
         public static final double shooterMaxRPM = 5500;
         public static final double shooterSpeakerRPMLower = 4000;
         public static final double shooterSpeakerRPMUpper = 4000;
-        public static final double shooterControlP = 0.5;
-        public static final double shooterControlI = 0.1;
-        public static final double shooterControlD = 0.3;
+        public static final double shooterControlP = 4;
+        public static final double shooterControlI = 0;
+        public static final double shooterControlD = 0.5;
 
 
         public static final double shooterAnalogMaxRate = 1.0;

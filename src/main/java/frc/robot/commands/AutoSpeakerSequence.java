@@ -45,14 +45,14 @@ public class AutoSpeakerSequence extends Command {
         cycles += 1;
         shooter.autoSpeakerShotRampUp();
         shooter.runSpeakerDiverter();
-        if (shooter.speakersAtSpeed()) {
-            indexer.speakerScore();
+        if (cycles > 0.3*50) {
+        indexer.speakerScore();
         }
     }
 
     @Override
     public boolean isFinished() {
-        if (cycles > 5*50) {
+        if (cycles > 0.6*50) {
             return true;
         }
         return false;

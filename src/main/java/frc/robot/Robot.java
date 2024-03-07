@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.internal.DriverStationModeThread;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -59,31 +60,58 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
     private Timer timer;
 
+    private boolean delayedInitialized = false;
+
     private boolean allianceColorKnown = false;
     public static Alliance allianceColor = Alliance.Blue;
     private double lastAllianceColorCheck = -1;
 
+    private Field2d driverField = new Field2d();
+    private Field2d debugField = new Field2d();
+
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
+
         configureButtonBindings();
 
         timer = new Timer();
         timer.start();
+    }
 
-        SequentialCommandGroup startupCalibrationCmd = new SequentialCommandGroup(
-            new WaitCommand(5),
-            new InstantCommand(() -> robotContainer.swerveSubsystem.zeroGyroAngle(), robotContainer.swerveSubsystem),
-            new InstantCommand(() -> robotContainer.swerveSubsystem.resetModuleEncoders(), robotContainer.swerveSubsystem)
-        );
-        startupCalibrationCmd.schedule();
+    private void delayedInit() {
+        delayedInitialized = true;
+        robotContainer.swerveSubsystem.zeroGyroAngle();
+        robotContainer.swerveSubsystem.resetModuleEncoders();
+        SmartDashboard.putString("Debug/YESS", "YESSSS");
+
+        SmartDashboard.putData("Driver/Field", driverField);
+        SmartDashboard.putData("Debug/Field", debugField);
+        SmartDashboard.putNumber("Debug/SetRobotPoseX", 0);
+        SmartDashboard.putNumber("Debug/SetRobotPoseY", 0);
+        SmartDashboard.putNumber("Debug/SetRobotPoseRotDeg", 0);
+        SmartDashboard.putData("Debug/Set Robot Pose", new InstantCommand(() -> {
+            double x = SmartDashboard.getNumber("Debug/SetRobotPoseX", 1);
+            double y = SmartDashboard.getNumber("Debug/SetRobotPoseY", 1);
+            double angleDeg = SmartDashboard.getNumber("Debug/SetRobotPoseRotDeg", 90);
+            Pose2d pose = new Pose2d(x, y, Rotation2d.fromDegrees(angleDeg));
+            robotContainer.swerveSubsystem.resetOdometry(pose);
+            SmartDashboard.putString("Debug/RANNNN", "yes");
+        }));
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+
+        if (!delayedInitialized && timer.get() > 5)
+            delayedInit();
+
         SmartDashboard.putBoolean("Driver/limit switch", robotContainer.indexer.getLimitBool());
+        SmartDashboard.putNumber("Driver/speaker rpm", robotContainer.shooter.shooterEncoderLower.getVelocity());
         updateAllianceColor();
+        driverField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
+        debugField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
     }
 
     @Override

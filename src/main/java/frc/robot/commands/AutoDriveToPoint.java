@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.PID;
 import frc.robot.Robot;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -25,12 +26,17 @@ import java.util.function.Supplier;
 public class AutoDriveToPoint extends Command {
 
     SwerveSubsystem swerveSubsystem;
-    Pose2d targetPose;
+    Pose2d originalTargetPose;
+    Pose2d processedTargetPose;
     PID xController;
     PID yController;
     PID thetaController;
     ChassisSpeeds prevChassisSpeeds;
     boolean stop;  
+    double xyTolerance;
+    double thetaTolerance;
+    double kMaxSpeedMetersPerSecond = Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
+
 
     public AutoDriveToPoint(
       SwerveSubsystem swerveSubsystem,
@@ -38,7 +44,9 @@ public class AutoDriveToPoint extends Command {
       )
         {
     this.swerveSubsystem = swerveSubsystem;
-    this.targetPose = targetPose;
+    this.originalTargetPose = targetPose;
+    xyTolerance = 0.05;
+    thetaTolerance = 5;
     stop = false;
     addRequirements(swerveSubsystem);
   }
@@ -49,8 +57,24 @@ public class AutoDriveToPoint extends Command {
       )
         {
     this.swerveSubsystem = swerveSubsystem;
-    this.targetPose = targetPose;
+    this.originalTargetPose = targetPose;
     this.stop = stop;
+    xyTolerance = 0.05;
+    thetaTolerance = 5;
+    addRequirements(swerveSubsystem);
+  }
+
+    public AutoDriveToPoint(
+      SwerveSubsystem swerveSubsystem,
+      Pose2d targetPose, double xyTolerance, double thetaTolerance, double kMaxSpeedMetersPerSecond, boolean stop
+      )
+        {
+    this.swerveSubsystem = swerveSubsystem;
+    this.originalTargetPose = targetPose;
+    this.stop = stop;
+    this.xyTolerance = xyTolerance;
+    this.thetaTolerance = thetaTolerance;
+    this.kMaxSpeedMetersPerSecond = kMaxSpeedMetersPerSecond;
     addRequirements(swerveSubsystem);
   }
 
@@ -64,15 +88,15 @@ public class AutoDriveToPoint extends Command {
   //                       Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond,
   //                       Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared));
   // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-  xController = new PID(5, 0, 1);
-  yController = new PID(5, 0, 1);
+  xController = new PID(5, 0.1, 1);
+  yController = new PID(5, 0.1, 1);
   thetaController = new PID(8, 0, 0.1);
   thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
   prevChassisSpeeds = swerveSubsystem.getChassisSpeeds();
 
-  targetPose = Robot.processPoseWithAllianceColor(targetPose);
-  SmartDashboard.putString("Debug/target pose", targetPose.toString());
+  processedTargetPose = Robot.processPoseWithAllianceColor(originalTargetPose);
+  SmartDashboard.putString("Debug/target pose", processedTargetPose.toString());
 
 
   // Pose2d currentPose = swerveSubsystem.getPose();
@@ -88,16 +112,16 @@ public class AutoDriveToPoint extends Command {
   @Override
   public void execute() {
     
-    Pose2d currentPose = swerveSubsystem.getPose();
-    double xPower = xController.calculate(currentPose.getX(), targetPose.getX());
-    double yPower = yController.calculate(currentPose.getY(), targetPose.getY());
+    Pose2d currentPose = swerveSubsystem.getPose2d();
+    double xPower = xController.calculate(currentPose.getX(), processedTargetPose.getX());
+    double yPower = yController.calculate(currentPose.getY(), processedTargetPose.getY());
     SmartDashboard.putNumber("Debug/xPower", xPower);
     SmartDashboard.putNumber("Debug/yPower", yPower);
 
-    double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
+    double thetaPower = thetaController.calculate(currentPose.getRotation().getRadians(), processedTargetPose.getRotation().getRadians());
 
     
-    var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, thetaPower, swerveSubsystem.getPose().getRotation());
+    var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xPower, yPower, thetaPower, swerveSubsystem.getPose2d().getRotation());
     SmartDashboard.putString("Debug/Auto speeds relative", targetChassisSpeeds.toString());
 
     Pose2d vD = new Pose2d(targetChassisSpeeds.vxMetersPerSecond - prevChassisSpeeds.vxMetersPerSecond, 
@@ -119,9 +143,9 @@ public class AutoDriveToPoint extends Command {
 
     double speedMagnitude = Math.sqrt(targetChassisSpeeds.vxMetersPerSecond*targetChassisSpeeds.vxMetersPerSecond + targetChassisSpeeds.vyMetersPerSecond*targetChassisSpeeds.vyMetersPerSecond);
     double omegaMagnitude = Math.abs(targetChassisSpeeds.omegaRadiansPerSecond);
-    if (speedMagnitude > Constants.AutoConstants.kMaxSpeedMetersPerSecond) {
-          targetChassisSpeeds.vxMetersPerSecond = Constants.AutoConstants.kMaxSpeedMetersPerSecond*targetChassisSpeeds.vxMetersPerSecond/speedMagnitude;
-          targetChassisSpeeds.vyMetersPerSecond = Constants.AutoConstants.kMaxSpeedMetersPerSecond*targetChassisSpeeds.vyMetersPerSecond/speedMagnitude;
+    if (speedMagnitude > kMaxSpeedMetersPerSecond) {
+          targetChassisSpeeds.vxMetersPerSecond = kMaxSpeedMetersPerSecond*targetChassisSpeeds.vxMetersPerSecond/speedMagnitude;
+          targetChassisSpeeds.vyMetersPerSecond = kMaxSpeedMetersPerSecond*targetChassisSpeeds.vyMetersPerSecond/speedMagnitude;
         }
     if (omegaMagnitude > Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond) {
           targetChassisSpeeds.omegaRadiansPerSecond = Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond*targetChassisSpeeds.omegaRadiansPerSecond/omegaMagnitude;
@@ -147,10 +171,10 @@ public class AutoDriveToPoint extends Command {
 
   @Override
   public boolean isFinished() {
-    Pose2d currentPose = swerveSubsystem.getPose();
-    if (Math.abs(currentPose.getX() - targetPose.getX()) < 0.05 
-    && Math.abs(currentPose.getY() - targetPose.getY()) < 0.05 
-    && Math.abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees()) < 5) {
+    Pose2d currentPose = swerveSubsystem.getPose2d();
+    if (Math.abs(currentPose.getX() - processedTargetPose.getX()) < xyTolerance 
+    && Math.abs(currentPose.getY() - processedTargetPose.getY()) < xyTolerance 
+    && Math.abs(currentPose.getRotation().getDegrees() - processedTargetPose.getRotation().getDegrees()) < thetaTolerance) {
       if (stop) {
         if (Math.abs(prevChassisSpeeds.vxMetersPerSecond) > 0.1
             || Math.abs(prevChassisSpeeds.vyMetersPerSecond) > 0.1

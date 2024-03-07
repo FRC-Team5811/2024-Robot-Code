@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -104,7 +105,7 @@ public class SwerveSubsystem extends SubsystemBase {
         return odometer.getPoseMeters().getRotation();
     }
     
-    public Pose2d getPose() {
+    public Pose2d getPose2d() {
         return odometer.getPoseMeters();
     }
 
@@ -144,7 +145,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         odometer.update(getGyroRotation2d(), swerveModulePositions);
 
-        SmartDashboard.putString("Debug/Robot pose", getPose().toString());
+        SmartDashboard.putString("Debug/Robot pose", getPose2d().toString());
         SmartDashboard.putString("Debug/Robot speeds", getChassisSpeeds().toString());
     }
 

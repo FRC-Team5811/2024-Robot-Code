@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -58,6 +59,11 @@ public class RobotContainer {
 
     public RobotContainer() {
 
+        CommandScheduler.getInstance().registerSubsystem(swerveSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(intake);
+        CommandScheduler.getInstance().registerSubsystem(indexer);
+        CommandScheduler.getInstance().registerSubsystem(shooter);
+
         SequentialCommandGroup testAuto0 = new SequentialCommandGroup(
             new ResetSwervePoseCmd(swerveSubsystem, new Pose2d(2, 2, new Rotation2d())),
             new WaitCommand(2),
@@ -68,9 +74,11 @@ public class RobotContainer {
             new WaitCommand(2),
             new AutoDriveToPoint(swerveSubsystem, new Pose2d(2.5, 3, new Rotation2d()), true)
         );
+        var autoTest1 = new AutoTest1(swerveSubsystem, intake, indexer, shooter);
 
         choosableAuto.setDefaultOption("Test Auto 0", testAuto0);
         choosableAuto.addOption("Test Auto 1", testAuto1);
+        choosableAuto.addOption("SpeakerTest auto 1", autoTest1);
         SmartDashboard.putData("Driver/Auto Selection", choosableAuto);
 
         // POV buttons work differently... let's store the raw value on changed

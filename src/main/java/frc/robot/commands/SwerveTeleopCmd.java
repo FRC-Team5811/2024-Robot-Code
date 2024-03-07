@@ -79,8 +79,9 @@ public class SwerveTeleopCmd extends Command {
         prevFieldOrientedInput = fieldOrientedToggleFunction.get();
 
         if (resetForwardHeadingFunction.get() && !prevResetHeadingInput) {
-            Pose2d currentPose = swerveSubsystem.getPose();
+            Pose2d currentPose = swerveSubsystem.getPose2d();
             swerveSubsystem.resetOdometry(new Pose2d(currentPose.getX(), currentPose.getY(), new Rotation2d()));
+            turningSetpoint = 0.0;
         }
         prevResetHeadingInput = resetForwardHeadingFunction.get();
 
