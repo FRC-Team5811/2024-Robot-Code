@@ -23,13 +23,13 @@ import frc.robot.subsystems.Indexer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class AutoSpeakerSequence extends Command {
+public class AmpSequence extends Command {
 
     private final Shooter shooter;
     private final Indexer indexer;
     private int cycles = 0;
 
-    public AutoSpeakerSequence(Shooter shooter, Indexer indexer) {
+    public AmpSequence(Shooter shooter, Indexer indexer) {
         this.indexer = indexer;
         this.shooter = shooter;
         addRequirements(shooter);
@@ -43,16 +43,13 @@ public class AutoSpeakerSequence extends Command {
     @Override
     public void execute() {
         cycles += 1;
-        shooter.autoSpeakerShotRampUp();
-        shooter.runSpeakerDiverter();
-        if (cycles > 0.3*50) {
-        indexer.speakerScore();
-        }
+        shooter.runAmpDiverter();
+        indexer.ampScore();
     }
 
     @Override
     public boolean isFinished() {
-        if (cycles > 0.6*50) {
+        if (cycles > 1.2*50) {
             return true;
         }
         return false;
@@ -60,7 +57,6 @@ public class AutoSpeakerSequence extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        shooter.stopSpeakerMotors();
         shooter.stopDiverter();
         indexer.stop();
 

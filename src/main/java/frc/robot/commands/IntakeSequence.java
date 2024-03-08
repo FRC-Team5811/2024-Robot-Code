@@ -17,22 +17,24 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.PID;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Indexer;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class AutoAmpSequence extends Command {
+public class IntakeSequence extends Command {
 
-    private final Shooter shooter;
+    private final boolean timeOut;
+    private final Intake intake;
     private final Indexer indexer;
     private int cycles = 0;
+    private int cyclesInPlace = 0;
 
-    public AutoAmpSequence(Shooter shooter, Indexer indexer) {
+    public IntakeSequence(Intake intake, Indexer indexer, boolean timeOut) {
+        this.timeOut = timeOut;
         this.indexer = indexer;
-        this.shooter = shooter;
-        addRequirements(shooter);
+        this.intake = intake;
+        addRequirements(intake);
         addRequirements(indexer);
     }
 
@@ -43,21 +45,27 @@ public class AutoAmpSequence extends Command {
     @Override
     public void execute() {
         cycles += 1;
-        shooter.runAmpDiverter();
-        indexer.ampScore();
+        intake.pull();
+        indexer.pull();
     }
 
     @Override
     public boolean isFinished() {
-        if (cycles > 1.2*50) {
+        if (cycles > 5*50 && timeOut) {
             return true;
         }
-        return false;
+        if (indexer.getLimitBool()) {
+            if (cyclesInPlace > 0.1*50) {
+                return true;
+            }
+            cycles += 1;
+        }
+        return false;  
     }
 
     @Override
     public void end(boolean interrupted) {
-        shooter.stopDiverter();
+        intake.stop();
         indexer.stop();
 
         // reset state

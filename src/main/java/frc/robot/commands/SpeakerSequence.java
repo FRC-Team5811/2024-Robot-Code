@@ -17,23 +17,22 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.PID;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Indexer;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class AutoIntakeSequence extends Command {
+public class SpeakerSequence extends Command {
 
-    private final boolean timeOut;
-    private final Intake intake;
+    private final Shooter shooter;
     private final Indexer indexer;
     private int cycles = 0;
 
-    public AutoIntakeSequence(Intake intake, Indexer indexer, boolean timeOut) {
-        this.timeOut = timeOut;
+    public SpeakerSequence(Shooter shooter, Indexer indexer) {
         this.indexer = indexer;
-        this.intake = intake;
-        addRequirements(intake);
+        this.shooter = shooter;
+        addRequirements(shooter);
         addRequirements(indexer);
     }
 
@@ -44,21 +43,25 @@ public class AutoIntakeSequence extends Command {
     @Override
     public void execute() {
         cycles += 1;
-        intake.pull();
-        indexer.pull();
+        shooter.autoSpeakerShotRampUp();
+        shooter.runSpeakerDiverter();
+        if (shooter.getSpeakersRPM() >= 0.5*Constants.ManipConstants.shooterSpeakerRPMLower) {
+            indexer.speakerScore();
+        }
     }
 
     @Override
     public boolean isFinished() {
-        if (cycles > 5*50 && timeOut) {
+        if (cycles > 0.6*50) {
             return true;
         }
-        return indexer.getLimitBool();  
+        return false;
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.stop();
+        shooter.stopSpeakerMotors();
+        shooter.stopDiverter();
         indexer.stop();
 
         // reset state

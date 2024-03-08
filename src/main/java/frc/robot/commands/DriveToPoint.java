@@ -23,7 +23,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class AutoDriveToPoint extends Command {
+public class DriveToPoint extends Command {
 
     SwerveSubsystem swerveSubsystem;
     Pose2d originalTargetPose;
@@ -38,7 +38,7 @@ public class AutoDriveToPoint extends Command {
     double kMaxSpeedMetersPerSecond = Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
 
 
-    public AutoDriveToPoint(
+    public DriveToPoint(
       SwerveSubsystem swerveSubsystem,
       Pose2d targetPose
       )
@@ -51,7 +51,7 @@ public class AutoDriveToPoint extends Command {
     addRequirements(swerveSubsystem);
   }
 
-    public AutoDriveToPoint(
+    public DriveToPoint(
       SwerveSubsystem swerveSubsystem,
       Pose2d targetPose, boolean stop
       )
@@ -64,7 +64,7 @@ public class AutoDriveToPoint extends Command {
     addRequirements(swerveSubsystem);
   }
 
-    public AutoDriveToPoint(
+    public DriveToPoint(
       SwerveSubsystem swerveSubsystem,
       Pose2d targetPose, double xyTolerance, double thetaTolerance, double kMaxSpeedMetersPerSecond, boolean stop
       )
@@ -172,9 +172,11 @@ public class AutoDriveToPoint extends Command {
   @Override
   public boolean isFinished() {
     Pose2d currentPose = swerveSubsystem.getPose2d();
-    if (Math.abs(currentPose.getX() - processedTargetPose.getX()) < xyTolerance 
+    var angle = currentPose.getRotation().minus(processedTargetPose.getRotation()).getDegrees() % 360;
+    angle = angle > 180 ? 360-angle : angle;
+    if (Math.abs(currentPose.getX() - processedTargetPose.getX()) < xyTolerance
     && Math.abs(currentPose.getY() - processedTargetPose.getY()) < xyTolerance 
-    && Math.abs(currentPose.getRotation().getDegrees() - processedTargetPose.getRotation().getDegrees()) < thetaTolerance) {
+    && Math.abs(angle) < thetaTolerance) {
       if (stop) {
         if (Math.abs(prevChassisSpeeds.vxMetersPerSecond) > 0.1
             || Math.abs(prevChassisSpeeds.vyMetersPerSecond) > 0.1

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -130,6 +132,19 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(
                         kMaxSpeedMetersPerSecond,
                         kMaxAccelerationMetersPerSecondSquared);
+        
+        public static final Pose2d start1Pose = new Pose2d(0.81, 4.38, Rotation2d.fromDegrees(-60));
+        public static final Pose2d start2Pose = new Pose2d(1.357, 5.488, new Rotation2d());
+        public static final Pose2d start3Pose = new Pose2d(0.60, 6.85, Rotation2d.fromDegrees(60));
+        public static final Pose2d note2Pose = new Pose2d(2.3, 5.588, new Rotation2d());
+        public static final Pose2d note3Pose = new Pose2d(2.3, 7.088, new Rotation2d());
+        public static final Pose2d note1Pose = new Pose2d(2.3, 4.1, new Rotation2d());
+        public static final Pose2d note4Pose = new Pose2d(0, 0, new Rotation2d());
+        public static final Pose2d note5Pose = new Pose2d(0, 0, new Rotation2d());
+        public static final Pose2d note6Pose = new Pose2d(0, 0, new Rotation2d());
+        public static final Pose2d note7Pose = new Pose2d(0, 0, new Rotation2d());
+        public static final Pose2d note8Pose = new Pose2d(0, 0, new Rotation2d());
+        
     }
 
     public static final class OIConstants {

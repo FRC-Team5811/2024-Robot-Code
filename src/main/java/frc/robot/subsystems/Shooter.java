@@ -64,6 +64,10 @@ public class Shooter extends SubsystemBase {
         return (shooterEncoderLower.getVelocity() >= Constants.ManipConstants.shooterSpeakerRPMLower);
     }
 
+    public double getSpeakersRPM() {
+        return (shooterEncoderLower.getVelocity());
+    }
+
     public void manualSpeakerMotors(double speed) {
         speakerUpperMotor.set(speed);
         speakerLowerMotor.set(speed);

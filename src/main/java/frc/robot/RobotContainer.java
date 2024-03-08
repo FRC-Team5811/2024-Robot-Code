@@ -23,13 +23,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AutoDriveToPoint;
+import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.SwerveTeleopCmd;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.commands.AutoTest1;
+import frc.robot.commands.S2n3n2n1;
+import frc.robot.commands.S3n3n2n1;
 import frc.robot.commands.ResetSwervePoseCmd;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -64,21 +65,12 @@ public class RobotContainer {
         CommandScheduler.getInstance().registerSubsystem(indexer);
         CommandScheduler.getInstance().registerSubsystem(shooter);
 
-        SequentialCommandGroup testAuto0 = new SequentialCommandGroup(
-            new ResetSwervePoseCmd(swerveSubsystem, new Pose2d(2, 2, new Rotation2d())),
-            new WaitCommand(2),
-            new AutoDriveToPoint(swerveSubsystem, new Pose2d(3, 2.5, new Rotation2d()), true)
-        );
-        SequentialCommandGroup testAuto1 = new SequentialCommandGroup(
-            new ResetSwervePoseCmd(swerveSubsystem, new Pose2d(2, 2, new Rotation2d())),
-            new WaitCommand(2),
-            new AutoDriveToPoint(swerveSubsystem, new Pose2d(2.5, 3, new Rotation2d()), true)
-        );
-        var autoTest1 = new AutoTest1(swerveSubsystem, intake, indexer, shooter);
+        var s2n3n2n1 = new S2n3n2n1(swerveSubsystem, intake, indexer, shooter);
+        var s3n3n2n1 = new S3n3n2n1(swerveSubsystem, intake, indexer, shooter);
 
-        choosableAuto.setDefaultOption("Test Auto 0", testAuto0);
-        choosableAuto.addOption("Test Auto 1", testAuto1);
-        choosableAuto.addOption("SpeakerTest auto 1", autoTest1);
+        choosableAuto.setDefaultOption("s2n3n1", s2n3n2n1);
+        choosableAuto.addOption("s3n3n2n1", s3n3n2n1);
+
         SmartDashboard.putData("Driver/Auto Selection", choosableAuto);
 
         // POV buttons work differently... let's store the raw value on changed

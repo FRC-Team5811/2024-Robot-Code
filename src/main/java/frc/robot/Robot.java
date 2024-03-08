@@ -39,11 +39,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AutoAmpSequence;
-import frc.robot.commands.AutoDriveToPoint;
-import frc.robot.commands.AutoIntakeSequence;
-import frc.robot.commands.AutoSpeakerSequence;
-import frc.robot.commands.AutoTest1;
+import frc.robot.commands.AmpSequence;
+import frc.robot.commands.DriveToPoint;
+import frc.robot.commands.IntakeSequence;
+import frc.robot.commands.SpeakerSequence;
+import frc.robot.commands.S2n3n2n1;
 import frc.robot.commands.IndexerTeleopCmd;
 import frc.robot.commands.IntakeTeleopCmd;
 import frc.robot.commands.ResetSwervePoseCmd;
@@ -146,6 +146,8 @@ public class Robot extends TimedRobot {
 
         robotContainer.swerveSubsystem.resetModuleEncoders();
 
+        robotContainer.swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(Constants.AutoConstants.start2Pose));
+
         setupDefaultCommands();
     }
 
@@ -206,11 +208,11 @@ public class Robot extends TimedRobot {
 
     private void configureButtonBindings() {
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.intakeSequenceButton).onTrue(
-            new AutoIntakeSequence(robotContainer.intake, robotContainer.indexer, true));
+            new IntakeSequence(robotContainer.intake, robotContainer.indexer, true));
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.ampShotSequenceButton).onTrue(
-            new AutoAmpSequence(robotContainer.shooter, robotContainer.indexer));
+            new AmpSequence(robotContainer.shooter, robotContainer.indexer));
         new JoystickButton(robotContainer.manipController, Constants.OIConstants.speakerShotSequenceButton).onTrue(
-            new AutoSpeakerSequence(robotContainer.shooter, robotContainer.indexer));
+            new SpeakerSequence(robotContainer.shooter, robotContainer.indexer));
     }
 
     private void updateAllianceColor() {
