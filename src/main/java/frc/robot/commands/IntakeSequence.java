@@ -51,14 +51,11 @@ public class IntakeSequence extends Command {
 
     @Override
     public boolean isFinished() {
-        if (cycles > 5*50 && timeOut) {
+        if (indexer.getLimitBool()) {
             return true;
         }
-        if (indexer.getLimitBool()) {
-            if (cyclesInPlace > 0.02*50) {
-                return true;
-            }
-            cycles += 1;
+        if (cycles > 5*50 && timeOut) {
+            return true;
         }
         return false;  
     }

@@ -18,21 +18,22 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class S3n3n8n7 extends SequentialCommandGroup{ 
+public class S2n2n7n6 extends SequentialCommandGroup{ 
 
-    public S3n3n8n7(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter) {
+    public S2n2n7n6(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter) {
+
         addCommands(
             //pre-loaded note
-            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start3Pose),
+            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start2Pose),
             new SpeakerSequence(shooter, indexer),
-            // note 3
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note3Pose, Constants.AutoConstants.start3Pose),
-            
-            //note 8
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note8Pose, Constants.AutoConstants.start3Pose, Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0, new Rotation2d(60)))),
-            
+            //note 2
+            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note2Pose, Constants.AutoConstants.start2Pose),
+
+            //note 6
+            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note7Pose, Constants.AutoConstants.start2Pose, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(-1.0, 0.5, new Rotation2d()))),
+  
             //note 7
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note7Pose, Constants.AutoConstants.start3Pose, Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0, new Rotation2d(60))))
+            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note6Pose, Constants.AutoConstants.start2Pose, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(-1.0, 0.5, new Rotation2d())))
         );
     }
 }

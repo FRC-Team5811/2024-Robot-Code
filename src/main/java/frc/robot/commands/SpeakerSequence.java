@@ -42,11 +42,13 @@ public class SpeakerSequence extends Command {
 
     @Override
     public void execute() {
-        cycles += 1;
         shooter.autoSpeakerShotRampUp();
         shooter.runSpeakerDiverter();
         if (shooter.getSpeakersRPM() >= 0.5*Constants.ManipConstants.shooterSpeakerRPMLower) {
             indexer.speakerScore();
+        }
+        if (!indexer.getLimitBool()) {
+            cycles += 1;
         }
     }
 
