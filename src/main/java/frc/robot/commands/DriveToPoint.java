@@ -36,6 +36,12 @@ public class DriveToPoint extends Command {
     double xyTolerance;
     double thetaTolerance;
     double kMaxSpeedMetersPerSecond = Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
+    double kPxy = 5;
+    double kIxy = 0.1;
+    double kDxy = 1;
+    double kPtheta = 8;
+    double kItheta = 0;
+    double kDtheta = 0.1;
 
 
     public DriveToPoint(
@@ -78,6 +84,29 @@ public class DriveToPoint extends Command {
     addRequirements(swerveSubsystem);
   }
 
+    public DriveToPoint(
+      SwerveSubsystem swerveSubsystem,
+      Pose2d targetPose, double xyTolerance, double thetaTolerance, 
+      double kMaxSpeedMetersPerSecond, boolean stop, 
+      double kPxy, double kIxy, double kDxy, 
+      double kPtheta, double kItheta, double kDtheta
+      )
+        {
+    this.swerveSubsystem = swerveSubsystem;
+    this.originalTargetPose = targetPose;
+    this.stop = stop;
+    this.xyTolerance = xyTolerance;
+    this.thetaTolerance = thetaTolerance;
+    this.kMaxSpeedMetersPerSecond = kMaxSpeedMetersPerSecond;
+    this.kPxy = kPxy;
+    this.kIxy = kIxy;
+    this.kDxy = kDxy;
+    this.kPtheta = kPtheta;
+    this.kItheta = kItheta;
+    this.kDtheta = kDtheta;
+    addRequirements(swerveSubsystem);
+  }
+
 @Override
   public void initialize() {
   // xController = new ProfiledPIDController(2, 0, 0, new TrapezoidProfile.Constraints(Constants.AutoConstants.kMaxSpeedMetersPerSecond,
@@ -88,9 +117,9 @@ public class DriveToPoint extends Command {
   //                       Constants.AutoConstants.kMaxAngularSpeedRadiansPerSecond,
   //                       Constants.AutoConstants.kMaxAngularAccelerationRadiansPerSecondSquared));
   // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-  xController = new PID(5, 0.1, 1);
-  yController = new PID(5, 0.1, 1);
-  thetaController = new PID(8, 0, 0.1);
+  xController = new PID(kPxy, kIxy, kDxy);
+  yController = new PID(kPxy, kIxy, kDxy);
+  thetaController = new PID(kPtheta, kItheta, kDtheta);
   thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
   prevChassisSpeeds = swerveSubsystem.getChassisSpeeds();

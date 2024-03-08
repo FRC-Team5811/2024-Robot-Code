@@ -55,7 +55,7 @@ public class IntakeSequence extends Command {
             return true;
         }
         if (indexer.getLimitBool()) {
-            if (cyclesInPlace > 0.1*50) {
+            if (cyclesInPlace > 0.02*50) {
                 return true;
             }
             cycles += 1;

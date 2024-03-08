@@ -17,7 +17,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class GrabAndSpeakerShoot extends SequentialCommandGroup {
 
-    GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose) {
+    public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose) {
 
         addCommands(
             new DriveToPoint(swerveSubsystem, notePose),
@@ -35,7 +35,7 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
             );
     }
 
-    GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose, Pose2d midpoint) {
+    public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose, Pose2d midpoint) {
 
         addCommands(
             new DriveToPoint(swerveSubsystem, midpoint),

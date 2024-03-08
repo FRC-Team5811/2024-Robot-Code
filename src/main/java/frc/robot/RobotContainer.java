@@ -25,12 +25,12 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.SwerveTeleopCmd;
+import frc.robot.commands.autoRoutines.S2n3n2n1;
+import frc.robot.commands.autoRoutines.S3n3n2n1;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.commands.S2n3n2n1;
-import frc.robot.commands.S3n3n2n1;
 import frc.robot.commands.ResetSwervePoseCmd;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
