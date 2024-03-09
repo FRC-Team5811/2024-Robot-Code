@@ -83,12 +83,11 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
             )
         );
 
-        ListIterator<Pose2d> midpointIterator2 = midpointsList.listIterator();
-        while (midpointIterator2.hasNext()) {
+        while (midpointIterator.hasPrevious()) {
             addCommands(
                 new ParallelCommandGroup(
                     new IntakeSequence(intake, indexer, true),
-                    new DriveToPoint(swerveSubsystem, midpointIterator2.next(), false)
+                    new DriveToPoint(swerveSubsystem, midpointIterator.previous(), false)
                 )
             );
         }
