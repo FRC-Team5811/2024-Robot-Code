@@ -8,9 +8,7 @@ public class PID {
     private double distance = 1;
     private double target = 1;
     private double error = distance - target;
-    private double f = 0;
     private double accumulation = 0;
-    private double lastTime = 0;
     private boolean continuousInput = false;
     private double lowerLim = 0;
     private double upperLim = 1;
