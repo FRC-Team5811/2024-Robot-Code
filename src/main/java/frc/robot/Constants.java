@@ -141,11 +141,11 @@ public final class Constants {
         public static final Pose2d note2Pose = new Pose2d(2.3, 5.588, new Rotation2d());
         public static final Pose2d note3Pose = new Pose2d(2.3, 7.088, new Rotation2d());
         public static final Pose2d note1Pose = new Pose2d(2.3, 4.1, new Rotation2d());
-        public static final Pose2d note4Pose = new Pose2d(0, 0, new Rotation2d());
-        public static final Pose2d note5Pose = new Pose2d(0, 0, new Rotation2d());
-        public static final Pose2d note6Pose = new Pose2d(0, 0, new Rotation2d());
-        public static final Pose2d note7Pose = new Pose2d(0, 0, new Rotation2d());
-        public static final Pose2d note8Pose = new Pose2d(0, 0, new Rotation2d());
+        public static final Pose2d note4Pose = new Pose2d(7.689, 0.755, new Rotation2d());
+        public static final Pose2d note5Pose = new Pose2d(7.689, 2.443, new Rotation2d());
+        public static final Pose2d note6Pose = new Pose2d(7.689, 4.131, new Rotation2d());
+        public static final Pose2d note7Pose = new Pose2d(7.689, 5.813, new Rotation2d());
+        public static final Pose2d note8Pose = new Pose2d(7.689, 7.500, new Rotation2d());
         public static final Pose2d mid1ForwardPose = new Pose2d(5.482, 1.575, new Rotation2d());
         public static final Pose2d mid1BackPose = new Pose2d(1.905, 1.575, new Rotation2d());
         public static final Pose2d mid2ForwardPose = new Pose2d(5.842, 6.477, new Rotation2d());

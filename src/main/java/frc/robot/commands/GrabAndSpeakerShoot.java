@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -63,7 +64,8 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
             );
     }
 
-    public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose, List<Pose2d> midpointsList) {
+    public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose, Pose2d[] midpointsArray) {
+        List<Pose2d> midpointsList = Arrays.asList(midpointsArray);
         ListIterator<Pose2d> midpointIterator = midpointsList.listIterator();
         while (midpointIterator.hasNext()) {
             addCommands(

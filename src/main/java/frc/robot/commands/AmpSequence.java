@@ -42,7 +42,9 @@ public class AmpSequence extends Command {
 
     @Override
     public void execute() {
-        cycles += 1;
+        if (!indexer.getLimitBool()) {
+            cycles += 1;
+        }
         shooter.runAmpDiverter();
         indexer.ampScore();
     }

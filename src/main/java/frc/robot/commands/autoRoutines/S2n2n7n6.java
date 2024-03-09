@@ -1,15 +1,7 @@
 package frc.robot.commands.autoRoutines;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.commands.GrabAndSpeakerShoot;
 import frc.robot.commands.ResetSwervePoseCmd;
 import frc.robot.commands.SpeakerSequence;
@@ -26,14 +18,22 @@ public class S2n2n7n6 extends SequentialCommandGroup{
             //pre-loaded note
             new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start2Pose),
             new SpeakerSequence(shooter, indexer),
+            
             //note 2
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note2Pose, Constants.AutoConstants.start2Pose),
+            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
+            Constants.AutoConstants.note2Pose, 
+            Constants.AutoConstants.start2Pose),
 
             //note 6
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note7Pose, Constants.AutoConstants.start2Pose, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(-1.0, 0.5, new Rotation2d()))),
+            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
+            Constants.AutoConstants.note7Pose, Constants.AutoConstants.start2Pose, 
+            Constants.AutoConstants.mid2ForwardPose),
   
             //note 7
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, Constants.AutoConstants.note6Pose, Constants.AutoConstants.start2Pose, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(-1.0, 0.5, new Rotation2d())))
+            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
+            Constants.AutoConstants.note6Pose, 
+            Constants.AutoConstants.start2Pose, 
+            Constants.AutoConstants.mid2ForwardPose)
         );
     }
 }
