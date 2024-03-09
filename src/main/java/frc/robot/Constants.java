@@ -204,13 +204,15 @@ public final class Constants {
     }
     
     public static class VisionConstants {
-        public static final Transform3d robotToCam =
+        public static final Transform3d robotToCamera =
                 new Transform3d(
                         new Translation3d(Units.inchesToMeters(4), Units.inchesToMeters(6), Units.inchesToMeters(11)),
                         new Rotation3d(
                                 0, 0,
                                 0)); // Cam mounted facing forward, half a meter forward of center, half a meter up
         // from center.
-        public static final String cameraName = "BONDS5811";
+        public static final String cameraName = "Camera0";
+        public static final int gamePiecePipeline = 0;
+        public static final int aprilTagPipeline = 1;
     }
 }
