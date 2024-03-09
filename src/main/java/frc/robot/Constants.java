@@ -146,6 +146,11 @@ public final class Constants {
         public static final Pose2d note6Pose = new Pose2d(0, 0, new Rotation2d());
         public static final Pose2d note7Pose = new Pose2d(0, 0, new Rotation2d());
         public static final Pose2d note8Pose = new Pose2d(0, 0, new Rotation2d());
+        public static final Pose2d mid1ForwardPose = new Pose2d(5.482, 1.575, new Rotation2d());
+        public static final Pose2d mid1BackPose = new Pose2d(1.905, 1.575, new Rotation2d());
+        public static final Pose2d mid2ForwardPose = new Pose2d(5.842, 6.477, new Rotation2d());
+        public static final Pose2d mid3SneakBackPose = new Pose2d(1.905, 7.747, new Rotation2d());
+        public static final Pose2d mid3SneakForwardPose = new Pose2d(6.477, 7.747, new Rotation2d());
         
     }
 

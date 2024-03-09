@@ -27,8 +27,10 @@ public class S3n8n7 extends SequentialCommandGroup{
     // List<Pose2d> midpointsNote8 = new ArrayList<Pose2d>();
     // midpointsNote8.add(Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0.5, new Rotation2d())));
 
-    // List<Pose2d> midpointsNote7 = new ArrayList<Pose2d>();
-    // midPointsNote7.add(Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0.5, new Rotation2d())));
+    // Pose2d[] midpointsNote7Array = {};
+    // List<Pose2d> midpointsNote7 = new ArrayList<Pose2d>(midpointsNote7Array.asList());
+    // midPointsNote7.add();
+    //.add(Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0.5, new Rotation2d())));
 
     public S3n8n7(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter) {
 
