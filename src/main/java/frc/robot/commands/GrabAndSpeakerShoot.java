@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Intake;
+import frc.robot.Constants;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -21,17 +22,17 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
     public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose) {
 
         addCommands(
-            new ParallelDeadlineGroup(
-                new DriveToPoint(swerveSubsystem, notePose),
+            new ParallelRaceGroup(
+                new DriveToPoint(swerveSubsystem, notePose, 0.1, 5, Constants.AutoConstants.kMaxSpeedMetersPerSecond, false, 7, 0.2, 2, 8, 0, 0.1),
                 new IntakeSequence(intake, indexer, false)
             ),
             new ParallelRaceGroup(
                 new IntakeSequence(intake, indexer, true),
-                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(0.3, 0, new Rotation2d())),  0.05, 2.5, 2, true)
+                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(1, 0, new Rotation2d())),  0.1, 2.5, 5, false)
             ),
-            new ParallelCommandGroup(
-                new IntakeSequence(intake, indexer, true),
+            new ParallelDeadlineGroup(
                 new DriveToPoint(swerveSubsystem, firePose, false),
+                new IntakeSequence(intake, indexer, true),
                 new SpeakerRampUp(shooter)
             ),
             new SpeakerSequence(shooter, indexer)
@@ -42,21 +43,21 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
     public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter, Pose2d notePose, Pose2d firePose, Pose2d midpoint) {
 
         addCommands(
-            new DriveToPoint(swerveSubsystem, midpoint),
+            new DriveToPoint(swerveSubsystem, midpoint, 0.15, 2.5,Constants.AutoConstants.kMaxSpeedMetersPerSecond, false),
             new ParallelDeadlineGroup(
                 new DriveToPoint(swerveSubsystem, notePose),
                 new IntakeSequence(intake, indexer, false)
             ),new ParallelRaceGroup(
                 new IntakeSequence(intake, indexer, true),
-                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(0.3, 0, new Rotation2d())),  0.05, 2.5, 1, true)
+                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(1, 0, new Rotation2d())),  0.05, 2.5, 5, true)
             ),
-            new ParallelCommandGroup(
-                new IntakeSequence(intake, indexer, true),
-                new DriveToPoint(swerveSubsystem, midpoint, true)
+            new ParallelDeadlineGroup(
+                new DriveToPoint(swerveSubsystem, midpoint, 0.15, 5,Constants.AutoConstants.kMaxSpeedMetersPerSecond, false),
+                new IntakeSequence(intake, indexer, true)
             ),
-            new ParallelCommandGroup(
-                new IntakeSequence(intake, indexer, true),
+            new ParallelDeadlineGroup(
                 new DriveToPoint(swerveSubsystem, firePose, true),
+                new IntakeSequence(intake, indexer, true),
                 new SpeakerRampUp(shooter)
             ),
             new SpeakerSequence(shooter, indexer)
@@ -69,7 +70,7 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
         ListIterator<Pose2d> midpointIterator = midpointsList.listIterator();
         while (midpointIterator.hasNext()) {
             addCommands(
-                new DriveToPoint(swerveSubsystem, midpointIterator.next(), false)
+                new DriveToPoint(swerveSubsystem, midpointIterator.next(), 0.15, 2.5, Constants.AutoConstants.kMaxSpeedMetersPerSecond, false)
             );
         }
 
@@ -81,23 +82,23 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
             ),
             new ParallelRaceGroup(
                 new IntakeSequence(intake, indexer, true),
-                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(0.3, 0, new Rotation2d())),  0.05, 2.5, 1, true)
+                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(1, 0, new Rotation2d())),  0.05, 2.5, 5, true)
             )
         );
 
         while (midpointIterator.hasPrevious()) {
             addCommands(
-                new ParallelCommandGroup(
-                    new IntakeSequence(intake, indexer, true),
-                    new DriveToPoint(swerveSubsystem, midpointIterator.previous(), false)
+                new ParallelDeadlineGroup(
+                    new DriveToPoint(swerveSubsystem, midpointIterator.previous(), 0.15, 2.5,Constants.AutoConstants.kMaxSpeedMetersPerSecond, false),
+                    new IntakeSequence(intake, indexer, true)
                 )
             );
         }
 
         addCommands(
-            new ParallelCommandGroup(
-                new IntakeSequence(intake, indexer, true),
+            new ParallelDeadlineGroup(
                 new DriveToPoint(swerveSubsystem, firePose, true),
+                new IntakeSequence(intake, indexer, true),
                 new SpeakerRampUp(shooter)
             ),
             new SpeakerSequence(shooter, indexer)

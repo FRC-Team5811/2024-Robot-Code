@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,7 +18,7 @@ public class DriveToPoint extends Command {
     Pose2d processedTargetPose;
     PID xController;
     PID yController;
-    PID thetaController;
+    PIDController thetaController;
     ChassisSpeeds prevChassisSpeeds;
     boolean stop;  
     double xyTolerance;
@@ -106,7 +107,7 @@ public class DriveToPoint extends Command {
   // thetaController.enableContinuousInput(-Math.PI, Math.PI);
   xController = new PID(kPxy, kIxy, kDxy);
   yController = new PID(kPxy, kIxy, kDxy);
-  thetaController = new PID(kPtheta, kItheta, kDtheta);
+  thetaController = new PIDController(kPtheta, kItheta, kDtheta);
   thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
   prevChassisSpeeds = swerveSubsystem.getChassisSpeeds();

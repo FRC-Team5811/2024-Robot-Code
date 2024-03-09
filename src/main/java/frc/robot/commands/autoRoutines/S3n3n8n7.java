@@ -1,5 +1,6 @@
 package frc.robot.commands.autoRoutines;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -23,17 +24,22 @@ public class S3n3n8n7 extends SequentialCommandGroup{
             // note 3
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note3Pose, 
-            Constants.AutoConstants.start3Pose),
+            Constants.AutoConstants.start3Pose,
+            new Pose2d(Constants.AutoConstants.note3Pose.getX()-1, 
+                Constants.AutoConstants.note3Pose.getY(), 
+                Rotation2d.fromDegrees(60))),
             
             //note 8
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note8Pose, Constants.AutoConstants.start3Pose, 
-            Constants.AutoConstants.mid3SneakForwardPose.transformBy(new Transform2d(0, 0, new Rotation2d(60)))),
+            new Pose2d[] {Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0, 
+                Rotation2d.fromDegrees(60))), Constants.AutoConstants.note3Pose} ),
             
             //note 7
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note7Pose, Constants.AutoConstants.start3Pose, 
-            Constants.AutoConstants.mid3SneakForwardPose.transformBy(new Transform2d(0, 0, new Rotation2d(60))))
+            new Pose2d[] {Constants.AutoConstants.note3Pose.transformBy(new Transform2d(0, 0, 
+                Rotation2d.fromDegrees(60))), Constants.AutoConstants.note3Pose} )
         );
     }
 }

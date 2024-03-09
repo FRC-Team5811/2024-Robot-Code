@@ -10,10 +10,19 @@ public class SpeakerSequence extends Command {
     private final Shooter shooter;
     private final Indexer indexer;
     private int cycles = 0;
+    private double speakerRPM = Constants.ManipConstants.shooterSpeakerRPMLower;
 
     public SpeakerSequence(Shooter shooter, Indexer indexer) {
         this.indexer = indexer;
         this.shooter = shooter;
+        addRequirements(shooter);
+        addRequirements(indexer);
+    }
+
+    public SpeakerSequence(Shooter shooter, Indexer indexer, double speakerRPM) {
+        this.indexer = indexer;
+        this.shooter = shooter;
+        this.speakerRPM = speakerRPM;
         addRequirements(shooter);
         addRequirements(indexer);
     }
@@ -24,9 +33,10 @@ public class SpeakerSequence extends Command {
 
     @Override
     public void execute() {
-        shooter.autoSpeakerShotRampUp();
+        shooter.autoSpeakerShotRampUp(speakerRPM);
         shooter.runSpeakerDiverter();
-        if (shooter.getSpeakersRPM() >= 0.5*Constants.ManipConstants.shooterSpeakerRPMLower) {
+        if (shooter.getLowerSpeakerRPM() >= 0.95*speakerRPM
+            && shooter.getUpperSpeakerRPM() >= 0.95*speakerRPM) {
             indexer.speakerScore();
         }
         if (!indexer.getLimitBool()) {

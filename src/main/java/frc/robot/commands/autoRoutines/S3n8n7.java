@@ -27,14 +27,15 @@ public class S3n8n7 extends SequentialCommandGroup{
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note8Pose, 
             Constants.AutoConstants.start3Pose, 
-            new Pose2d[] {Constants.AutoConstants.mid3SneakBackPose.transformBy(new Transform2d(0, 0, new Rotation2d(60))), 
+            new Pose2d[] {Constants.AutoConstants.mid3SneakBackPose, 
                 Constants.AutoConstants.mid3SneakForwardPose}),
+            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start3Pose.transformBy(new Transform2d(0.45, 0, new Rotation2d()))),
 
             //note 7
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note7Pose, 
             Constants.AutoConstants.start3Pose, 
-            new Pose2d[] {Constants.AutoConstants.mid3SneakBackPose.transformBy(new Transform2d(0, 0, new Rotation2d(60))), 
+            new Pose2d[] {Constants.AutoConstants.mid3SneakBackPose, 
                 Constants.AutoConstants.mid3SneakForwardPose}),
 
             //drive to center

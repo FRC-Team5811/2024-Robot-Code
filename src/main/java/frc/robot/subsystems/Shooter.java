@@ -47,13 +47,33 @@ public class Shooter extends SubsystemBase {
         speakerUpperMotor.set(expectedOutputUpper + pidOutputUpper);
     }
 
+    public void autoSpeakerShotRampUp(double speakerRPM) {
+        double shooterSetpointRPMLower = speakerRPM;
+        double shooterSetpointRPMUpper = speakerRPM;
+        double maxRPM = Constants.ManipConstants.shooterMaxRPM;
+
+        double rpmLower = shooterEncoderLower.getVelocity();
+        double rpmUpper = shooterEncoderUpper.getVelocity();
+        double expectedOutputLower = (1.0/maxRPM) * (shooterSetpointRPMLower);
+        double expectedOutputUpper = (1.0/maxRPM) * (shooterSetpointRPMUpper);
+        double pidOutputLower = (1.0/maxRPM) * shooterPIDLower.calculate(rpmLower, shooterSetpointRPMLower);
+        double pidOutputUpper = (1.0/maxRPM) * shooterPIDUpper.calculate(rpmUpper, shooterSetpointRPMUpper);
+        
+        speakerLowerMotor.set(expectedOutputLower + pidOutputLower);
+        speakerUpperMotor.set(expectedOutputUpper + pidOutputUpper);
+    }
+
     public boolean speakersAtSpeed() {
         return (shooterEncoderLower.getVelocity() >= Constants.ManipConstants.shooterSpeakerRPMLower);
     }
 
-    public double getSpeakersRPM() {
+    public double getLowerSpeakerRPM() {
         return (shooterEncoderLower.getVelocity());
     }
+
+    public double getUpperSpeakerRPM() {
+        return (shooterEncoderUpper.getVelocity());
+    }   
 
     public void manualSpeakerMotors(double speed) {
         speakerUpperMotor.set(speed);

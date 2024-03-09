@@ -113,7 +113,7 @@ public final class Constants {
         public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 6;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 5;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 10;
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = 32 * Math.PI;
         public static final double kPXController = 1;
         public static final double kPYController = 1;
@@ -132,20 +132,20 @@ public final class Constants {
                         kMaxSpeedMetersPerSecond,
                         kMaxAccelerationMetersPerSecondSquared);
         
-        public static final Pose2d start1Pose = new Pose2d(0.81, 4.38, Rotation2d.fromDegrees(-60));
-        public static final Pose2d start2Pose = new Pose2d(1.357, 5.488, new Rotation2d());
-        public static final Pose2d start3Pose = new Pose2d(0.60, 6.85, Rotation2d.fromDegrees(60));
-        public static final Pose2d note2Pose = new Pose2d(2.3, 5.588, new Rotation2d());
-        public static final Pose2d note3Pose = new Pose2d(2.3, 7.088, new Rotation2d());
-        public static final Pose2d note1Pose = new Pose2d(2.3, 4.1, new Rotation2d());
-        public static final Pose2d note4Pose = new Pose2d(7.689, 0.755, new Rotation2d());
-        public static final Pose2d note5Pose = new Pose2d(7.689, 2.443, new Rotation2d());
-        public static final Pose2d note6Pose = new Pose2d(7.689, 4.131, new Rotation2d());
-        public static final Pose2d note7Pose = new Pose2d(7.689, 5.813, new Rotation2d());
-        public static final Pose2d note8Pose = new Pose2d(7.689, 7.500, new Rotation2d());
+        public static final Pose2d start1Pose = new Pose2d(0.81, 4.38, Rotation2d.fromDegrees(-60)); //DNC
+        public static final Pose2d start2Pose = new Pose2d(1.577, 5.6, new Rotation2d()); //DNC
+        public static final Pose2d start3Pose = new Pose2d(0.49, 7.064, Rotation2d.fromDegrees(60)); //DNC
+        public static final Pose2d note2Pose = new Pose2d(2.1, 5.588, new Rotation2d()); //DNC
+        public static final Pose2d note3Pose = new Pose2d(2.1, 7.088, new Rotation2d()); //DO NOT CHANGE
+        public static final Pose2d note1Pose = new Pose2d(2.1, 4.0, new Rotation2d()); //DNC
+        public static final Pose2d note4Pose = new Pose2d(8.2, 0.755, new Rotation2d());
+        public static final Pose2d note5Pose = new Pose2d(8.2, 2.443, new Rotation2d());
+        public static final Pose2d note6Pose = new Pose2d(8.2, 4.131, new Rotation2d());
+        public static final Pose2d note7Pose = new Pose2d(8.2, 5.9, new Rotation2d());
+        public static final Pose2d note8Pose = new Pose2d(8.2, 7.35, new Rotation2d()); //DO NOT CHANGE
         public static final Pose2d mid1ForwardPose = new Pose2d(5.482, 1.575, new Rotation2d());
         public static final Pose2d mid1BackPose = new Pose2d(1.905, 1.575, new Rotation2d());
-        public static final Pose2d mid2ForwardPose = new Pose2d(5.842, 6.477, new Rotation2d());
+        public static final Pose2d mid2ForwardPose = new Pose2d(5.842, 6.7, new Rotation2d());
         public static final Pose2d mid3SneakBackPose = new Pose2d(1.905, 7.747, new Rotation2d());
         public static final Pose2d mid3SneakForwardPose = new Pose2d(6.477, 7.747, new Rotation2d());
         

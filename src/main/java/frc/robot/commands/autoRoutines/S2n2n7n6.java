@@ -26,12 +26,12 @@ public class S2n2n7n6 extends SequentialCommandGroup{
 
             //note 6
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
-            Constants.AutoConstants.note7Pose, Constants.AutoConstants.start2Pose, 
+            Constants.AutoConstants.note6Pose, Constants.AutoConstants.start2Pose, 
             Constants.AutoConstants.mid2ForwardPose),
   
             //note 7
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
-            Constants.AutoConstants.note6Pose, 
+            Constants.AutoConstants.note7Pose, 
             Constants.AutoConstants.start2Pose, 
             Constants.AutoConstants.mid2ForwardPose)
         );
