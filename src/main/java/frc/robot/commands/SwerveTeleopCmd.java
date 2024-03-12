@@ -132,9 +132,9 @@ public class SwerveTeleopCmd extends Command {
 
         // apply slow mode
         if (slowMode) {
-            xSpeed = xSpeed * 0.15;
-            ySpeed = ySpeed * 0.15;
-            turningSpeed = turningSpeed * 0.15;
+            xSpeed = xSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
+            ySpeed = ySpeed * Constants.DriveConstants.SlowModeSpeedPercent;
+            turningSpeed = turningSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
         }
 
         // apply field oriented control if active

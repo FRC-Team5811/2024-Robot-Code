@@ -18,6 +18,7 @@ import frc.robot.commands.autoRoutines.S2n3n2n1;
 import frc.robot.commands.autoRoutines.S3n3n2n1;
 import frc.robot.commands.autoRoutines.S3n3n8n7;
 import frc.robot.commands.autoRoutines.S3n8n7;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -30,6 +31,7 @@ public class RobotContainer {
     public final Intake intake = new Intake();
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
+    public final Climber climber = new Climber();
 
     // Controllers
     public final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);

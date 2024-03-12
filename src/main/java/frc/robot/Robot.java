@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AmpSequence;
+import frc.robot.commands.ClimberTeleopCmd;
 import frc.robot.commands.IntakeSequence;
 import frc.robot.commands.SpeakerSequence;
 import frc.robot.commands.IndexerTeleopCmd;
@@ -154,14 +155,14 @@ public class Robot extends TimedRobot {
         robotContainer.intake.setDefaultCommand(new IntakeTeleopCmd(
             robotContainer.intake,
             () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
-            () -> robotContainer.manipPOVDownValue
+            () -> false
             ));
 
         // manual indexer controls on manip controller
         robotContainer.indexer.setDefaultCommand(new IndexerTeleopCmd(
             robotContainer.indexer,
             () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
-            () -> robotContainer.manipPOVDownValue,
+            () -> false,
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
             () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
             ));
@@ -170,9 +171,15 @@ public class Robot extends TimedRobot {
         robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
             robotContainer.shooter,
             () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
-            () -> robotContainer.manipController.getRawButton(OIConstants.shooterManualButton),
-            () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton)
+            () -> false,
+            () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
+            () -> robotContainer.manipController.getRawButton(OIConstants.shooterRampUpButton)
             ));
+        // manual climber controls on manip controller
+        robotContainer.climber.setDefaultCommand(new ClimberTeleopCmd(
+            robotContainer.climber,
+            () -> robotContainer.manipPOVUpValue, 
+            () -> robotContainer.manipPOVDownValue));
     }
 
     private void configureButtonBindings() {

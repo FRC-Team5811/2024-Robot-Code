@@ -14,15 +14,17 @@ public class ShooterTeleopCmd extends Command {
     private final Supplier<Double> shooterAnalogFunction;
     private final Supplier<Boolean> shooterButtonFunction;
     private final Supplier<Boolean> ampScoreButtonFunction;
+    private final Supplier<Boolean> shooterRampUpButton;
 
     private final SlewRateLimiter shooterAnalogLimiter;
 
     public ShooterTeleopCmd(Shooter shooter, Supplier<Double> shooterAnalogFunction,
-        Supplier<Boolean> shooterHoldFunction, Supplier<Boolean> ampScoreButtonFunction) {
+        Supplier<Boolean> shooterHoldFunction, Supplier<Boolean> ampScoreButtonFunction, Supplier<Boolean> shooterRampUpButton) {
         this.shooter = shooter;
         this.shooterAnalogFunction = shooterAnalogFunction;
         this.shooterButtonFunction = shooterHoldFunction;
         this.ampScoreButtonFunction = ampScoreButtonFunction;
+        this.shooterRampUpButton = shooterRampUpButton;
         shooterAnalogLimiter = new SlewRateLimiter(Constants.ManipConstants.shooterAnalogMaxRate);
         addRequirements(shooter);
     }
@@ -39,6 +41,9 @@ public class ShooterTeleopCmd extends Command {
 
             shooter.autoSpeakerShotRampUp();
             shooter.runSpeakerDiverter();
+        }
+        else if (shooterRampUpButton.get()) {
+            shooter.autoSpeakerShotRampUp();
         }
         else {
             double input = shooterAnalogFunction.get();

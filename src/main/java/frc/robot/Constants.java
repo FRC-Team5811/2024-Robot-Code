@@ -84,15 +84,16 @@ public final class Constants {
         public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.6;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond * 0.9;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
                 kPhysicalMaxAngularSpeedRadiansPerSecond * 0.5;  
         public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 30;
         public static final double kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared = 8 * Math.PI;
+        public static final double SlowModeSpeedPercent = 0.3;
 
-        public static final double kPThetaLockTurning = 2;
+        public static final double kPThetaLockTurning = 3;
         public static final double kIThetaLockTurning = 0;
-        public static final double kDThetaLockTurning = 0;
+        public static final double kDThetaLockTurning = 0.5;
     }
 
     public static final class ManipConstants {
@@ -198,6 +199,7 @@ public final class Constants {
         public static final int shooterManualButton = YButton;
         public static final int ampShotSequenceButton = BButton;
         public static final int speakerShotSequenceButton = XButton;
+        public static final int shooterRampUpButton = RightTriggerButton;
     }
 
     public static class FieldConstants {
