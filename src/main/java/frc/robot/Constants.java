@@ -12,7 +12,8 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-    public static boolean dashboardDebugMode = true;
+    public static int ledPort;
+    public static int ledCount;
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);

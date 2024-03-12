@@ -43,4 +43,8 @@ public class Indexer extends SubsystemBase {
         return limitSwitch.get();
     }
 
+    public boolean isNoteLoaded() {
+        return getLimitBool();
+    }
+
 }

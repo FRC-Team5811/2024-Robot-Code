@@ -63,17 +63,27 @@ public class Shooter extends SubsystemBase {
         speakerUpperMotor.set(expectedOutputUpper + pidOutputUpper);
     }
 
-    public boolean speakersAtSpeed() {
-        return (shooterEncoderLower.getVelocity() >= Constants.ManipConstants.shooterSpeakerRPMLower);
-    }
-
     public double getLowerSpeakerRPM() {
         return (shooterEncoderLower.getVelocity());
     }
 
     public double getUpperSpeakerRPM() {
         return (shooterEncoderUpper.getVelocity());
-    }   
+    }
+
+    public boolean isShooterWheelsWarmup() {
+        return (
+            speakerLowerMotor.get() > 0.1 &&
+            speakerUpperMotor.get() > 0.1
+            );
+    }
+
+    public boolean isShooterWheelsReady() {
+        return (
+            getLowerSpeakerRPM() > 0.95 * Constants.ManipConstants.shooterSpeakerRPMLower &&
+            getUpperSpeakerRPM() > 0.95 * Constants.ManipConstants.shooterSpeakerRPMUpper
+            );
+    }
 
     public void manualSpeakerMotors(double speed) {
         speakerUpperMotor.set(speed);
@@ -87,6 +97,10 @@ public class Shooter extends SubsystemBase {
 
     public void runAmpDiverter() {
         diverterMotor.set(diverterAmpShotMotorSpeed);
+    }
+
+    public boolean isShootingAmp() {
+        return diverterMotor.get() == diverterAmpShotMotorSpeed;
     }
 
     public void runSpeakerDiverter() {

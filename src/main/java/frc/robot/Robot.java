@@ -32,15 +32,19 @@ public class Robot extends TimedRobot {
 
     private boolean delayedInitialized = false;
 
-    private boolean allianceColorKnown = false;
+    public static boolean allianceColorKnown = false;
     public static Alliance allianceColor = Alliance.Blue;
     private double lastAllianceColorCheck = -1;
 
     private Field2d driverField = new Field2d();
     private Field2d debugField = new Field2d();
 
+    private static Robot instance = null;
+
     @Override
     public void robotInit() {
+        instance = this;
+
         robotContainer = new RobotContainer();
 
         configureButtonBindings();
@@ -82,6 +86,11 @@ public class Robot extends TimedRobot {
         updateAllianceColor();
         driverField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
         debugField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
+    }
+
+    public static boolean isInstanceDisabled() {
+        if (instance == null) return true;
+        return instance.isDisabled();
     }
 
     @Override

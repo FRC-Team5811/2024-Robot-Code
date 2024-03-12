@@ -21,6 +21,7 @@ import frc.robot.commands.autoRoutines.S3n8n7;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -32,6 +33,7 @@ public class RobotContainer {
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Climber climber = new Climber();
+    public final LEDs leds = new LEDs(this);
 
     // Controllers
     public final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -54,6 +56,8 @@ public class RobotContainer {
         CommandScheduler.getInstance().registerSubsystem(intake);
         CommandScheduler.getInstance().registerSubsystem(indexer);
         CommandScheduler.getInstance().registerSubsystem(shooter);
+        CommandScheduler.getInstance().registerSubsystem(climber);
+        CommandScheduler.getInstance().registerSubsystem(leds);
 
         var s1n1n2n3 = new S1n1n2n3(swerveSubsystem, intake, indexer, shooter);
         var s1n1n4n5 = new S1n1n4n5(swerveSubsystem, intake, indexer, shooter);
