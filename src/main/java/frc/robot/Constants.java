@@ -12,8 +12,8 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-    public static int ledPort;
-    public static int ledCount;
+    public static int ledPort = 4;
+    public static int ledCount = 150;
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
