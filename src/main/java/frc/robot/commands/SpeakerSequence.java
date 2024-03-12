@@ -43,6 +43,7 @@ public class SpeakerSequence extends Command {
         if (!indexer.getLimitBool()) {
             limitCycles += 1;
         }
+        cycles++;
     }
 
     @Override

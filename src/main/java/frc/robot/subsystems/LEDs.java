@@ -37,7 +37,7 @@ public class LEDs extends SubsystemBase {
         else if (robotContainer.indexer.isNoteLoaded()) { noteLoadedLogic(); }
         else if (robotContainer.intake.isNoteInIntake()) { noteInIntakeLogic(); }
         else if (robotContainer.intake.isIntaking()) { intakingLogic(); }
-        else idleLogic();
+        else { idleLogic(); }
 
         // set the data after the buffer is changed
         led.setData(buffer);
@@ -71,18 +71,16 @@ public class LEDs extends SubsystemBase {
 
     private void intakingLogic() {
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright green
+            // bright red
             buffer.setHSV(i, 0, 255, 255);
         }
     }
 
     private void noteInIntakeLogic() {
-        // flashing green
-
-        int value = cycleCount % 25 < 13 ? 255 : 0;
+        // int value = cycleCount % 25 < 13 ? 255 : 0;
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright green
-            buffer.setHSV(i, 120 / 2, 255, value);
+            // bright blue
+            buffer.setHSV(i, 120 / 2, 255, 255);
         }
     }
 
