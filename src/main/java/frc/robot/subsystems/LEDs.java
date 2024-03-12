@@ -72,7 +72,7 @@ public class LEDs extends SubsystemBase {
     private void intakingLogic() {
         for (int i = 0; i < buffer.getLength(); i++) {
             // bright green
-            buffer.setHSV(i, 120 / 2, 255, 255);
+            buffer.setHSV(i, 0, 255, 255);
         }
     }
 
@@ -88,8 +88,8 @@ public class LEDs extends SubsystemBase {
 
     private void noteLoadedLogic() {
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright orange
-            buffer.setHSV(i, 32 / 2, 255, 255);
+            // bright blue
+            buffer.setHSV(i, 240 / 2, 255, 255);
         }
     }
 
@@ -111,12 +111,10 @@ public class LEDs extends SubsystemBase {
     }
 
     private void shooterWheelsReadyLogic() {
-        // flashing red
-
-        int value = cycleCount % 25 < 13 ? 255 : 0; // flash on and off every 0.5 seconds
+        // int value = cycleCount % 25 < 13 ? 255 : 0; // flash on and off every 0.5 seconds
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright red
-            buffer.setHSV(i, 0, 255, value);
+            // bright purple
+            buffer.setHSV(i, 290 / 2, 255, 255);
         }
     }
 

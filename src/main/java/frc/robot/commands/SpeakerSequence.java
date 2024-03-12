@@ -10,6 +10,7 @@ public class SpeakerSequence extends Command {
     private final Shooter shooter;
     private final Indexer indexer;
     private int cycles = 0;
+    private int limitCycles = 0;
     private double speakerRPM = Constants.ManipConstants.shooterSpeakerRPMLower;
 
     public SpeakerSequence(Shooter shooter, Indexer indexer) {
@@ -40,13 +41,13 @@ public class SpeakerSequence extends Command {
             indexer.speakerScore();
         }
         if (!indexer.getLimitBool()) {
-            cycles += 1;
+            limitCycles += 1;
         }
     }
 
     @Override
     public boolean isFinished() {
-        if (cycles > 0.6*50) {
+        if (cycles > 3*50 || limitCycles > 0.6*50) {
             return true;
         }
         return false;
