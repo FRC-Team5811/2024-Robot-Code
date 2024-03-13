@@ -66,7 +66,9 @@ public class ShooterTeleopCmd extends Command {
                 shooter.runSpeakerDiverter();
             }
             else {
-                shooter.stopDiverter();
+                if (!diverterSpeakerFireButton.get()) {
+                    shooter.stopDiverter();
+                }
             }
         }
     }
