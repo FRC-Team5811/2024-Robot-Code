@@ -26,16 +26,16 @@ public class S1n4n5 extends SequentialCommandGroup{
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note4Pose, 
             Constants.AutoConstants.start1Pose, 
-            new Pose2d[] {Constants.AutoConstants.mid1BackPose.transformBy(new Transform2d(0, 0, new Rotation2d(-60))), Constants.AutoConstants.mid1ForwardPose}),
+            new Pose2d[] {Constants.AutoConstants.mid1BackPose.transformBy(new Transform2d(0, 0, Rotation2d.fromDegrees(-60))), Constants.AutoConstants.mid1ForwardPose}),
             
             //note 5
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note5Pose, 
             Constants.AutoConstants.start1Pose, 
-            new Pose2d[] {Constants.AutoConstants.mid1BackPose.transformBy(new Transform2d(0, 0, new Rotation2d(-60))), Constants.AutoConstants.mid1ForwardPose}),
+            new Pose2d[] {Constants.AutoConstants.mid1BackPose.transformBy(new Transform2d(0, 0, Rotation2d.fromDegrees(-60))), Constants.AutoConstants.mid1ForwardPose}),
             
             //drive to center
-            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note4Pose.transformBy(new Transform2d(-1, 0, new Rotation2d(-60)))),
+            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note4Pose.transformBy(new Transform2d(-1, 0, Rotation2d.fromDegrees(-60)))),
             new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note6Pose)
         );
     }
