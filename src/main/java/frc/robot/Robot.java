@@ -157,7 +157,12 @@ public class Robot extends TimedRobot {
             () -> robotContainer.driverController.getRawAxis(OIConstants.kDriverRotAxis),
             () -> robotContainer.driverController.getRawButton(OIConstants.driverFieldOrientedButton),
             () -> robotContainer.driverController.getRawButton(OIConstants.driverResetHeadingButton),
-            () -> robotContainer.driverController.getRawButton(OIConstants.driverSlowModeButton)
+            () -> robotContainer.driverController.getRawAxis(OIConstants.driverSlowModeButton),
+            () -> robotContainer.driverController.getRawAxis(OIConstants.driverBreakButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverForwardSetpointButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverLeftSetpointButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverBackSetpointButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverRightSetpointButton)
             ));
 
         // manual intake controls on manip controller

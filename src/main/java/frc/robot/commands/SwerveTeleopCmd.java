@@ -21,7 +21,13 @@ public class SwerveTeleopCmd extends Command {
     private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
     private final Supplier<Boolean> fieldOrientedToggleFunction;
     private final Supplier<Boolean> resetForwardHeadingFunction;
-    private final Supplier<Boolean> slowModeFunction;
+    private final Supplier<Double> slowModeFunction;
+    private final Supplier<Double> breakFunction;
+    private final Supplier<Boolean> forwardSetpointFunction;
+    private final Supplier<Boolean> rightSetpointFunction;
+    private final Supplier<Boolean> backSetpointFunction;
+    private final Supplier<Boolean> leftSetpointFunction;
+
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
     private final SlewRateLimiter turningLimiter;
@@ -39,7 +45,8 @@ public class SwerveTeleopCmd extends Command {
     public SwerveTeleopCmd(SwerveSubsystem swerveSubsystem,
             Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
             Supplier<Boolean> fieldOrientedToggleFunction, Supplier<Boolean> resetForwardHeadingFunction,
-            Supplier<Boolean> slowModeFunction) {
+            Supplier<Double> slowModeFunction, Supplier<Double> breakFunction, Supplier<Boolean> forwardSetpointFunction, Supplier<Boolean> rightSetpointFunction, 
+            Supplier<Boolean> backSetpointFunction, Supplier<Boolean> leftSetpointFunction) {
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunction = xSpdFunction;
         this.ySpdFunction = ySpdFunction;
@@ -47,6 +54,11 @@ public class SwerveTeleopCmd extends Command {
         this.fieldOrientedToggleFunction = fieldOrientedToggleFunction;
         this.resetForwardHeadingFunction = resetForwardHeadingFunction;
         this.slowModeFunction = slowModeFunction;
+        this.breakFunction = breakFunction;
+        this.forwardSetpointFunction = forwardSetpointFunction;
+        this.rightSetpointFunction = rightSetpointFunction;
+        this.backSetpointFunction = backSetpointFunction;
+        this.leftSetpointFunction = leftSetpointFunction;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationMetersPerSecondSquared);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationMetersPerSecondSquared);
         this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared);
@@ -83,7 +95,9 @@ public class SwerveTeleopCmd extends Command {
         }
         prevResetHeadingInput = resetForwardHeadingFunction.get();
 
-        boolean slowMode = slowModeFunction.get();
+        // boolean slowMode = slowModeFunction.get();
+        // Get brake percent
+        double breakingPercent = 1 - breakFunction.get();
 
         // calculate translational speeds
         double xSpeed = xInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
@@ -95,7 +109,25 @@ public class SwerveTeleopCmd extends Command {
         
         // calculate rotational speed
         double turningSpeed;
-        if (Math.abs(turningInput) > 0.0) { // this code is after deadband
+        //setpoints
+        if (forwardSetpointFunction.get()) {
+            turningSetpoint = 0.0;
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+        }
+        else if (rightSetpointFunction.get()) {
+            turningSetpoint = -Math.PI/2;
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+        }
+        else if (backSetpointFunction.get()) {
+            turningSetpoint = Math.PI;
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+        }
+        else if (leftSetpointFunction.get()) {
+            turningSetpoint = Math.PI/2;
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+        }
+        //for all else other than setpoints
+        else if (Math.abs(turningInput) > 0.0) { // this code is after deadband
             // driver is actively telling the robot to turn
             wasTurningLastFrame = true;
             turningSpeed = turningInput * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
@@ -131,10 +163,16 @@ public class SwerveTeleopCmd extends Command {
         }
 
         // apply slow mode
-        if (slowMode) {
+        if (slowModeFunction.get() > 0.1) {
             xSpeed = xSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
             ySpeed = ySpeed * Constants.DriveConstants.SlowModeSpeedPercent;
             turningSpeed = turningSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
+        }
+        else {
+            //apply break
+            xSpeed = xSpeed * breakingPercent;
+            ySpeed = ySpeed * breakingPercent;
+            turningSpeed = turningSpeed * breakingPercent;
         }
 
         // apply field oriented control if active

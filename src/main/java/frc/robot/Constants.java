@@ -181,9 +181,14 @@ public final class Constants {
         public static final int kDriverYAxis = 1;
         public static final int kDriverXAxis = 0;
         public static final int kDriverRotAxis = 2;
-        public static final int driverFieldOrientedButton = AButton;
-        public static final int driverResetHeadingButton = RightTriggerButton;
+        public static final int driverFieldOrientedButton = RightBumperButton;
+        public static final int driverResetHeadingButton = LeftBumperButton;
         public static final int driverSlowModeButton = LeftTriggerButton;
+        public static final int driverBreakButton = RightTriggerButton;
+        public static final int driverForwardSetpointButton = AButton;
+        public static final int driverRightSetpointButton = BButton;
+        public static final int driverBackSetpointButton = YButton;
+        public static final int driverLeftSetpointButton = XButton;
 
         // intake bindings
         public static final int intakeManualButton = RightBumperButton;
