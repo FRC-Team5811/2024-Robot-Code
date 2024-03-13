@@ -201,6 +201,7 @@ public final class Constants {
         public static final int ampShotSequenceButton = BButton;
         public static final int speakerShotSequenceButton = XButton;
         public static final int shooterRampUpButton = RightTriggerButton;
+        public static final int diverterSpeakerFireButton = LeftBumperButton;
     }
 
     public static class FieldConstants {
