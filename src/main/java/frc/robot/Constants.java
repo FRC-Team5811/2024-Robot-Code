@@ -185,9 +185,9 @@ public final class Constants {
         public static final int driverResetHeadingButton = LeftBumperButton;
         public static final int driverSlowModeButton = LeftTriggerButton;
         public static final int driverBreakButton = RightTriggerButton;
-        public static final int driverForwardSetpointButton = AButton;
+        public static final int driverForwardSetpointButton = YButton;
         public static final int driverRightSetpointButton = BButton;
-        public static final int driverBackSetpointButton = YButton;
+        public static final int driverBackSetpointButton = AButton;
         public static final int driverLeftSetpointButton = XButton;
 
         // intake bindings
