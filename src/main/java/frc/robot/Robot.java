@@ -178,7 +178,7 @@ public class Robot extends TimedRobot {
             () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
             () -> false,
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
-            () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
+            () -> false
             ));
 
         // manual shooter controls on manip controller
@@ -187,7 +187,8 @@ public class Robot extends TimedRobot {
             () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
             () -> false,
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
-            () -> robotContainer.manipController.getRawButton(OIConstants.shooterRampUpButton)
+            () -> robotContainer.manipController.getRawButton(OIConstants.shooterRampUpButton),
+            () -> robotContainer.manipController.getRawButton(OIConstants.diverterSpeakerFireButton)
             ));
         // manual climber controls on manip controller
         robotContainer.climber.setDefaultCommand(new ClimberTeleopCmd(

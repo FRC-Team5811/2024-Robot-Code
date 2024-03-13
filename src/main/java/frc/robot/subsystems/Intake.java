@@ -37,6 +37,6 @@ public class Intake extends SubsystemBase {
 
     public boolean isNoteInIntake() {
         // TODO fix this with note in intake detection!!
-        return isIntaking();
+        return isIntaking() && intakeMotor.getMotorOutputVoltage() < 11.5;
     }
 }

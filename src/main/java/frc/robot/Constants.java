@@ -12,7 +12,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-    public static int ledPort = 4;
+    public static int ledPort = 0;
     public static int ledCount = 150;
 
     public static final class ModuleConstants {
@@ -90,7 +90,7 @@ public final class Constants {
                 kPhysicalMaxAngularSpeedRadiansPerSecond * 0.5;  
         public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 30;
         public static final double kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared = 8 * Math.PI;
-        public static final double SlowModeSpeedPercent = 0.3;
+        public static final double SlowModeSpeedPercent = 0.4;
 
         public static final double kPThetaLockTurning = 3;
         public static final double kIThetaLockTurning = 0;
@@ -206,6 +206,7 @@ public final class Constants {
         public static final int ampShotSequenceButton = BButton;
         public static final int speakerShotSequenceButton = XButton;
         public static final int shooterRampUpButton = RightTriggerButton;
+        public static final int diverterSpeakerFireButton = LeftBumperButton;
     }
 
     public static class FieldConstants {

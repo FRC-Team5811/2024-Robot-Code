@@ -31,13 +31,13 @@ public class LEDs extends SubsystemBase {
 
         // states in order of most to least importance to display
         // each logic function is responsible for setting the buffer with colors
-        if (robotContainer.shooter.isShooterWheelsReady()) shooterWheelsReadyLogic();
-        else if (robotContainer.shooter.isShooterWheelsWarmup()) shooterWheelsWarmupLogic();
-        else if (robotContainer.shooter.isShootingAmp()) shootingAmpLogic();
-        else if (robotContainer.indexer.isNoteLoaded()) noteLoadedLogic();
-        else if (robotContainer.intake.isNoteInIntake()) noteInIntakeLogic();
-        else if (robotContainer.intake.isIntaking()) intakingLogic();
-        else idleLogic();
+        if (robotContainer.shooter.isShooterWheelsReady()) { shooterWheelsReadyLogic(); }
+        else if (robotContainer.shooter.isShooterWheelsWarmup()) { shooterWheelsWarmupLogic(); }
+        else if (robotContainer.shooter.isShootingAmp()) { shootingAmpLogic(); }
+        else if (robotContainer.indexer.isNoteLoaded()) { noteLoadedLogic(); }
+        else if (robotContainer.intake.isNoteInIntake()) { noteInIntakeLogic(); }
+        else if (robotContainer.intake.isIntaking()) { intakingLogic(); }
+        else { idleLogic(); }
 
         // set the data after the buffer is changed
         led.setData(buffer);
@@ -51,7 +51,7 @@ public class LEDs extends SubsystemBase {
             if (!Robot.allianceColorKnown)
                 hue = 290 / 2; // if we don't know alliance color, set to purple
 
-            int value = (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
+            int value = 64; // (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
             for (int i = 0; i < buffer.getLength(); i++) {
                 // black, off
                 buffer.setHSV(i, hue, 255, value);
@@ -61,7 +61,7 @@ public class LEDs extends SubsystemBase {
             // breathe in and out BONDS color
 
             int hue = 42 / 2;
-            int value = (int)Math.sin(2 * Math.PI * cycleCount / 50 / 2); // breathe in and out every 2 seconds
+            int value = 64; //(int)Math.sin(2 * Math.PI * cycleCount / 50 / 2); // breathe in and out every 2 seconds
             for (int i = 0; i < buffer.getLength(); i++) {
                 // black, off
                 buffer.setHSV(i, hue, 255, value);
@@ -71,25 +71,23 @@ public class LEDs extends SubsystemBase {
 
     private void intakingLogic() {
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright green
-            buffer.setHSV(i, 120 / 2, 255, 255);
+            // bright red
+            buffer.setHSV(i, 0, 255, 255);
         }
     }
 
     private void noteInIntakeLogic() {
-        // flashing green
-
-        int value = cycleCount % 25 < 13 ? 255 : 0;
+        // int value = cycleCount % 25 < 13 ? 255 : 0;
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright green
-            buffer.setHSV(i, 120 / 2, 255, value);
+            // bright blue
+            buffer.setHSV(i, 120 / 2, 255, 255);
         }
     }
 
     private void noteLoadedLogic() {
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright orange
-            buffer.setHSV(i, 32 / 2, 255, 255);
+            // bright blue
+            buffer.setHSV(i, 240 / 2, 255, 255);
         }
     }
 
@@ -112,12 +110,10 @@ public class LEDs extends SubsystemBase {
     }
 
     private void shooterWheelsReadyLogic() {
-        // flashing red
-
-        int value = cycleCount % 25 < 13 ? 255 : 0; // flash on and off every 0.5 seconds
+        // int value = cycleCount % 25 < 13 ? 255 : 0; // flash on and off every 0.5 seconds
         for (int i = 0; i < buffer.getLength(); i++) {
-            // bright red
-            buffer.setHSV(i, 0, 255, value);
+            // bright purple
+            buffer.setHSV(i, 290 / 2, 255, 255);
         }
     }
 

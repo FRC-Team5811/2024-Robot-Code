@@ -15,16 +15,18 @@ public class ShooterTeleopCmd extends Command {
     private final Supplier<Boolean> shooterButtonFunction;
     private final Supplier<Boolean> ampScoreButtonFunction;
     private final Supplier<Boolean> shooterRampUpButton;
+    private final Supplier<Boolean> diverterSpeakerFireButton;
 
     private final SlewRateLimiter shooterAnalogLimiter;
 
     public ShooterTeleopCmd(Shooter shooter, Supplier<Double> shooterAnalogFunction,
-        Supplier<Boolean> shooterHoldFunction, Supplier<Boolean> ampScoreButtonFunction, Supplier<Boolean> shooterRampUpButton) {
+        Supplier<Boolean> shooterHoldFunction, Supplier<Boolean> ampScoreButtonFunction, Supplier<Boolean> shooterRampUpButton, Supplier<Boolean> diverterSpeakerFireButton) {
         this.shooter = shooter;
         this.shooterAnalogFunction = shooterAnalogFunction;
         this.shooterButtonFunction = shooterHoldFunction;
         this.ampScoreButtonFunction = ampScoreButtonFunction;
         this.shooterRampUpButton = shooterRampUpButton;
+        this.diverterSpeakerFireButton = diverterSpeakerFireButton;
         shooterAnalogLimiter = new SlewRateLimiter(Constants.ManipConstants.shooterAnalogMaxRate);
         addRequirements(shooter);
     }
@@ -36,6 +38,9 @@ public class ShooterTeleopCmd extends Command {
     @Override
     public void execute() {
         
+        if (diverterSpeakerFireButton.get()) {
+            shooter.runSpeakerDiverter();
+        }
         if (shooterButtonFunction.get()) {
             // manip is pressing speaker shot ramp up button
 
@@ -61,7 +66,9 @@ public class ShooterTeleopCmd extends Command {
                 shooter.runSpeakerDiverter();
             }
             else {
-                shooter.stopDiverter();
+                if (!diverterSpeakerFireButton.get()) {
+                    shooter.stopDiverter();
+                }
             }
         }
     }
