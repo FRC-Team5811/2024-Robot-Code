@@ -102,7 +102,7 @@ public class LEDs extends SubsystemBase {
     }
 
     private void shooterWheelsWarmupLogic() {
-        int value = 255 * (int)(robotContainer.shooter.getLowerSpeakerRPM() / Constants.ManipConstants.shooterSpeakerRPMUpper); //increases intensity as motors spin up
+        int value = (int)(255 * (0.5 + (0.5 * (robotContainer.shooter.getLowerSpeakerRPM() / Constants.ManipConstants.shooterSpeakerRPMUpper)))); //increases intensity as motors spin up
         for (int i = 0; i < buffer.getLength(); i++) {
             // bright red
             buffer.setHSV(i, 0, 255, value);
