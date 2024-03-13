@@ -10,7 +10,7 @@ public class Indexer extends SubsystemBase {
 
     public final CANSparkMax indexerMotor = new CANSparkMax(15, MotorType.kBrushless);
     private DigitalInput limitSwitch = new DigitalInput(0);
-    public final double indexerAmpShotMotorSpeed = 0.3;
+    public final double indexerAmpShotMotorSpeed = 1;
     public final double indexerSpeakerShotMotorSpeed = 1;
     public final double indexerPushSpeed = -1;
     public final double indexerPullSpeed = 1;
