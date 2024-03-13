@@ -31,12 +31,12 @@ public class LEDs extends SubsystemBase {
 
         // states in order of most to least importance to display
         // each logic function is responsible for setting the buffer with colors
-        if (robotContainer.shooter.isShooterWheelsReady()) shooterWheelsReadyLogic();
-        else if (robotContainer.shooter.isShooterWheelsWarmup()) shooterWheelsWarmupLogic();
-        else if (robotContainer.shooter.isShootingAmp()) shootingAmpLogic();
-        else if (robotContainer.indexer.isNoteLoaded()) noteLoadedLogic();
-        else if (robotContainer.intake.isNoteInIntake()) noteInIntakeLogic();
-        else if (robotContainer.intake.isIntaking()) intakingLogic();
+        if (robotContainer.shooter.isShooterWheelsReady()) { shooterWheelsReadyLogic(); }
+        else if (robotContainer.shooter.isShooterWheelsWarmup()) { shooterWheelsWarmupLogic(); }
+        else if (robotContainer.shooter.isShootingAmp()) { shootingAmpLogic(); }
+        else if (robotContainer.indexer.isNoteLoaded()) { noteLoadedLogic(); }
+        else if (robotContainer.intake.isNoteInIntake()) { noteInIntakeLogic(); }
+        else if (robotContainer.intake.isIntaking()) { intakingLogic(); }
         else idleLogic();
 
         // set the data after the buffer is changed
@@ -51,7 +51,7 @@ public class LEDs extends SubsystemBase {
             if (!Robot.allianceColorKnown)
                 hue = 290 / 2; // if we don't know alliance color, set to purple
 
-            int value = (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
+            int value = 64; // (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
             for (int i = 0; i < buffer.getLength(); i++) {
                 // black, off
                 buffer.setHSV(i, hue, 255, value);
@@ -61,7 +61,7 @@ public class LEDs extends SubsystemBase {
             // breathe in and out BONDS color
 
             int hue = 42 / 2;
-            int value = (int)Math.sin(2 * Math.PI * cycleCount / 50 / 2); // breathe in and out every 2 seconds
+            int value = 64; //(int)Math.sin(2 * Math.PI * cycleCount / 50 / 2); // breathe in and out every 2 seconds
             for (int i = 0; i < buffer.getLength(); i++) {
                 // black, off
                 buffer.setHSV(i, hue, 255, value);
