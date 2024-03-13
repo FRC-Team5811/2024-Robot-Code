@@ -173,7 +173,7 @@ public class Robot extends TimedRobot {
             () -> robotContainer.manipController.getRawButton(OIConstants.intakeManualButton),
             () -> false,
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
-            () -> robotContainer.manipController.getRawButton(OIConstants.speakerScoreManualButton)
+            () -> false
             ));
 
         // manual shooter controls on manip controller

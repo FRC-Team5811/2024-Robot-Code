@@ -45,11 +45,11 @@ public class IndexerTeleopCmd extends Command {
 
             indexer.ampScore();
         }
-        // else if (speakerScoreFunction.get()) {
+        else if (speakerScoreFunction.get()) {
             // manip is manually speaker scoring
 
-            //indexer.speakerScore();
-        // }
+            indexer.speakerScore();
+        }
         else {
             indexer.stop();
         }
