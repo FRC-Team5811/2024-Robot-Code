@@ -115,7 +115,7 @@ public class SwerveTeleopCmd extends Command {
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
         else if (rightSetpointFunction.get()) {
-            turningSetpoint = -Math.PI/2;
+            turningSetpoint = Math.PI/2;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
         else if (backSetpointFunction.get()) {
@@ -123,7 +123,7 @@ public class SwerveTeleopCmd extends Command {
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
         else if (leftSetpointFunction.get()) {
-            turningSetpoint = Math.PI/2;
+            turningSetpoint = -Math.PI/2;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
         //for all else other than setpoints
