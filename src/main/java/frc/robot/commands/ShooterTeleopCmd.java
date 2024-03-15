@@ -39,13 +39,10 @@ public class ShooterTeleopCmd extends Command {
     public void execute() {
         
         if (diverterSpeakerFireButton.get()) {
-            shooter.runSpeakerDiverter();
-        }
-        if (shooterButtonFunction.get()) {
-            // manip is pressing speaker shot ramp up button
-
             shooter.autoSpeakerShotRampUp();
-            shooter.runSpeakerDiverter();
+            if (shooter.isShooterWheelsReady()) {
+                shooter.runSpeakerDiverter();
+            }
         }
         else if (shooterRampUpButton.get()) {
             shooter.autoSpeakerShotRampUp();

@@ -185,7 +185,7 @@ public class Robot extends TimedRobot {
         robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
             robotContainer.shooter,
             () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
-            () -> false,
+            () -> robotContainer.manipController.getRawButton(OIConstants.speakerShotSequenceButton),
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
             () -> robotContainer.manipController.getRawButton(OIConstants.shooterRampUpButton),
             () -> robotContainer.manipController.getRawButton(OIConstants.diverterSpeakerFireButton)

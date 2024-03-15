@@ -61,6 +61,7 @@ public class SpeakerSequence extends Command {
         indexer.stop();
 
         // reset state
+        limitCycles = 0;
         cycles = 0;
     }
 }

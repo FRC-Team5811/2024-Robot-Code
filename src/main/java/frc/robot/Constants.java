@@ -13,7 +13,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
 
     public static int ledPort = 0;
-    public static int ledCount = 150;
+    public static int ledCount = 195;
 
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
@@ -196,7 +196,7 @@ public final class Constants {
         
 
         // indexer bindings
-        public static final int ampScoreManualButton = LeftTriggerButton;
+        public static final int ampScoreManualButton = RightTriggerButton;
         public static final int speakerScoreManualButton = RightTriggerButton;
 
         // shooter bindings
@@ -205,7 +205,7 @@ public final class Constants {
         public static final int shooterManualButton = YButton;
         public static final int ampShotSequenceButton = BButton;
         public static final int speakerShotSequenceButton = XButton;
-        public static final int shooterRampUpButton = RightTriggerButton;
+        public static final int shooterRampUpButton = LeftTriggerButton;
         public static final int diverterSpeakerFireButton = LeftBumperButton;
     }
 
