@@ -9,6 +9,7 @@ public class Intake extends SubsystemBase {
     
     public final WPI_VictorSPX intakeMotor = new WPI_VictorSPX(16);
     public final double intakeSpeed = 1;
+    private boolean noteInIntake = false;
 
     public Intake() {
         
@@ -29,6 +30,7 @@ public class Intake extends SubsystemBase {
 
     public void stop() {
         intakeMotor.stopMotor();
+        noteInIntake = false;
     }
 
     public boolean isIntaking() {
@@ -37,6 +39,9 @@ public class Intake extends SubsystemBase {
 
     public boolean isNoteInIntake() {
         // TODO fix this with note in intake detection!!
-        return isIntaking() && intakeMotor.getMotorOutputVoltage() < 11.5;
+        if (isIntaking() && intakeMotor.getMotorOutputVoltage() < 11.5) {
+            noteInIntake = true;
+        }
+        return noteInIntake;
     }
 }
