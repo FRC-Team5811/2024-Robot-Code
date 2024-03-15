@@ -53,7 +53,7 @@ public class LEDs extends SubsystemBase {
                 int hue = 280 / 2; // if we don't know alliance color, set to purple
                 int value = 64;
                 for (int i = 0; i < buffer.getLength(); i++) {
-                    hue = (int)(280 + Math.sin(i*2*Math.PI/20));
+                    hue = (int)(280 + 80*Math.sin((i+cycleCount)*2*Math.PI/20));
                     buffer.setHSV(i, hue, 255, value);
             }
             }
