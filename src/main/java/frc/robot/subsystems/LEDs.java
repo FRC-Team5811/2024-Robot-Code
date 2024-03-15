@@ -90,10 +90,10 @@ public class LEDs extends SubsystemBase {
     }
 
     private void noteInIntakeLogic() {
-        // int value = cycleCount % 25 < 13 ? 255 : 0;
+        int value = cycleCount % 25 < 13 ? 255 : 0;
         for (int i = 0; i < buffer.getLength(); i++) {
             // bright blue
-            buffer.setHSV(i, 120 / 2, 255, 255);
+            buffer.setHSV(i, 120 / 2, 255, value);
         }
         SmartDashboard.putString("Debug/LED State", "Note in Intake");
     }

@@ -125,7 +125,7 @@ public class Robot extends TimedRobot {
 
         robotContainer.swerveSubsystem.resetModuleEncoders();
 
-        robotContainer.swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(Constants.AutoConstants.start3Pose));
+        robotContainer.swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(Constants.AutoConstants.start2Pose));
 
         setupDefaultCommands();
     }
