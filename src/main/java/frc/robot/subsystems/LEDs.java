@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -20,6 +21,7 @@ public class LEDs extends SubsystemBase {
 
         led = new AddressableLED(Constants.ledPort);
         buffer = new AddressableLEDBuffer(Constants.ledCount);
+        SmartDashboard.putString("Debug/LED State", "LED Start");
 
         led.setLength(buffer.getLength());
         led.setData(buffer);
@@ -47,14 +49,23 @@ public class LEDs extends SubsystemBase {
         if (Robot.isInstanceDisabled()) { // robot is disabled
             // breathe in and out with alliance color
 
-            int hue = Robot.allianceColor == Alliance.Blue ? 240 / 2 : 0;
-            if (!Robot.allianceColorKnown)
-                hue = 290 / 2; // if we don't know alliance color, set to purple
-
-            int value = 64; // (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
-            for (int i = 0; i < buffer.getLength(); i++) {
-                // black, off
-                buffer.setHSV(i, hue, 255, value);
+            if (!Robot.allianceColorKnown) {
+                int hue = 280 / 2; // if we don't know alliance color, set to purple
+                int value = 64;
+                for (int i = 0; i < buffer.getLength(); i++) {
+                    hue = (int)(280 + 80*Math.sin((i+cycleCount)*2*Math.PI/20));
+                    buffer.setHSV(i, hue, 255, value);
+            }
+            }
+            else {
+                int hue = Robot.allianceColor == Alliance.Blue ? 240 / 2 : 0;
+                int value = 64; // (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
+                for (int i = 0; i < buffer.getLength(); i++) {
+                    // black, off
+                    if (i % 2 == 1) buffer.setHSV(i, hue, 255, value);
+                    else buffer.setHSV(i, hue, 255, value);
+            }
+            SmartDashboard.putString("Debug/LED State", "Idle Disabled");
             }
         }
         else { // robot is not disabled
@@ -66,6 +77,7 @@ public class LEDs extends SubsystemBase {
                 // black, off
                 buffer.setHSV(i, hue, 255, value);
             }
+            SmartDashboard.putString("Debug/LED State", "Idle Not Disabled");
         }
     }
 
@@ -74,6 +86,7 @@ public class LEDs extends SubsystemBase {
             // bright red
             buffer.setHSV(i, 0, 255, 255);
         }
+        SmartDashboard.putString("Debug/LED State", "Intaking");
     }
 
     private void noteInIntakeLogic() {
@@ -82,6 +95,7 @@ public class LEDs extends SubsystemBase {
             // bright blue
             buffer.setHSV(i, 120 / 2, 255, value);
         }
+        SmartDashboard.putString("Debug/LED State", "Note in Intake");
     }
 
     private void noteLoadedLogic() {
@@ -89,6 +103,7 @@ public class LEDs extends SubsystemBase {
             // bright blue
             buffer.setHSV(i, 240 / 2, 255, 255);
         }
+        SmartDashboard.putString("Debug/LED State", "Limit switch hit");
     }
 
     private void shootingAmpLogic() {
@@ -99,14 +114,17 @@ public class LEDs extends SubsystemBase {
             // bright blue
             buffer.setHSV(i, 240 / 2, 255, value);
         }
+        SmartDashboard.putString("Debug/LED State", "Amp Scoring");
     }
 
     private void shooterWheelsWarmupLogic() {
         int value = (int)(255 * (0.5 + (0.5 * (robotContainer.shooter.getLowerSpeakerRPM() / Constants.ManipConstants.shooterSpeakerRPMUpper)))); //increases intensity as motors spin up
+        value = value <= 255 ? value : 255;
         for (int i = 0; i < buffer.getLength(); i++) {
             // bright red
             buffer.setHSV(i, 0, 255, value);
         }
+        SmartDashboard.putString("Debug/LED State", "Shooter Warming Up");
     }
 
     private void shooterWheelsReadyLogic() {
@@ -115,6 +133,7 @@ public class LEDs extends SubsystemBase {
             // bright purple
             buffer.setHSV(i, 290 / 2, 255, 255);
         }
+        SmartDashboard.putString("Debug/LED State", "Shooter Ready");
     }
 
 }
