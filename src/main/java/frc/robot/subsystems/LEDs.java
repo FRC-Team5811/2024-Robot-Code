@@ -61,10 +61,14 @@ public class LEDs extends SubsystemBase {
                 int hue = Robot.allianceColor == Alliance.Blue ? 240 / 2 : 0;
                 int value = 64; // (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
                 for (int i = 0; i < buffer.getLength(); i++) {
-                    // black, off
-                    if (i % 2 == 1) buffer.setHSV(i, hue, 255, value);
-                    else buffer.setHSV(i, hue, 255, value);
-            }
+                    hue = (int)(280 + 80*Math.sin((i+cycleCount)*2*Math.PI/20));
+                    buffer.setHSV(i, hue, 255, value);
+                }
+            //     for (int i = 0; i < buffer.getLength(); i++) {
+            //         // black, off
+            //         if (i % 2 == 1) buffer.setHSV(i, hue, 255, value);
+            //         else buffer.setHSV(i, hue, 255, value);
+            // }
             SmartDashboard.putString("Debug/LED State", "Idle Disabled");
             }
         }

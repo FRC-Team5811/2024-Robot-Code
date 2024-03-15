@@ -168,12 +168,10 @@ public class SwerveTeleopCmd extends Command {
             ySpeed = ySpeed * Constants.DriveConstants.SlowModeSpeedPercent;
             turningSpeed = turningSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
         }
-        else {
             //apply break
             xSpeed = xSpeed * breakingPercent;
             ySpeed = ySpeed * breakingPercent;
             turningSpeed = turningSpeed * breakingPercent;
-        }
 
         // apply field oriented control if active
         ChassisSpeeds chassisSpeeds;

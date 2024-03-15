@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
@@ -36,9 +37,12 @@ public class SpeakerSequence extends Command {
     public void execute() {
         shooter.autoSpeakerShotRampUp(speakerRPM);
         shooter.runSpeakerDiverter();
+        SmartDashboard.putBoolean("Driver/is firing", false);
         if (shooter.getLowerSpeakerRPM() >= 0.95*speakerRPM
-            && shooter.getUpperSpeakerRPM() >= 0.95*speakerRPM) {
+            // && shooter.getUpperSpeakerRPM() >= 0.95*speakerRPM
+            ) {
             indexer.speakerScore();
+            SmartDashboard.putBoolean("Driver/is firing", true);
         }
         if (!indexer.getLimitBool()) {
             limitCycles += 1;

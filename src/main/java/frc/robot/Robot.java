@@ -82,7 +82,9 @@ public class Robot extends TimedRobot {
             delayedInit();
 
         SmartDashboard.putBoolean("Driver/limit switch", robotContainer.indexer.getLimitBool());
-        SmartDashboard.putNumber("Driver/speaker rpm", robotContainer.shooter.shooterEncoderLower.getVelocity());
+        SmartDashboard.putNumber("Driver/lower speaker rpm", robotContainer.shooter.shooterEncoderLower.getVelocity());
+                SmartDashboard.putNumber("Driver/upper speaker rpm", robotContainer.shooter.shooterEncoderUpper.getVelocity());
+
         updateAllianceColor();
         driverField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
         debugField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
