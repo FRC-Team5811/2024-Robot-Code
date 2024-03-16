@@ -15,6 +15,7 @@ public class LEDs extends SubsystemBase {
     private final AddressableLED led;
     private final AddressableLEDBuffer buffer;
     private int cycleCount = 0;
+    private int state = 1;
 
     public LEDs(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
@@ -49,26 +50,25 @@ public class LEDs extends SubsystemBase {
         if (Robot.isInstanceDisabled()) { // robot is disabled
             // breathe in and out with alliance color
 
+
             if (!Robot.allianceColorKnown) {
                 int hue = 280 / 2; // if we don't know alliance color, set to purple
                 int value = 64;
-                for (int i = 0; i < buffer.getLength(); i++) {
-                    hue = (int)(280 + 80*Math.sin((i+cycleCount)*2*Math.PI/20));
-                    buffer.setHSV(i, hue, 255, value);
+                if (cycleCount % 50 == 0) {
+                    for (int i = 0; i < buffer.getLength(); i++) {
+                        hue = (int)((360 - (280 + 80*Math.sin((i+(cycleCount/10))*2*Math.PI/20)))/2); //spins through colors
+                        buffer.setHSV(i, hue, 255, value);
+                }
             }
             }
             else {
-                int hue = Robot.allianceColor == Alliance.Blue ? 240 / 2 : 0;
+                int hue = Robot.allianceColor == Alliance.Blue ? 120 / 2 : 0;
                 int value = 64; // (int)Math.sin(2 * Math.PI * cycleCount / 50 / 4); // breathe in and out every 4 seconds
                 for (int i = 0; i < buffer.getLength(); i++) {
-                    hue = (int)(280 + 80*Math.sin((i+cycleCount)*2*Math.PI/20));
-                    buffer.setHSV(i, hue, 255, value);
-                }
-            //     for (int i = 0; i < buffer.getLength(); i++) {
-            //         // black, off
-            //         if (i % 2 == 1) buffer.setHSV(i, hue, 255, value);
-            //         else buffer.setHSV(i, hue, 255, value);
-            // }
+                    // black, off
+                    if (i % 2 == 1) buffer.setHSV(i, hue, 255, value);
+                    else buffer.setHSV(i, hue, 255, value);
+            }
             SmartDashboard.putString("Debug/LED State", "Idle Disabled");
             }
         }

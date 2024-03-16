@@ -42,7 +42,6 @@ public class SpeakerSequence extends Command {
             // && shooter.getUpperSpeakerRPM() >= 0.95*speakerRPM
             ) {
             indexer.speakerScore();
-            SmartDashboard.putBoolean("Driver/is firing", true);
         }
         if (!indexer.getLimitBool()) {
             limitCycles += 1;

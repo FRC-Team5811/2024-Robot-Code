@@ -145,6 +145,9 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putString("Debug/Robot pose", getPose2d().toString());
         SmartDashboard.putString("Debug/Robot speeds", getChassisSpeeds().toString());
+        SmartDashboard.putNumber("Driver/XPose", getPose2d().getX());
+        SmartDashboard.putNumber("Driver/YPose", getPose2d().getY());
+        SmartDashboard.putNumber("Driver/ThetaPose", getPose2d().getRotation().getDegrees());
     }
 
     public void stopModules() {

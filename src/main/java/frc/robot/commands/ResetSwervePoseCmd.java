@@ -17,14 +17,8 @@ public class ResetSwervePoseCmd extends InstantCommand {
     }
 
     @Override
-    public void initialize() {}
-
-    @Override
-    public void execute() {
+    public void initialize() {
         swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(pose));
     }
-
-    @Override
-    public void end(boolean interrupted) {}
 
 }

@@ -10,6 +10,7 @@ public class Intake extends SubsystemBase {
     public final WPI_VictorSPX intakeMotor = new WPI_VictorSPX(16);
     public final double intakeSpeed = 1;
     private boolean noteInIntake = false;
+    private int cyclesInIntake = 0;
 
     public Intake() {
         
@@ -18,6 +19,11 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Debug/Intake Voltage", intakeMotor.getMotorOutputVoltage());
+        if (noteInIntake) cyclesInIntake++;
+        else if (cyclesInIntake > (int)4*50) {
+            noteInIntake = false;
+            cyclesInIntake = 0;
+        }
     }
 
     public void pull() {
@@ -39,9 +45,8 @@ public class Intake extends SubsystemBase {
 
     public boolean isNoteInIntake() {
         // TODO fix this with note in intake detection!!
-        if (isIntaking() && intakeMotor.getMotorOutputVoltage() < 11.5) {
-            noteInIntake = true;
-        }
+        if (!isIntaking()) noteInIntake = false;
+        else if (intakeMotor.getMotorOutputVoltage() < 11.5) noteInIntake = true;
         return noteInIntake;
     }
 }

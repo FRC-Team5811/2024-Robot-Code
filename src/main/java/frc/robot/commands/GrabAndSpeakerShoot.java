@@ -31,8 +31,10 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
                 new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(1, 0, new Rotation2d())),  0.1, 2.5, 5, false)
             ),
             new ParallelDeadlineGroup(
-                new DriveToPoint(swerveSubsystem, firePose, false),
-                new IntakeSequence(intake, indexer, true),
+                new ParallelCommandGroup(
+                    new DriveToPoint(swerveSubsystem, firePose, false),
+                    new IntakeSequence(intake, indexer, true)
+                ),
                 new SpeakerRampUp(shooter)
             ),
             new SpeakerSequence(shooter, indexer)
@@ -56,8 +58,10 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
                 new IntakeSequence(intake, indexer, true)
             ),
             new ParallelDeadlineGroup(
-                new DriveToPoint(swerveSubsystem, firePose, true),
-                new IntakeSequence(intake, indexer, true),
+                new ParallelCommandGroup(
+                    new DriveToPoint(swerveSubsystem, firePose, true),
+                    new IntakeSequence(intake, indexer, true)
+                ),
                 new SpeakerRampUp(shooter)
             ),
             new SpeakerSequence(shooter, indexer)
@@ -97,8 +101,10 @@ public class GrabAndSpeakerShoot extends SequentialCommandGroup {
 
         addCommands(
             new ParallelDeadlineGroup(
-                new DriveToPoint(swerveSubsystem, firePose, true),
-                new IntakeSequence(intake, indexer, true),
+                new ParallelCommandGroup(
+                    new DriveToPoint(swerveSubsystem, firePose, true),
+                    new IntakeSequence(intake, indexer, true)
+                    ),
                 new SpeakerRampUp(shooter)
             ),
             new SpeakerSequence(shooter, indexer)

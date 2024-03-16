@@ -111,19 +111,19 @@ public class SwerveTeleopCmd extends Command {
         double turningSpeed;
         //setpoints
         if (forwardSetpointFunction.get()) {
-            turningSetpoint = 0.0;
+            turningSetpoint = 0;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
         else if (rightSetpointFunction.get()) {
-            turningSetpoint = Math.PI/2;
-            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
-        }
-        else if (backSetpointFunction.get()) {
             turningSetpoint = Math.PI;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
+        else if (backSetpointFunction.get()) {
+            turningSetpoint = 3*Math.PI/2;
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+        }
         else if (leftSetpointFunction.get()) {
-            turningSetpoint = -Math.PI/2;
+            turningSetpoint = Math.PI/2;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
         }
         //for all else other than setpoints
@@ -172,6 +172,10 @@ public class SwerveTeleopCmd extends Command {
             xSpeed = xSpeed * breakingPercent;
             ySpeed = ySpeed * breakingPercent;
             turningSpeed = turningSpeed * breakingPercent;
+            // stop coasting accidentally
+            if (breakingPercent < 0.05) {
+                swerveSubsystem.stopModules();
+            }
 
         // apply field oriented control if active
         ChassisSpeeds chassisSpeeds;

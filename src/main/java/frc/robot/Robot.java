@@ -61,17 +61,6 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Driver/Field", driverField);
         SmartDashboard.putData("Debug/Field", debugField);
-        SmartDashboard.putNumber("Debug/SetRobotPoseX", 0);
-        SmartDashboard.putNumber("Debug/SetRobotPoseY", 0);
-        SmartDashboard.putNumber("Debug/SetRobotPoseRotDeg", 0);
-        SmartDashboard.putData("Debug/Set Robot Pose", new InstantCommand(() -> {
-            double x = SmartDashboard.getNumber("Debug/SetRobotPoseX", 1);
-            double y = SmartDashboard.getNumber("Debug/SetRobotPoseY", 1);
-            double angleDeg = SmartDashboard.getNumber("Debug/SetRobotPoseRotDeg", 90);
-            Pose2d pose = new Pose2d(x, y, Rotation2d.fromDegrees(angleDeg));
-            robotContainer.swerveSubsystem.resetOdometry(pose);
-            SmartDashboard.putString("Debug/RANNNN", "yes");
-        }));
     }
 
     @Override
@@ -82,8 +71,6 @@ public class Robot extends TimedRobot {
             delayedInit();
 
         SmartDashboard.putBoolean("Driver/limit switch", robotContainer.indexer.getLimitBool());
-        SmartDashboard.putNumber("Driver/lower speaker rpm", robotContainer.shooter.shooterEncoderLower.getVelocity());
-                SmartDashboard.putNumber("Driver/upper speaker rpm", robotContainer.shooter.shooterEncoderUpper.getVelocity());
 
         updateAllianceColor();
         driverField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
@@ -105,6 +92,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        robotContainer.swerveSubsystem.removeDefaultCommand();
+        robotContainer.intake.removeDefaultCommand();
+        robotContainer.indexer.removeDefaultCommand();
+        robotContainer.shooter.removeDefaultCommand();
+        robotContainer.climber.removeDefaultCommand();
+
         CommandScheduler.getInstance().cancelAll();
 
         Command autoCommand = robotContainer.choosableAuto.getSelected();

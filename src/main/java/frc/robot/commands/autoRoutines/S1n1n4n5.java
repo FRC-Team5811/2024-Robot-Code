@@ -18,12 +18,13 @@ public class S1n1n4n5 extends SequentialCommandGroup{
     public S1n1n4n5(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter) {
         addCommands(
             //pre-loaded note
-            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start3Pose),
+            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start1Pose),
             new SpeakerSequence(shooter, indexer),
             // note 1
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
-            Constants.AutoConstants.note1Pose, Constants.AutoConstants.start1Pose, 
-            Constants.AutoConstants.note1Pose.transformBy(new Transform2d(-1, 0, new Rotation2d(-60)))),
+            Constants.AutoConstants.note1Pose, 
+            Constants.AutoConstants.start1Pose.transformBy(new Transform2d(-0.05, -0.075, new Rotation2d(0))), 
+            Constants.AutoConstants.note1Pose.transformBy(new Transform2d(-0.5, 0, Rotation2d.fromDegrees(-60)))),
             
             //note 4
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 

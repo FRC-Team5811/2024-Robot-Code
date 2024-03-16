@@ -19,7 +19,7 @@ public class S1n4n5 extends SequentialCommandGroup{
     public S1n4n5(SwerveSubsystem swerveSubsystem, Intake intake, Indexer indexer, Shooter shooter) {
         addCommands(
             //pre-loaded note
-            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start3Pose),
+            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start1Pose),
             new SpeakerSequence(shooter, indexer),
             
             //note 4
