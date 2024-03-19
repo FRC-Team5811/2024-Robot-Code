@@ -16,6 +16,7 @@ public class LEDs extends SubsystemBase {
     private final AddressableLEDBuffer buffer;
     private int cycleCount = 0;
     private int state = 1;
+    private int prevState = 0;
 
     public LEDs(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
@@ -34,16 +35,33 @@ public class LEDs extends SubsystemBase {
 
         // states in order of most to least importance to display
         // each logic function is responsible for setting the buffer with colors
-        if (robotContainer.shooter.isShooterWheelsReady()) { shooterWheelsReadyLogic(); }
-        else if (robotContainer.shooter.isShooterWheelsWarmup()) { shooterWheelsWarmupLogic(); }
-        else if (robotContainer.shooter.isShootingAmp()) { shootingAmpLogic(); }
-        else if (robotContainer.indexer.isNoteLoaded()) { noteLoadedLogic(); }
-        else if (robotContainer.intake.isNoteInIntake()) { noteInIntakeLogic(); }
-        else if (robotContainer.intake.isIntaking()) { intakingLogic(); }
-        else { idleLogic(); }
+        if (!Robot.isAutonomousCustom()) {    
+            if (robotContainer.shooter.isShooterWheelsReady()) { state = 1; }
+            else if (robotContainer.shooter.isShooterWheelsWarmup()) { state = 2; }
+            else if (robotContainer.shooter.isShootingAmp()) { state = 3; }
+            else if (robotContainer.indexer.isNoteLoaded()) { state = 4; }
+            else if (robotContainer.intake.isNoteInIntake()) { state = 5; }
+            else if (robotContainer.intake.isIntaking()) { state = 6; }
+            else {state = 7;}
+        }
+        else state = prevState;
 
-        // set the data after the buffer is changed
-        led.setData(buffer);
+
+        
+        if (state != prevState
+            && state != 7) {
+            if (state == 1) { shooterWheelsReadyLogic(); }
+            else if (state == 2) { shooterWheelsWarmupLogic(); }
+            else if (state == 3) { shootingAmpLogic(); }
+            else if (state == 4) { noteLoadedLogic(); }
+            else if (state == 5) { noteInIntakeLogic(); }
+            else if (state == 6) { intakingLogic(); }
+            else { idleLogic(); }
+
+            // set the data after the buffer is changed
+            led.setData(buffer);
+        }
+        prevState = state;
     }
 
     private void idleLogic() {

@@ -36,6 +36,8 @@ public class Robot extends TimedRobot {
     public static Alliance allianceColor = Alliance.Blue;
     private double lastAllianceColorCheck = -1;
 
+    public static boolean isAutonomous = false;
+
     private Field2d driverField = new Field2d();
     private Field2d debugField = new Field2d();
 
@@ -102,6 +104,8 @@ public class Robot extends TimedRobot {
 
         Command autoCommand = robotContainer.choosableAuto.getSelected();
         autoCommand.schedule();
+        
+        isAutonomous = true;
     }
 
     // this function is called periodically during autonomous
@@ -123,13 +127,13 @@ public class Robot extends TimedRobot {
         robotContainer.swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(Constants.AutoConstants.start2Pose));
 
         setupDefaultCommands();
+        
+        isAutonomous = false;
     }
 
     // this function is called periodically during operator control
     @Override
     public void teleopPeriodic() {
-
-
     }
 
     @Override
@@ -239,5 +243,9 @@ public class Robot extends TimedRobot {
         Rotation2d rotation = pose.getRotation();
 
         return new Pose2d(16.591 - x, y, Rotation2d.fromDegrees(180).minus(rotation));
+    }
+
+    public static boolean isAutonomousCustom() {
+        return isAutonomous;
     }
 }
