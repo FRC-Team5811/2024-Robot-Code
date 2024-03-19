@@ -97,7 +97,7 @@ public class SwerveTeleopCmd extends Command {
 
         // boolean slowMode = slowModeFunction.get();
         // Get brake percent
-        double breakingPercent = 1 - breakFunction.get();
+        double breakingPercent = 1 - 0.9*breakFunction.get();
 
         // calculate translational speeds
         double xSpeed = xInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
@@ -130,7 +130,7 @@ public class SwerveTeleopCmd extends Command {
         else if (Math.abs(turningInput) > 0.0) { // this code is after deadband
             // driver is actively telling the robot to turn
             wasTurningLastFrame = true;
-            turningSpeed = turningInput * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+            turningSpeed = turningInput * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * DriveConstants.turningSpeedPercent;
         }
         else {
             // driver is not telling the robot to turn
@@ -143,11 +143,10 @@ public class SwerveTeleopCmd extends Command {
             }
 
             // if drivetrain is moving above threshold, apply theta lock, else, turning speed is 0
-            ChassisSpeeds chassisSpeeds = swerveSubsystem.getChassisSpeeds();
             if (
-            Math.abs(chassisSpeeds.vxMetersPerSecond) > 0.1 ||
-            Math.abs(chassisSpeeds.vyMetersPerSecond) > 0.1 ||
-            Math.abs(chassisSpeeds.omegaRadiansPerSecond) > 0.1
+            Math.abs(xInput) > 0.1 ||
+            Math.abs(yInput) > 0.1 ||
+            Math.abs(turningInput) > 0.1
             ) {
                 turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
             }
