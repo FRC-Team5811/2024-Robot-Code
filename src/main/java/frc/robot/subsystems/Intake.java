@@ -23,11 +23,6 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         // SmartDashboard.putNumber("Debug/Intake Voltage", intakeMotor.getMotorOutputVoltage());
-        if (noteInIntake) cyclesInIntake++;
-        else if (cyclesInIntake > (int)4*50) {
-            noteInIntake = false;
-            cyclesInIntake = 0;
-        }
     }
 
     public void pull() {
@@ -48,7 +43,13 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean isNoteInIntake() {  
-        return (getLimitBool() && isIntaking());
+        noteInIntake = (getLimitBool());
+        if (noteInIntake) cyclesInIntake++;
+        else if (cyclesInIntake > (int)3*50) {
+            noteInIntake = false;
+            cyclesInIntake = 0;
+        }
+        return (isIntaking() && noteInIntake);
     }
     
 

@@ -12,6 +12,7 @@ public class Climber extends SubsystemBase {
     public final double climbSpeed = 1;
     private DigitalInput limitSwitch = new DigitalInput(1);
 
+
     public Climber () {
         climberMotor.setInverted(false);
     }
@@ -29,7 +30,7 @@ public class Climber extends SubsystemBase {
         climberMotor.stopMotor();
     }
 
-    public Boolean getLimitBool() {
+    public boolean getLimitBool() {
         return limitSwitch.get();
     }
 

@@ -47,7 +47,7 @@ public class LEDs extends SubsystemBase {
         else state = prevState;
         
         if (state != prevState
-            && state != 7) {
+            || state == 7) {
             if (state == 1) { shooterWheelsReadyLogic(); }
             else if (state == 2) { shooterWheelsWarmupLogic(); }
             else if (state == 3) { shootingAmpLogic(); }

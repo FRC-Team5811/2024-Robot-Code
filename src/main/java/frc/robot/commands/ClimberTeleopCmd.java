@@ -30,8 +30,8 @@ public class ClimberTeleopCmd extends Command {
         }
         else if (climberDownFunction.get()) {
             // manip is manually expelling
-
-            climber.down();
+            if (!climber.getLimitBool()) climber.down();
+            else climber.stop();
         }
         else {
             climber.stop();
