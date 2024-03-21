@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
     }
 
     public void down() {
-        if (limitSwitch.get()) climberMotor.set(-climbSpeed);
+        if (!limitSwitch.get()) climberMotor.set(-climbSpeed);
         else climberMotor.stopMotor();
     }
 
