@@ -10,6 +10,8 @@ public class Climber extends SubsystemBase {
 
     public final CANSparkMax climberMotor = new CANSparkMax(16, MotorType.kBrushless);
     public final double climbSpeed = 1;
+    private DigitalInput limitSwitch = new DigitalInput(1);
+
 
     public Climber () {
         climberMotor.setInverted(false);
