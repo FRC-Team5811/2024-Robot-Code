@@ -45,8 +45,6 @@ public class LEDs extends SubsystemBase {
             else {state = 7;}
         }
         else state = prevState;
-
-
         
         if (state != prevState
             && state != 7) {
