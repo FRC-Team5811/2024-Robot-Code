@@ -139,7 +139,7 @@ public final class Constants {
         public static final Pose2d start2Pose = new Pose2d(1.577, 5.6, new Rotation2d()); //DNC
         public static final Pose2d start3Pose = new Pose2d(0.49, 7.064, Rotation2d.fromDegrees(60)); //DNC
         public static final Pose2d note1Pose = new Pose2d(2.1, 3.75, new Rotation2d()); //DNC
-        public static final Pose2d note2Pose = new Pose2d(2.1, 5.44, new Rotation2d()); //DNC
+        public static final Pose2d note2Pose = new Pose2d(2.1, 5.4, new Rotation2d()); //DNC
         public static final Pose2d note3Pose = new Pose2d(2.1, 6.93, new Rotation2d()); //DO NOT CHANGE
         public static final Pose2d note4Pose = new Pose2d(8.2, 0.3, new Rotation2d()); 
         public static final Pose2d note5Pose = new Pose2d(8.2, 2.443, new Rotation2d());
