@@ -45,8 +45,6 @@ public class LEDs extends SubsystemBase {
             else {state = 7;}
         }
         else state = prevState;
-
-
         
         if (state != prevState
             && state != 7) {
@@ -131,7 +129,7 @@ public class LEDs extends SubsystemBase {
     private void shootingAmpLogic() {
         // flashing blue
 
-        int value = cycleCount % 25 < 13 ? 255 : 0; // flash on and off every 0.5 seconds
+        int value = 255;
         for (int i = 0; i < buffer.getLength(); i++) {
             // bright blue
             buffer.setHSV(i, 240 / 2, 255, value);

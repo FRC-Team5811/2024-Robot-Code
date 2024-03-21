@@ -72,7 +72,9 @@ public class Robot extends TimedRobot {
         if (!delayedInitialized && timer.get() > 5)
             delayedInit();
 
-        SmartDashboard.putBoolean("Driver/limit switch", robotContainer.indexer.getLimitBool());
+        SmartDashboard.putBoolean("Driver/note loaded", robotContainer.indexer.getLimitBool());
+        SmartDashboard.putBoolean("Driver/note in intake", robotContainer.intake.getLimitBool());
+        SmartDashboard.putBoolean("Driver/climber limit hit", robotContainer.climber.getLimitBool());
 
         updateAllianceColor();
         driverField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());
