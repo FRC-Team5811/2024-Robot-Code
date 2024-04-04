@@ -129,7 +129,7 @@ public class SwerveTeleopCmd extends Command {
         }
         else if (shuttleSetpointFunction.get()) {
             turningSetpoint = Constants.DriveConstants.shuttleSetpointFunction;
-            if (Robot.allianceColor == Alliance.Red) turningSetpoint = -Math.PI - turningSetpoint;
+            if (Robot.allianceColor == Alliance.Red) turningSetpoint = - turningSetpoint;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
             SwerveSubsystem.isShuttlePose = ((swerveSubsystem.getPoseAngleRad() > turningSetpoint - 5*Math.PI/180)
                                             && (swerveSubsystem.getPoseAngleRad() < turningSetpoint + 5*Math.PI/180));

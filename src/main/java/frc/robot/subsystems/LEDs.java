@@ -147,19 +147,16 @@ public class LEDs extends SubsystemBase {
         int value = 255; //value <= 255 ? value : 255;
         int speedIndexUpper = (int)(18*robotContainer.shooter.getUpperSpeakerRPM() / Constants.ManipConstants.shooterMaxRPM);
         int speedIndexLower = (int)(18*robotContainer.shooter.getLowerSpeakerRPM() / Constants.ManipConstants.shooterMaxRPM);
-
+        int saturation = (int)(255*(Math.abs(Math.sin((cycleCount)*2*Math.PI/50))));
         for (int i = 0; i < buffer.getLength(); i++) {
-            int saturation = (int)(255*(Math.abs(Math.sin((cycleCount)*2*Math.PI))));
-            int hue = (int)(((27 + 13*Math.sin(i)*2*Math.PI/30))/2);
+            int hue = (int)(((27 + 13*Math.sin(i*2*Math.PI/30)))/2);
             // bright red
-            if (i <= 51 + speedIndexUpper
-                && i <= 51
-                && i >= 68) buffer.setHSV(i, 0, 64, 255);
+            if (i > 68 - speedIndexUpper
+                && i <= 68) buffer.setHSV(i, 0, 64, 255);
             else if (i <= 10 + speedIndexLower
-                && i <= 10
-                && i >= 28) buffer.setHSV(i, 0, 64, 255);
+                && i >= 10) buffer.setHSV(i, 0, 64, 255);
             else buffer.setHSV(i, hue, saturation, value);
-        }
+     }
         // for (int i = 10; i < 28; i++) {
 
         // }
