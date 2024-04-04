@@ -16,24 +16,24 @@ public class S2n2n7n6 extends SequentialCommandGroup{
 
         addCommands(
             //pre-loaded note
-            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start2Pose),
-            new SpeakerSequence(shooter, indexer),
+            // new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start2Pose),
+            // new SpeakerSequence(shooter, indexer),
             
-            //note 2
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
-            Constants.AutoConstants.note2Pose, 
-            Constants.AutoConstants.start2Pose),
+            // //note 2
+            // new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
+            // Constants.AutoConstants.note2Pose, 
+            // Constants.AutoConstants.start2Pose),
 
-            //note 6
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
-            Constants.AutoConstants.note6Pose, Constants.AutoConstants.start2Pose, 
-            Constants.AutoConstants.mid2ForwardPose),
+            // //note 6
+            // new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
+            // Constants.AutoConstants.note6Pose, Constants.AutoConstants.start2Pose, 
+            // Constants.AutoConstants.mid2ForwardPose),
   
-            //note 7
-            new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
-            Constants.AutoConstants.note7Pose, 
-            Constants.AutoConstants.start2Pose, 
-            Constants.AutoConstants.mid2ForwardPose)
+            // //note 7
+            // new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
+            // Constants.AutoConstants.note7Pose, 
+            // Constants.AutoConstants.start2Pose, 
+            // Constants.AutoConstants.mid2ForwardPose)
         );
     }
 }

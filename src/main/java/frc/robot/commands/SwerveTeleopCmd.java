@@ -7,10 +7,12 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.PID;
+import frc.robot.Robot;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -19,7 +21,7 @@ public class SwerveTeleopCmd extends Command {
 
     private final SwerveSubsystem swerveSubsystem;
     private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-    private final Supplier<Boolean> fieldOrientedToggleFunction;
+    private final Supplier<Boolean> fieldOrientedFunction;
     private final Supplier<Boolean> resetForwardHeadingFunction;
     private final Supplier<Double> slowModeFunction;
     private final Supplier<Double> breakFunction;
@@ -27,6 +29,7 @@ public class SwerveTeleopCmd extends Command {
     private final Supplier<Boolean> rightSetpointFunction;
     private final Supplier<Boolean> backSetpointFunction;
     private final Supplier<Boolean> leftSetpointFunction;
+    private final Supplier<Boolean> shuttleSetpointFunction;
 
     private final SlewRateLimiter xLimiter;
     private final SlewRateLimiter yLimiter;
@@ -44,14 +47,14 @@ public class SwerveTeleopCmd extends Command {
 
     public SwerveTeleopCmd(SwerveSubsystem swerveSubsystem,
             Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
-            Supplier<Boolean> fieldOrientedToggleFunction, Supplier<Boolean> resetForwardHeadingFunction,
+            Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> resetForwardHeadingFunction,
             Supplier<Double> slowModeFunction, Supplier<Double> breakFunction, Supplier<Boolean> forwardSetpointFunction, Supplier<Boolean> rightSetpointFunction, 
-            Supplier<Boolean> backSetpointFunction, Supplier<Boolean> leftSetpointFunction) {
+            Supplier<Boolean> backSetpointFunction, Supplier<Boolean> leftSetpointFunction, Supplier<Boolean> shuttleSetpointFunction) {
         this.swerveSubsystem = swerveSubsystem;
         this.xSpdFunction = xSpdFunction;
         this.ySpdFunction = ySpdFunction;
         this.turningSpdFunction = turningSpdFunction;
-        this.fieldOrientedToggleFunction = fieldOrientedToggleFunction;
+        this.fieldOrientedFunction = fieldOrientedFunction;
         this.resetForwardHeadingFunction = resetForwardHeadingFunction;
         this.slowModeFunction = slowModeFunction;
         this.breakFunction = breakFunction;
@@ -59,6 +62,7 @@ public class SwerveTeleopCmd extends Command {
         this.rightSetpointFunction = rightSetpointFunction;
         this.backSetpointFunction = backSetpointFunction;
         this.leftSetpointFunction = leftSetpointFunction;
+        this.shuttleSetpointFunction = shuttleSetpointFunction;
         this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationMetersPerSecondSquared);
         this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationMetersPerSecondSquared);
         this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared);
@@ -84,10 +88,6 @@ public class SwerveTeleopCmd extends Command {
         xInput = xInput > 0 ? Math.pow(Math.abs(xInput), inputCurveExponent) : -Math.pow(Math.abs(xInput), inputCurveExponent);
         yInput = yInput > 0 ? Math.pow(Math.abs(yInput), inputCurveExponent) : -Math.pow(Math.abs(yInput), inputCurveExponent);
 
-        if (fieldOrientedToggleFunction.get() && !prevFieldOrientedInput)
-            fieldOrientedActive = !fieldOrientedActive;
-        prevFieldOrientedInput = fieldOrientedToggleFunction.get();
-
         if (resetForwardHeadingFunction.get() && !prevResetHeadingInput) {
             Pose2d currentPose = swerveSubsystem.getPose2d();
             swerveSubsystem.resetOdometry(new Pose2d(currentPose.getX(), currentPose.getY(), new Rotation2d()));
@@ -97,7 +97,7 @@ public class SwerveTeleopCmd extends Command {
 
         // boolean slowMode = slowModeFunction.get();
         // Get brake percent
-        double breakingPercent = 1 - 0.9*breakFunction.get();
+        double breakingPercent = 1.0 - 0.9*breakFunction.get();
 
         // calculate translational speeds
         double xSpeed = xInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
@@ -110,6 +110,7 @@ public class SwerveTeleopCmd extends Command {
         // calculate rotational speed
         double turningSpeed;
         //setpoints
+        SwerveSubsystem.isShuttlePose = false;
         if (forwardSetpointFunction.get()) {
             turningSetpoint = 0;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
@@ -125,6 +126,14 @@ public class SwerveTeleopCmd extends Command {
         else if (leftSetpointFunction.get()) {
             turningSetpoint = Math.PI/2;
             turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+        }
+        else if (shuttleSetpointFunction.get()) {
+            turningSetpoint = Constants.DriveConstants.shuttleSetpointFunction;
+            if (Robot.allianceColor == Alliance.Red) turningSetpoint = -Math.PI - turningSetpoint;
+            turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+            SwerveSubsystem.isShuttlePose = ((swerveSubsystem.getPoseAngleRad() > turningSetpoint - 5*Math.PI/180)
+                                            && (swerveSubsystem.getPoseAngleRad() < turningSetpoint + 5*Math.PI/180));
+            SmartDashboard.putNumber("Debug/setpoint degrees", turningSetpoint*180/Math.PI);
         }
         //for all else other than setpoints
         else if (Math.abs(turningInput) > 0.0) { // this code is after deadband
@@ -145,8 +154,7 @@ public class SwerveTeleopCmd extends Command {
             // if drivetrain is moving above threshold, apply theta lock, else, turning speed is 0
             if (
             Math.abs(xInput) > 0.1 ||
-            Math.abs(yInput) > 0.1 ||
-            Math.abs(turningInput) > 0.1
+            Math.abs(yInput) > 0.1
             ) {
                 turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
             }
@@ -162,23 +170,21 @@ public class SwerveTeleopCmd extends Command {
         }
 
         // apply slow mode
-        if (slowModeFunction.get() > 0.1) {
+        if (slowModeFunction.get() > 0.1
+        || fieldOrientedFunction.get()) {
             xSpeed = xSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
             ySpeed = ySpeed * Constants.DriveConstants.SlowModeSpeedPercent;
             turningSpeed = turningSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
         }
-            //apply break
-            xSpeed = xSpeed * breakingPercent;
-            ySpeed = ySpeed * breakingPercent;
-            turningSpeed = turningSpeed * breakingPercent;
-            // stop coasting accidentally
-            if (breakingPercent < 0.05) {
-                swerveSubsystem.stopModules();
-            }
+
+        //apply break
+        xSpeed = xSpeed * breakingPercent;
+        ySpeed = ySpeed * breakingPercent;
+        turningSpeed = turningSpeed * breakingPercent;
 
         // apply field oriented control if active
         ChassisSpeeds chassisSpeeds;
-        if (fieldOrientedActive) {
+        if (!fieldOrientedFunction.get()) {
             // speeds were relative to field, so convert them back to robot relative
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, turningSpeed, swerveSubsystem.getPoseRotation2d());
         } else {
@@ -201,5 +207,11 @@ public class SwerveTeleopCmd extends Command {
     @Override
     public boolean isFinished() {
         return false;
+    }
+
+    private boolean isShuttlePose() {
+        return (shuttleSetpointFunction.get() 
+        && (swerveSubsystem.getPoseAngleRad() > Constants.DriveConstants.shuttleSetpointFunction - 5*Math.PI/180)
+        && (swerveSubsystem.getPoseAngleRad() < Constants.DriveConstants.shuttleSetpointFunction + 5*Math.PI/180));
     }
 }

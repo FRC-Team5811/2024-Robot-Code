@@ -82,7 +82,7 @@ public final class Constants {
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 2.412 - 1.571; //1.149 - 0.923; // 1.317; // 6.149893967820428;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 3.369 + 1.571; //5.566; // 5.575; // 0.43207125951125236;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 6.7;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
@@ -96,13 +96,17 @@ public final class Constants {
         public static final double kPThetaLockTurning = 6;
         public static final double kIThetaLockTurning = 0;
         public static final double kDThetaLockTurning = 1;
+
+        public static final double shuttleSetpointFunction = -Math.PI/6;
     }
 
     public static final class ManipConstants {
         
         public static final double shooterMaxRPM = 5500;
-        public static final double shooterSpeakerRPMLower = 4000;
         public static final double shooterSpeakerRPMUpper = 4000;
+        public static final double shooterSpeakerRPMLower = 4000;
+        public static final double shooterShuttleRPMUpper = 3000;
+        public static final double shooterShuttleRPMLower = 3000;
         public static final double shooterControlP = 4;
         public static final double shooterControlI = 0;
         public static final double shooterControlD = 0.5;
@@ -113,7 +117,7 @@ public final class Constants {
     }
     
     public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
+        public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond; //5 / 2;
         public static final double kMaxAngularSpeedRadiansPerSecond = //
                 DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 6;
         public static final double kMaxAccelerationMetersPerSecondSquared = 10;
@@ -138,16 +142,16 @@ public final class Constants {
         public static final Pose2d start1Pose = new Pose2d(0.81, 4.38, Rotation2d.fromDegrees(-60));
         public static final Pose2d start2Pose = new Pose2d(1.577, 5.6, new Rotation2d()); //DNC
         public static final Pose2d start3Pose = new Pose2d(0.49, 7.064, Rotation2d.fromDegrees(60)); //DNC
-        public static final Pose2d note1Pose = new Pose2d(2.1, 3.75, new Rotation2d()); //DNC
-        public static final Pose2d note2Pose = new Pose2d(2.1, 5.4, new Rotation2d()); //DNC
-        public static final Pose2d note3Pose = new Pose2d(2.1, 6.93, new Rotation2d()); //DO NOT CHANGE
-        public static final Pose2d note4Pose = new Pose2d(8.2, 0.3, new Rotation2d()); 
-        public static final Pose2d note5Pose = new Pose2d(8.2, 2.443, new Rotation2d());
-        public static final Pose2d note6Pose = new Pose2d(8.2, 4.131, new Rotation2d());
-        public static final Pose2d note7Pose = new Pose2d(8.2, 5.9, new Rotation2d());
-        public static final Pose2d note8Pose = new Pose2d(8.2, 7.35, new Rotation2d()); //DO NOT CHANGE
-        public static final Pose2d mid1ForwardPose = new Pose2d(5.482, 1.575, new Rotation2d());
-        public static final Pose2d mid1BackPose = new Pose2d(1.905, 1.575, new Rotation2d());
+        public static final Pose2d note1Pose = new Pose2d(1.9, 3.87, new Rotation2d()); //DNC
+        public static final Pose2d note2Pose = new Pose2d(2.1, 5.52, new Rotation2d()); //DNC
+        public static final Pose2d note3Pose = new Pose2d(2.1, 7.15, new Rotation2d()); //DO NOT CHANGE
+        public static final Pose2d note4Pose = new Pose2d(9, 1.67, new Rotation2d()); // REAL POSITION: new Pose2d(8.2, 0.6, new Rotation2d()); 
+        public static final Pose2d note5Pose = new Pose2d(9, 3.5, new Rotation2d()); // OLD X: 8.2
+        public static final Pose2d note6Pose = new Pose2d(9, 4.131, new Rotation2d());
+        public static final Pose2d note7Pose = new Pose2d(9, 5.9, new Rotation2d());
+        public static final Pose2d note8Pose = new Pose2d(9, 7.35, new Rotation2d()); //DO NOT CHANGE
+        public static final Pose2d mid1ForwardPose = new Pose2d(7.5, 1.7, new Rotation2d());
+        public static final Pose2d mid1BackPose = new Pose2d(1.905, 1.87, new Rotation2d());
         public static final Pose2d mid2ForwardPose = new Pose2d(5.842, 6.7, new Rotation2d());
         public static final Pose2d mid3SneakBackPose = new Pose2d(1.905, 7.747, new Rotation2d());
         public static final Pose2d mid3SneakForwardPose = new Pose2d(6.477, 7.747, new Rotation2d());
@@ -190,6 +194,7 @@ public final class Constants {
         public static final int driverRightSetpointButton = BButton;
         public static final int driverBackSetpointButton = AButton;
         public static final int driverLeftSetpointButton = XButton;
+        public static final int driverShuttleSetpointButton = 10;
 
         // intake bindings
         public static final int intakeManualButton = RightBumperButton;
@@ -207,7 +212,8 @@ public final class Constants {
         public static final int ampShotSequenceButton = BButton;
         public static final int speakerShotSequenceButton = XButton;
         public static final int shooterRampUpButton = LeftTriggerButton;
-        public static final int diverterSpeakerFireButton = LeftBumperButton;
+        public static final int diverterSpeakerFireButton = BButton; //LeftBumperButton;
+        public static final int shuttleRampUp = LeftBumperButton;
     }
 
     public static class FieldConstants {

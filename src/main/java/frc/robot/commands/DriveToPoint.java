@@ -24,9 +24,9 @@ public class DriveToPoint extends Command {
     double xyTolerance;
     double thetaTolerance;
     double kMaxSpeedMetersPerSecond = Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 2;
-    double kPxy = 5;
-    double kIxy = 0.1;
-    double kDxy = 1;
+    double kPxy = 15; //5;
+    double kIxy = 0;// 0.1;
+    double kDxy = 6; //1;
     double kPtheta = 8;
     double kItheta = 0;
     double kDtheta = 0.1;
@@ -53,7 +53,7 @@ public class DriveToPoint extends Command {
     this.swerveSubsystem = swerveSubsystem;
     this.originalTargetPose = targetPose;
     this.stop = stop;
-    xyTolerance = 0.05;
+    xyTolerance = 0.1; // 0.05;
     thetaTolerance = 5;
     addRequirements(swerveSubsystem);
   }

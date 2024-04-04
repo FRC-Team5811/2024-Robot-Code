@@ -38,6 +38,7 @@ public class SwerveSubsystem extends SubsystemBase {
             new Rotation2d(0), swerveModulePositions);
 
     private boolean locked = false;
+    public static boolean isShuttlePose = false;
 
     public SwerveSubsystem() {
         frontLeft = new SwerveModule(
@@ -170,5 +171,9 @@ public class SwerveSubsystem extends SubsystemBase {
         frontLeft.setIdleMode(idleMode);
         backRight.setIdleMode(idleMode);
         backLeft.setIdleMode(idleMode);
+    }
+
+    public boolean isShuttlePose() {
+        return isShuttlePose;
     }
 }

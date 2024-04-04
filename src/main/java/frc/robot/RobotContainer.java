@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.beans.Visibility;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,6 +13,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.autoRoutines.S1n1n2n3;
 import frc.robot.commands.autoRoutines.S1n1n4n5;
 import frc.robot.commands.autoRoutines.S1n4n5;
+import frc.robot.commands.autoRoutines.S1n5n4;
 import frc.robot.commands.autoRoutines.S2n1n2n3;
 import frc.robot.commands.autoRoutines.S2n2n3n8;
 import frc.robot.commands.autoRoutines.S2n2n7n6;
@@ -18,12 +21,14 @@ import frc.robot.commands.autoRoutines.S2n3n2n1;
 import frc.robot.commands.autoRoutines.S3n3n2n1;
 import frc.robot.commands.autoRoutines.S3n3n8n7;
 import frc.robot.commands.autoRoutines.S3n8n7;
+import frc.robot.commands.autoRoutines.defense;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
@@ -34,6 +39,7 @@ public class RobotContainer {
     public final Shooter shooter = new Shooter();
     public final Climber climber = new Climber();
     public final LEDs leds = new LEDs(this);
+    public final Vision vision = new Vision();
 
     // Controllers
     public final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
@@ -62,6 +68,7 @@ public class RobotContainer {
         var s1n1n2n3 = new S1n1n2n3(swerveSubsystem, intake, indexer, shooter);
         var s1n1n4n5 = new S1n1n4n5(swerveSubsystem, intake, indexer, shooter);
         var s1n4n5 = new S1n4n5(swerveSubsystem, intake, indexer, shooter);
+        var s1n5n4 = new S1n5n4(swerveSubsystem, intake, indexer, shooter);
         var s2n1n2n3 = new S2n1n2n3(swerveSubsystem, intake, indexer, shooter);
         var s2n2n3n8 = new S2n2n3n8(swerveSubsystem, intake, indexer, shooter);
         var s2n2n7n6 = new S2n2n7n6(swerveSubsystem, intake, indexer, shooter);
@@ -69,17 +76,20 @@ public class RobotContainer {
         var s3n3n2n1 = new S3n3n2n1(swerveSubsystem, intake, indexer, shooter);
         var s3n3n8n7 = new S3n3n8n7(swerveSubsystem, intake, indexer, shooter);
         var s3n8n7 = new S3n8n7(swerveSubsystem, intake, indexer, shooter);
+        var defense = new defense(swerveSubsystem, intake, indexer, shooter);
 
         choosableAuto.setDefaultOption("s1n1n2n3", s1n1n2n3);
         choosableAuto.addOption("s1n1n4n5", s1n1n4n5);
         choosableAuto.addOption("s1n4n5", s1n4n5);
+        choosableAuto.addOption("s1n5n4", s1n5n4);
         choosableAuto.addOption("s2n1n2n3", s2n1n2n3);
         choosableAuto.addOption("s2n2n3n8", s2n2n3n8);
-        choosableAuto.addOption("s2n2n7n6", s2n2n7n6);
+        choosableAuto.addOption("NO AUTO", s2n2n7n6);
         choosableAuto.addOption("s2n3n2n1", s2n3n2n1);
         choosableAuto.addOption("s3n3n2n1", s3n3n2n1);
-        choosableAuto.addOption("s3n3n8n7", s3n3n8n7);
+        choosableAuto.addOption("s3Stop&Fire", s3n3n8n7);
         choosableAuto.addOption("s3n8n7", s3n8n7);
+        choosableAuto.addOption("s1defense", defense);
 
         SmartDashboard.putData("Driver/Auto Selection", choosableAuto);
 

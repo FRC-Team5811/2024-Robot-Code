@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     
-    public final CANSparkMax intakeMotor = new CANSparkMax(17, MotorType.kBrushed);
+    public final CANSparkMax intakeMotor = new CANSparkMax(17, MotorType.kBrushless);
     public final double intakeSpeed = 1;
     private boolean noteInIntake = false;
     private int cyclesInIntake = 0;
@@ -18,6 +18,7 @@ public class Intake extends SubsystemBase {
 
 
     public Intake() {
+        intakeMotor.setInverted(true);
     }
 
     @Override

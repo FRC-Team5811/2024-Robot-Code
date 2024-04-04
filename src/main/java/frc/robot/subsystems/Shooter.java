@@ -67,6 +67,22 @@ public class Shooter extends SubsystemBase {
         speakerUpperMotor.set(expectedOutputUpper + pidOutputUpper);
     }
 
+    public void unevenRampUp(double upperRPM, double lowerRPM) {
+        double shooterSetpointRPMLower = lowerRPM;
+        double shooterSetpointRPMUpper = upperRPM;
+        double maxRPM = Constants.ManipConstants.shooterMaxRPM;
+
+        double rpmLower = shooterEncoderLower.getVelocity();
+        double rpmUpper = shooterEncoderUpper.getVelocity();
+        double expectedOutputLower = (1.0/maxRPM) * (shooterSetpointRPMLower);
+        double expectedOutputUpper = (1.0/maxRPM) * (shooterSetpointRPMUpper);
+        double pidOutputLower = (1.0/maxRPM) * shooterPIDLower.calculate(rpmLower, shooterSetpointRPMLower);
+        double pidOutputUpper = (1.0/maxRPM) * shooterPIDUpper.calculate(rpmUpper, shooterSetpointRPMUpper);
+        
+        speakerLowerMotor.set(expectedOutputLower + pidOutputLower);
+        speakerUpperMotor.set(expectedOutputUpper + pidOutputUpper);
+    }
+    
     public double getLowerSpeakerRPM() {
         return (shooterEncoderLower.getVelocity());
     }
@@ -82,10 +98,19 @@ public class Shooter extends SubsystemBase {
             );
     }
 
-    public boolean isShooterWheelsReady() {
+    public boolean isSpeakerReady() {
         return (
             getLowerSpeakerRPM() > 0.95 * Constants.ManipConstants.shooterSpeakerRPMLower &&
             getUpperSpeakerRPM() > 0.95 * Constants.ManipConstants.shooterSpeakerRPMUpper
+            );
+    }
+
+    public boolean isShuttleReady() {
+        return (
+            getLowerSpeakerRPM() > 0.95 * Constants.ManipConstants.shooterShuttleRPMLower &&
+            getUpperSpeakerRPM() > 0.95 * Constants.ManipConstants.shooterShuttleRPMUpper &&
+            getLowerSpeakerRPM() < 1.05 * Constants.ManipConstants.shooterShuttleRPMLower &&
+            getUpperSpeakerRPM() < 1.05 * Constants.ManipConstants.shooterShuttleRPMUpper
             );
     }
 

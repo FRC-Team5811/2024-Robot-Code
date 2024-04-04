@@ -126,7 +126,7 @@ public class Robot extends TimedRobot {
 
         robotContainer.swerveSubsystem.resetModuleEncoders();
 
-        robotContainer.swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(Constants.AutoConstants.start2Pose));
+        // robotContainer.swerveSubsystem.resetOdometry(Robot.processPoseWithAllianceColor(Constants.AutoConstants.start2Pose));
 
         setupDefaultCommands();
         
@@ -163,7 +163,8 @@ public class Robot extends TimedRobot {
             () -> robotContainer.driverController.getRawButton(OIConstants.driverForwardSetpointButton),
             () -> robotContainer.driverController.getRawButton(OIConstants.driverLeftSetpointButton),
             () -> robotContainer.driverController.getRawButton(OIConstants.driverBackSetpointButton),
-            () -> robotContainer.driverController.getRawButton(OIConstants.driverRightSetpointButton)
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverRightSetpointButton),
+            () -> robotContainer.driverController.getRawButton(OIConstants.driverShuttleSetpointButton)
             ));
 
         // manual intake controls on manip controller
@@ -185,11 +186,14 @@ public class Robot extends TimedRobot {
         // manual shooter controls on manip controller
         robotContainer.shooter.setDefaultCommand(new ShooterTeleopCmd(
             robotContainer.shooter,
+            robotContainer.indexer,
             () -> robotContainer.manipController.getRawAxis(OIConstants.shooterManualAxis),
             () -> robotContainer.manipController.getRawButton(OIConstants.speakerShotSequenceButton),
             () -> robotContainer.manipController.getRawButton(OIConstants.ampScoreManualButton),
             () -> robotContainer.manipController.getRawButton(OIConstants.shooterRampUpButton),
-            () -> robotContainer.manipController.getRawButton(OIConstants.diverterSpeakerFireButton)
+            () -> robotContainer.manipController.getRawButton(OIConstants.diverterSpeakerFireButton),
+            () -> robotContainer.manipController.getRawButton(OIConstants.shuttleRampUp),
+            () -> robotContainer.manipController.getRawButton(OIConstants.speakerShotSequenceButton)
             ));
         // manual climber controls on manip controller
         robotContainer.climber.setDefaultCommand(new ClimberTeleopCmd(
