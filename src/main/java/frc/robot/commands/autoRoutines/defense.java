@@ -24,10 +24,16 @@ public class defense extends SequentialCommandGroup{
             // kill all center notes
             new DriveToPoint(swerveSubsystem, Constants.AutoConstants.mid1ForwardPose.transformBy(new Transform2d(-1, 0, Rotation2d.fromDegrees(-60))), 0.5, 10, 7, 
             false, 10, 0, 2, 8, 0, 0.1),
-            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note4Pose.transformBy(new Transform2d(0.5, 0, Rotation2d.fromDegrees(-60))), 0.2, 10, 5, true),
-            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note8Pose.transformBy(new Transform2d(0.5, 0, Rotation2d.fromDegrees(-60))), 
+            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note4Pose.transformBy(new Transform2d(0.9, 0, Rotation2d.fromDegrees(-60))), 0.2, 10, 5, true),
+            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(0.9, 0, Rotation2d.fromDegrees(-60))), 
             0.5, 10, 7, 
-            false, 10, 0, 2, 8, 0, 0.1)
+            false, 10, 0, 2, 8, 0, 0.1),
+            new ParallelCommandGroup(
+            new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(1.0, 0, Rotation2d.fromDegrees(120))), 
+            0.5, 10, 7, 
+            false, 10, 0, 2, 8, 0, 0.1),
+            new IntakeSequence(intake)
+            )
         );
     }
 }
