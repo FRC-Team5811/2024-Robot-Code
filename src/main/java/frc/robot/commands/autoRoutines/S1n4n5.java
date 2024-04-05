@@ -26,7 +26,7 @@ public class S1n4n5 extends SequentialCommandGroup{
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note4Pose, 
             Constants.AutoConstants.start1Pose, 
-            new Pose2d[] {Constants.AutoConstants.mid1BackPose}, 
+            new Pose2d[] {Constants.AutoConstants.mid1BackPose.transformBy(new Transform2d(0, 0.5, new Rotation2d()))}, 
             Rotation2d.fromDegrees(-60)),
             
             //note 5
