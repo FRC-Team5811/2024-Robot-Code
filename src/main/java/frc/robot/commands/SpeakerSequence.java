@@ -51,7 +51,7 @@ public class SpeakerSequence extends Command {
 
     @Override
     public boolean isFinished() {
-        if (cycles > 3*50 || limitCycles > 0.16*50) {
+        if (cycles > 3*50 || limitCycles > 0.60*50) {
             return true;
         }
         return false;

@@ -16,7 +16,7 @@ public class S2n2n7n6 extends SequentialCommandGroup{
 
         addCommands(
             //pre-loaded note
-            // new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start2Pose),
+            new ResetSwervePoseCmd(swerveSubsystem, Constants.AutoConstants.start2Pose)
             // new SpeakerSequence(shooter, indexer),
             
             // //note 2
