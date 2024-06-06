@@ -90,7 +90,7 @@ public final class Constants {
                 kPhysicalMaxAngularSpeedRadiansPerSecond * 0.5;  
         public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 30;
         public static final double kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared = 8 * Math.PI;
-        public static final double SlowModeSpeedPercent = 0.375;
+        public static final double SlowModeSpeedPercent = 0.305;
         public static final double turningSpeedPercent = 0.70;
 
         public static final double kPThetaLockTurning = 6;
