@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,6 +24,7 @@ import frc.robot.commands.IndexerTeleopCmd;
 import frc.robot.commands.IntakeTeleopCmd;
 import frc.robot.commands.ShooterTeleopCmd;
 import frc.robot.commands.SwerveTeleopCmd;
+import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class Robot extends TimedRobot {
@@ -114,6 +116,14 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousPeriodic() {
     }
+
+    @Override
+    public void autonomousExit() {
+        if (allianceColor == Alliance.Red) {
+            robotContainer.swerveSubsystem.resetOdometry(robotContainer.swerveSubsystem.getPose2d().transformBy(new Transform2d(0, 0, Rotation2d.fromDegrees(-180))));
+        }
+    }
+
 
     @Override
     public void teleopInit() {

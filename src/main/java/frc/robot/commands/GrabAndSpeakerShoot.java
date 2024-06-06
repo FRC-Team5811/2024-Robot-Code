@@ -145,7 +145,7 @@ public GrabAndSpeakerShoot(SwerveSubsystem swerveSubsystem, Intake intake, Index
             ),
             new ParallelRaceGroup(
                 new IntakeSequence(intake, indexer, true),
-                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(rotation.getCos()*1.5, rotation.getSin()*1.5, rotation)),  
+                new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(rotation.getCos()*1.3, rotation.getSin()*1.3, rotation)),  
                 0.1, 5, Constants.AutoConstants.kMaxSpeedMetersPerSecond, false)
                 // new DriveToPoint(swerveSubsystem, notePose.transformBy(new Transform2d(1, 0, new Rotation2d())),  0.05, 2.5, 5, true)
             )

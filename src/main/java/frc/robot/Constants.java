@@ -140,12 +140,12 @@ public final class Constants {
                         kMaxAccelerationMetersPerSecondSquared);
         
         public static final Pose2d start1Pose = new Pose2d(0.81, 4.38, Rotation2d.fromDegrees(-60));
-        public static final Pose2d start2Pose = new Pose2d(1.577, 5.6, new Rotation2d()); //DNC
+        public static final Pose2d start2Pose = new Pose2d(1.3, 5.6, new Rotation2d()); //DNC x:1.577
         public static final Pose2d start3Pose = new Pose2d(0.49, 7.064, Rotation2d.fromDegrees(60)); //DNC
-        public static final Pose2d note1Pose = new Pose2d(1.9, 3.87, new Rotation2d()); //DNC
-        public static final Pose2d note2Pose = new Pose2d(2.1, 5.42, new Rotation2d()); //DNC
+        public static final Pose2d note1Pose = new Pose2d(2.0, 3.97, new Rotation2d()); //DNC
+        public static final Pose2d note2Pose = new Pose2d(2.1, 5.52, new Rotation2d()); //DNC
         public static final Pose2d note3Pose = new Pose2d(2.1, 7.15, new Rotation2d()); //DO NOT CHANGE
-        public static final Pose2d note4Pose = new Pose2d(9, 1.67, new Rotation2d()); // REAL POSITION: new Pose2d(8.2, 0.6, new Rotation2d()); 
+        public static final Pose2d note4Pose = new Pose2d(9, 0.67, new Rotation2d()); // REAL POSITION: new Pose2d(8.2, 0.6, new Rotation2d()); 
         public static final Pose2d note5Pose = new Pose2d(9, 3.5, new Rotation2d()); // OLD X: 8.2
         public static final Pose2d note6Pose = new Pose2d(9, 4.131, new Rotation2d());
         public static final Pose2d note7Pose = new Pose2d(9, 5.9, new Rotation2d());

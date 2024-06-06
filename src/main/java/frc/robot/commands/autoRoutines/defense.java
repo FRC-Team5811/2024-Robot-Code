@@ -2,10 +2,12 @@ package frc.robot.commands.autoRoutines;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.DriveToPoint;
 import frc.robot.commands.GrabAndSpeakerShoot;
+import frc.robot.commands.IntakeSequence;
 import frc.robot.commands.ResetSwervePoseCmd;
 import frc.robot.commands.SpeakerSequence;
 import frc.robot.subsystems.Intake;
@@ -32,7 +34,7 @@ public class defense extends SequentialCommandGroup{
             new DriveToPoint(swerveSubsystem, Constants.AutoConstants.note7Pose.transformBy(new Transform2d(1.0, 0, Rotation2d.fromDegrees(120))), 
             0.5, 10, 7, 
             false, 10, 0, 2, 8, 0, 0.1),
-            new IntakeSequence(intake)
+            new IntakeSequence(intake, indexer, true)
             )
         );
     }
