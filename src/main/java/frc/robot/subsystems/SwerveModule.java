@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.PID;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
@@ -28,6 +29,10 @@ public class SwerveModule {
     private final boolean absoluteEncoderReversed;
     private final double absoluteEncoderOffsetRad;
     private final String moduleName;
+    
+    private final PID wheelSpeedPID = new PID(1, 0, 0.1);
+    private double wheelPIDOutput = 0;
+
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed, String moduleName) {
@@ -151,9 +156,12 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         state = betterOptimize(state, getPosition().angle);
         double turningSetpoint = state.angle.getRadians();
-        driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        if (!Constants.DriveConstants.oldWheelSpeedControl) {
+            wheelPIDOutput = wheelSpeedPID.calculate(getDriveVelocity(), state.speedMetersPerSecond);
+            driveMotor.set(wheelPIDOutput + (state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond));
+        }
+        else driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
-        
         SmartDashboard.putString("Debug/Module [" + moduleName + "] desired state", state.toString());
     }
 
