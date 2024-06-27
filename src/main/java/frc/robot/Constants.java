@@ -98,6 +98,8 @@ public final class Constants {
         public static final double kDThetaLockTurning = 1;
 
         public static final double shuttleSetpointFunction = -Math.PI/6;
+
+        public static final boolean oldWheelSpeedControl = false;
     }
 
     public static final class ManipConstants {
