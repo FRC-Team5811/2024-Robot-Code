@@ -31,9 +31,6 @@ public class SwerveModule {
     private final double absoluteEncoderOffsetRad;
     private final String moduleName;
     
-    private final PID wheelSpeedPID = new PID(1, 0, 0.1);
-    private double wheelPIDOutput = 0;
-
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset, boolean absoluteEncoderReversed, String moduleName) {
@@ -72,9 +69,9 @@ public class SwerveModule {
         turningMotorPidController.setI(Constants.ModuleConstants.kITurning);
 
         driveMotorPidController = driveMotor.getPIDController();
-        driveMotorPidController.setP(Constants.ModuleConstants.kPTurning);
-        driveMotorPidController.setD(Constants.ModuleConstants.kDTurning);
-        driveMotorPidController.setI(Constants.ModuleConstants.kITurning);
+        driveMotorPidController.setP(Constants.ModuleConstants.kPDriving);
+        driveMotorPidController.setD(Constants.ModuleConstants.kDDriving);
+        driveMotorPidController.setI(Constants.ModuleConstants.kIDriving);
     }
 
     public void onPeriodic() {
@@ -162,7 +159,7 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         state = betterOptimize(state, getPosition().angle);
         double turningSetpoint = state.angle.getRadians();
-        double drivingSetpoint = state.speedMetersPerSecond * 60 / 4 * Math.PI;
+        double drivingSetpoint = state.speedMetersPerSecond*60 / (4*2.54 / 100) * Math.PI;
         //driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
         driveMotorPidController.setReference(drivingSetpoint, CANSparkMax.ControlType.kVelocity);
