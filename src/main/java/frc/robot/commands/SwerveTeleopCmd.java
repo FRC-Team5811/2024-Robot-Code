@@ -142,25 +142,27 @@ public class SwerveTeleopCmd extends Command {
             turningSpeed = turningInput * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * DriveConstants.turningSpeedPercent;
         }
         else {
+            wasTurningLastFrame = true;
+            turningSpeed = turningInput * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond * DriveConstants.turningSpeedPercent;
             // driver is not telling the robot to turn
 
-            // if we were turning last frame, update the setpoint to our current heading
-            // if not, don't modify the setpoint
-            if (wasTurningLastFrame) {
-                turningSetpoint = swerveSubsystem.getPoseAngleRad();
-                wasTurningLastFrame = false;
-            }
+            // // if we were turning last frame, update the setpoint to our current heading
+            // // if not, don't modify the setpoint
+            // if (wasTurningLastFrame) {
+            //     turningSetpoint = swerveSubsystem.getPoseAngleRad();
+            //     wasTurningLastFrame = false;
+            // }
 
-            // if drivetrain is moving above threshold, apply theta lock, else, turning speed is 0
-            if (
-            Math.abs(xInput) > 0.1 ||
-            Math.abs(yInput) > 0.1
-            ) {
-                turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
-            }
-            else {
-                turningSpeed = 0.0;
-            }
+            // // if drivetrain is moving above threshold, apply theta lock, else, turning speed is 0
+            // if (
+            // Math.abs(xInput) > 0.1 ||
+            // Math.abs(yInput) > 0.1
+            // ) {
+            //     turningSpeed = thetaLockController.calculate(swerveSubsystem.getPoseAngleRad(), turningSetpoint);
+            // }
+            // else {
+            //     turningSpeed = 0.0;
+            // }
         }
         
         // limit rotational acceleration, then limit max rotation speed

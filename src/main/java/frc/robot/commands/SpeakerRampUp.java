@@ -25,7 +25,7 @@ public class SpeakerRampUp extends Command {
 
     @Override
     public boolean isFinished() {
-        if (cycles > 2*50) {
+        if (cycles > 2*50) { //there are 50 cycles a second
             return true;
         }
         return false;

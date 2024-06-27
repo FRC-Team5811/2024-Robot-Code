@@ -85,17 +85,17 @@ public final class Constants {
         public static final double kPhysicalMaxSpeedMetersPerSecond = 6.7;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
-        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
+        public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-                kPhysicalMaxAngularSpeedRadiansPerSecond * 0.5;  
+                kPhysicalMaxAngularSpeedRadiansPerSecond * 0.65 * 0.5;  
         public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 30;
         public static final double kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared = 8 * Math.PI;
         public static final double SlowModeSpeedPercent = 0.375;
         public static final double turningSpeedPercent = 0.70;
 
-        public static final double kPThetaLockTurning = 6;
+        public static final double kPThetaLockTurning = 0;
         public static final double kIThetaLockTurning = 0;
-        public static final double kDThetaLockTurning = 1;
+        public static final double kDThetaLockTurning = 0;
 
         public static final double shuttleSetpointFunction = -Math.PI/6;
     }
