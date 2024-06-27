@@ -22,6 +22,7 @@ public class SwerveModule {
 
     // private final PIDController turningPidController;
     private final SparkPIDController turningMotorPidController;
+    private final SparkPIDController driveMotorPidController;
 
     private final DutyCycleEncoder absoluteEncoder;
     private final int absoluteEncoderId;
@@ -64,6 +65,11 @@ public class SwerveModule {
         turningMotorPidController.setP(Constants.ModuleConstants.kPTurning);
         turningMotorPidController.setD(Constants.ModuleConstants.kDTurning);
         turningMotorPidController.setI(Constants.ModuleConstants.kITurning);
+
+        driveMotorPidController = driveMotor.getPIDController();
+        driveMotorPidController.setP(Constants.ModuleConstants.kPTurning);
+        driveMotorPidController.setD(Constants.ModuleConstants.kDTurning);
+        driveMotorPidController.setI(Constants.ModuleConstants.kITurning);
     }
 
     public void onPeriodic() {
@@ -151,8 +157,10 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         state = betterOptimize(state, getPosition().angle);
         double turningSetpoint = state.angle.getRadians();
-        driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        double drivingSetpoint = state.speedMetersPerSecond * 60 / 4 * Math.PI;
+        //driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
+        driveMotorPidController.setReference(drivingSetpoint, CANSparkMax.ControlType.kVelocity);
         
         SmartDashboard.putString("Debug/Module [" + moduleName + "] desired state", state.toString());
     }

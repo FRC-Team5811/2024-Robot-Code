@@ -28,7 +28,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.Vision;
+// import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
 
@@ -39,7 +39,7 @@ public class RobotContainer {
     public final Shooter shooter = new Shooter();
     public final Climber climber = new Climber();
     public final LEDs leds = new LEDs(this);
-    public final Vision vision = new Vision();
+    // public final Vision vision = new Vision();
 
     // Controllers
     public final Joystick driverController = new Joystick(OIConstants.kDriverControllerPort);
