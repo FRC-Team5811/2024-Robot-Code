@@ -82,7 +82,7 @@ public final class Constants {
         public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 2.412 - 1.571; //1.149 - 0.923; // 1.317; // 6.149893967820428;
         public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 3.369 + 1.571; //5.566; // 5.575; // 0.43207125951125236;
 
-        public static final double kPhysicalMaxSpeedMetersPerSecond = 6.7;
+        public static final double kPhysicalMaxSpeedMetersPerSecond = 6.7 / 4;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
@@ -90,7 +90,7 @@ public final class Constants {
                 kPhysicalMaxAngularSpeedRadiansPerSecond * 0.65 * 0.5;  
         public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 30;
         public static final double kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared = 8 * Math.PI;
-        public static final double SlowModeSpeedPercent = 0.375;
+        public static final double SlowModeSpeedPercent = 0.305;
         public static final double turningSpeedPercent = 0.70;
 
         public static final double kPThetaLockTurning = 0;
@@ -98,6 +98,8 @@ public final class Constants {
         public static final double kDThetaLockTurning = 0;
 
         public static final double shuttleSetpointFunction = -Math.PI/6;
+
+        public static final boolean oldWheelSpeedControl = false;
     }
 
     public static final class ManipConstants {
