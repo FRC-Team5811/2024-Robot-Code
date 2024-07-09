@@ -65,6 +65,8 @@ public class Robot extends TimedRobot {
 
         SmartDashboard.putData("Driver/Field", driverField);
         SmartDashboard.putData("Debug/Field", debugField);
+        SmartDashboard.putNumber("Debug/p value", Constants.ModuleConstants.kPDriving);
+        SmartDashboard.putNumber("Debug/d value", Constants.ModuleConstants.kDDriving);
     }
 
     @Override

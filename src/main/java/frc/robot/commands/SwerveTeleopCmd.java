@@ -102,11 +102,13 @@ public class SwerveTeleopCmd extends Command {
         // calculate translational speeds
         double xSpeed = xInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         double ySpeed = yInput * DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        SmartDashboard.putNumber("Debug/xSpeed step 1", xSpeed);
 
         // limit translational acceleration
         xSpeed = xLimiter.calculate(xSpeed);
         ySpeed = yLimiter.calculate(ySpeed);
-        
+
+
         // calculate rotational speed
         double turningSpeed;
         //setpoints
@@ -178,6 +180,7 @@ public class SwerveTeleopCmd extends Command {
             ySpeed = ySpeed * Constants.DriveConstants.SlowModeSpeedPercent;
             turningSpeed = turningSpeed * Constants.DriveConstants.SlowModeSpeedPercent;
         }
+
 
         //apply break
         xSpeed = xSpeed * breakingPercent;
