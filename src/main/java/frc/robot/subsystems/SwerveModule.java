@@ -165,10 +165,13 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState state) {
         //Debugging Code for Tuning Driving PID
         if (cycles % 50 == 0) {
-            double newP = SmartDashboard.getNumber("Debug/p value", 0.5);
-            double newD = SmartDashboard.getNumber("Debug/d value", 0.1);
+            double newP = SmartDashboard.getNumber("Debug/p value", Constants.ModuleConstants.kPDriving);
+            double newD = SmartDashboard.getNumber("Debug/d value", Constants.ModuleConstants.kPDriving);
             SmartDashboard.putNumber("Debug/p value", newP);
             SmartDashboard.putNumber("Debug/d value", newD);
+            double newFF = SmartDashboard.getNumber("Debug/FF value", Constants.ModuleConstants.kFFDriving);
+            SmartDashboard.putNumber("Debug/FF value", newFF);
+            driveMotorPidController.setFF(newFF);
             driveMotorPidController.setP(newP);
             driveMotorPidController.setD(newD);
         }
