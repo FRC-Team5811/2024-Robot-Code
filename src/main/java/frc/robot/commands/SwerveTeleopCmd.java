@@ -202,6 +202,7 @@ public class SwerveTeleopCmd extends Command {
         swerveSubsystem.setModuleStates(moduleStates);
 
         SmartDashboard.putString("Debug/Teleop Speeds", chassisSpeeds.toString());
+        SmartDashboard.putNumber("Debug/x vel error", chassisSpeeds.vxMetersPerSecond - swerveSubsystem.getChassisSpeeds().vxMetersPerSecond);
     }
 
     @Override
