@@ -30,6 +30,7 @@ public final class Constants {
         public static final double kDDriving = 0.0;
         public static final double kIDriving = 0.0;
         public static final double kFFDriving = 0.001;
+        public static final double kIDriving = 0.001;
     }
 
     public static final class DriveConstants {
