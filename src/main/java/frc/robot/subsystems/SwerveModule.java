@@ -132,10 +132,6 @@ public class SwerveModule {
         turningEncoder.setPosition(getAbsoluteEncoderRad());
     }
 
-    public void printAbsEncoder() {
-        
-    }
-
     public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(getDriveDistance(), new Rotation2d(getTurningPosition()));
     }
@@ -183,7 +179,7 @@ public class SwerveModule {
         state = betterOptimize(state, getPosition().angle);
         double turningSetpoint = state.angle.getRadians();
         //double drivingSetpoint = state.speedMetersPerSecond*60 / (4*2.54*Math.PI / 100);
-        double drivingSetpoint = state.speedMetersPerSecond*Constants.ModuleConstants.kTurningEncoderRPM2RadPerSec;
+        double drivingSetpoint = state.speedMetersPerSecond*Constants.ModuleConstants.kDriveEncoderRPM2MeterPerSec;
         driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
         driveMotorPidController.setReference(drivingSetpoint, CANSparkMax.ControlType.kVelocity);
