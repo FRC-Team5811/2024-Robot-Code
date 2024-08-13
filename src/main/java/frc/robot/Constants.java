@@ -26,11 +26,10 @@ public final class Constants {
         public static final double kPTurning = 0.5;
         public static final double kDTurning = 0.0;
         public static final double kITurning = 0.0;
-        public static final double kPDriving = 0.15;
+        public static final double kPDriving = 0.0; //0.15;
         public static final double kDDriving = 0.0;
         public static final double kIDriving = 0.0;
         public static final double kFFDriving = 0.001;
-        public static final double kIDriving = 0.001;
     }
 
     public static final class DriveConstants {
@@ -92,8 +91,8 @@ public final class Constants {
 
         public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond;
         public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-                kPhysicalMaxAngularSpeedRadiansPerSecond * 0.65 * 0.5 / 4;  
-        public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 5;
+                kPhysicalMaxAngularSpeedRadiansPerSecond * 0.65;
+        public static final double kTeleDriveMaxAccelerationMetersPerSecondSquared = 30;
         public static final double kTeleDriveMaxAngularAccelerationRadiansPerSecondSquared = 8 * Math.PI;
         public static final double SlowModeSpeedPercent = 0.305;
         public static final double turningSpeedPercent = 0.70;
@@ -149,8 +148,8 @@ public final class Constants {
         public static final Pose2d start1Pose = new Pose2d(0.81, 4.38, Rotation2d.fromDegrees(-60));
         public static final Pose2d start2Pose = new Pose2d(1.3, 5.6, new Rotation2d()); //DNC x:1.577
         public static final Pose2d start3Pose = new Pose2d(0.49, 7.064, Rotation2d.fromDegrees(60)); //DNC
-        public static final Pose2d note1Pose = new Pose2d(2.0, 3.97, new Rotation2d()); //DNC
-        public static final Pose2d note2Pose = new Pose2d(2.1, 5.52, new Rotation2d()); //DNC
+        public static final Pose2d note1Pose = new Pose2d(2.0, 4.25, new Rotation2d()); //DNC
+        public static final Pose2d note2Pose = new Pose2d(2.1, 5.55, new Rotation2d()); //DNC
         public static final Pose2d note3Pose = new Pose2d(2.1, 7.15, new Rotation2d()); //DO NOT CHANGE
         public static final Pose2d note4Pose = new Pose2d(9, 0.67, new Rotation2d()); // REAL POSITION: new Pose2d(8.2, 0.6, new Rotation2d()); 
         public static final Pose2d note5Pose = new Pose2d(9, 3.5, new Rotation2d()); // OLD X: 8.2

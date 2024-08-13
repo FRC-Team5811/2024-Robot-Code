@@ -1,5 +1,7 @@
 package frc.robot.commands.autoRoutines;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.GrabAndSpeakerShoot;
@@ -27,12 +29,12 @@ public class S2n3n2n1 extends SequentialCommandGroup{
             //note 2
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note2Pose, 
-            Constants.AutoConstants.start2Pose),
+            Constants.AutoConstants.start2Pose.transformBy(new Transform2d(-0.1, 0, new Rotation2d(0)))),
   
             //note 1
             new GrabAndSpeakerShoot(swerveSubsystem, intake, indexer, shooter, 
             Constants.AutoConstants.note1Pose, 
-            Constants.AutoConstants.start2Pose)
+            Constants.AutoConstants.start2Pose.transformBy(new Transform2d(-0.1, 0, new Rotation2d(0))))
         );
     }
 }

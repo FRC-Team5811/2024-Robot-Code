@@ -53,7 +53,7 @@ public class SwerveModule {
         turningEncoder = turningMotor.getEncoder();
 
         driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
-        driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
+        driveEncoder.setVelocityConversionFactor(1);
         turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
         turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
         turningEncoder.setPosition(getAbsoluteEncoderRad());
@@ -100,7 +100,7 @@ public class SwerveModule {
     }
     
     public double getDriveVelocity() {
-        return driveEncoder.getVelocity();
+        return driveEncoder.getVelocity()*ModuleConstants.kDriveEncoderRPM2MeterPerSec;
     }
 
     public double getDriveDistance() {
@@ -141,7 +141,7 @@ public class SwerveModule {
     }
 
     public SwerveModuleState getState() {
-        return new SwerveModuleState(driveEncoder.getVelocity(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
     }
 
     public static SwerveModuleState betterOptimize(SwerveModuleState desiredState, Rotation2d currentAngle) {
@@ -167,22 +167,24 @@ public class SwerveModule {
         if (cycles % 50 == 0) {
             double newP = SmartDashboard.getNumber("Debug/p value", Constants.ModuleConstants.kPDriving);
             double newD = SmartDashboard.getNumber("Debug/d value", Constants.ModuleConstants.kDDriving);
+            double newI = SmartDashboard.getNumber("Debug/I value", Constants.ModuleConstants.kIDriving);
+            double newFF = SmartDashboard.getNumber("Debug/FF value", Constants.ModuleConstants.kFFDriving);
             SmartDashboard.putNumber("Debug/p value", newP);
             SmartDashboard.putNumber("Debug/d value", newD);
-            double newFF = SmartDashboard.getNumber("Debug/FF value", Constants.ModuleConstants.kFFDriving);
-            double newI = SmartDashboard.getNumber("Debug/I value", Constants.ModuleConstants.kIDriving);
+            SmartDashboard.putNumber("Debug/I value", newI);
             SmartDashboard.putNumber("Debug/FF value", newFF);
             driveMotorPidController.setFF(newFF);
             driveMotorPidController.setP(newP);
             driveMotorPidController.setD(newD);
-            driveMotorPidController.setI(newI)
+            driveMotorPidController.setI(newI);
         }
         cycles += 1;
         // end of debugging code
         state = betterOptimize(state, getPosition().angle);
         double turningSetpoint = state.angle.getRadians();
-        double drivingSetpoint = state.speedMetersPerSecond*60 / (4*2.54*Math.PI / 100);
-        //driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        //double drivingSetpoint = state.speedMetersPerSecond*60 / (4*2.54*Math.PI / 100);
+        double drivingSetpoint = state.speedMetersPerSecond*Constants.ModuleConstants.kTurningEncoderRPM2RadPerSec;
+        driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
         driveMotorPidController.setReference(drivingSetpoint, CANSparkMax.ControlType.kVelocity);
         SmartDashboard.putString("Debug/Module [" + moduleName + "] desired state", state.toString());
