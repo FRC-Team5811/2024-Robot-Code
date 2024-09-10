@@ -79,6 +79,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putBoolean("Driver/note loaded", robotContainer.indexer.getLimitBool());
         SmartDashboard.putBoolean("Driver/note in intake", robotContainer.intake.getLimitBool());
         SmartDashboard.putBoolean("Driver/climber limit hit", robotContainer.climber.getLimitBool());
+        SmartDashboard.putNumber("Debug2/front left real speed", robotContainer.swerveSubsystem.getFrontLeftDriveVelocity());
 
         updateAllianceColor();
         driverField.setRobotPose(robotContainer.swerveSubsystem.getPose2d());

@@ -20,7 +20,6 @@ public class SwerveModule {
     private final CANSparkMax turningMotor;
     private final RelativeEncoder driveEncoder;
     private final RelativeEncoder turningEncoder;
-
     // private final PIDController turningPidController;
     private final SparkPIDController turningMotorPidController;
     private final SparkPIDController driveMotorPidController;
@@ -53,7 +52,9 @@ public class SwerveModule {
         turningEncoder = turningMotor.getEncoder();
 
         driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
-        driveEncoder.setVelocityConversionFactor(1);
+        SmartDashboard.putNumber("VelocityConversionFactor", 1);
+        double VelocityConversionFactor = SmartDashboard.getNumber("VelocityConversionFactor", 1);
+        driveEncoder.setVelocityConversionFactor(VelocityConversionFactor);
         turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
         turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
         turningEncoder.setPosition(getAbsoluteEncoderRad());
@@ -68,12 +69,12 @@ public class SwerveModule {
         turningMotorPidController.setP(Constants.ModuleConstants.kPTurning);
         turningMotorPidController.setD(Constants.ModuleConstants.kDTurning);
         turningMotorPidController.setI(Constants.ModuleConstants.kITurning);
-
+        
         driveMotorPidController = driveMotor.getPIDController();
         driveMotorPidController.setP(Constants.ModuleConstants.kPDriving);
         driveMotorPidController.setD(Constants.ModuleConstants.kDDriving);
         driveMotorPidController.setI(Constants.ModuleConstants.kIDriving);
-        driveMotorPidController.setFF(1/5676);
+        driveMotorPidController.setFF(1/5676);//PID is off by this amount (precision on this value does not matter)
         driveMotorPidController.setOutputRange(-1, 1);
 
 
@@ -173,17 +174,23 @@ public class SwerveModule {
             driveMotorPidController.setP(newP);
             driveMotorPidController.setD(newD);
             driveMotorPidController.setI(newI);
+            
+            double VelocityConversionFactor = SmartDashboard.getNumber("VelocityConversionFactor", 1);
+            SmartDashboard.putNumber("VelocityConversionFactor", VelocityConversionFactor);
+            driveEncoder.setVelocityConversionFactor(VelocityConversionFactor);
         }
         cycles += 1;
         // end of debugging code
         state = betterOptimize(state, getPosition().angle);
         double turningSetpoint = state.angle.getRadians();
-        //double drivingSetpoint = state.speedMetersPerSecond*60 / (4*2.54*Math.PI / 100);
-        double drivingSetpoint = state.speedMetersPerSecond*Constants.ModuleConstants.kDriveEncoderRPM2MeterPerSec;
-        driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        // double drivingSetpoint = state.speedMetersPerSecond*60 / (4*2.54*Math.PI / 100);
+        double drivingSetpoint = state.speedMetersPerSecond * Constants.ModuleConstants.kDriveMeterPerSecond2Rot;
+        //double drivingSetpoint = state.speedMetersPerSecond*Constants.ModuleConstants.kDriveEncoderRPM2MeterPerSec;
+        //driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turningMotorPidController.setReference(turningSetpoint, CANSparkMax.ControlType.kPosition);
         driveMotorPidController.setReference(drivingSetpoint, CANSparkMax.ControlType.kVelocity);
-        SmartDashboard.putString("Debug/Module [" + moduleName + "] desired state", state.toString());
+        SmartDashboard.putString("Debug2/Module [" + moduleName + "] desired state", state.toString());
+        
     }
 
     public void stop() {
